@@ -1,0 +1,13 @@
+﻿<Window x:Class="TXM.GUI.Windows.RandomizerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Randomizer" Height="237" Width="269" ResizeMode="NoResize">
+    <Grid>
+        <TextBox x:Name="TextBoxPlayerCount" Margin="121,19,0,0" HorizontalAlignment="Left" Width="103" Height="19" VerticalAlignment="Top"/>
+        <Label x:Name="LabelNumberOfPlayer" Content="Anzahl der Spieler" HorizontalAlignment="Left" Margin="10,12,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="LabelInfo" Content="Der ausgewählte Spieler ist: " HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top"/>
+        <Label Content="" x:Name="LabelResult" HorizontalAlignment="Left" Margin="99,90,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="ButtonClose" Content="Beenden" HorizontalAlignment="Left" Margin="151,170,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button x:Name="ButtonRandom" Content="Zufälligen Spieler ermitteln" HorizontalAlignment="Left" Margin="10,139,0,0" VerticalAlignment="Top" Width="159" Click="Button_Click_1"/>
+    </Grid>
+</Window>
