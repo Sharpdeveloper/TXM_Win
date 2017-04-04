@@ -306,11 +306,11 @@ namespace TXM.Core
 
         public static string TableForForum(Tournament2 tournament, List<Player> players)
         {
-            string output = tournament.Name + " - Tabelle - Runde " + tournament.DisplayedRound + "\n[table][tr][td]Platz[/td][td]Name[/td][td]Siege[/td][td]mod. Siege[/td][td]Unentschieden[/td][td]Niederlagen[/td][td]Punkte[/td][td]HdS[/td][td]Stärke der Gegner[/td][/tr]\n";
+			string output = tournament.Name + " - Table - Round " + tournament.DisplayedRound + "\n[table][tr][td]#[/td][td]Name[/td][td]Points[/td][td]Wins[/td][td]Looses[/td][td]MoV[/td][td]SoS[/td][/tr]\n";
             for (int i = 1; i <= players.Count; i++)
             {
                 Player p = players[i - 1];
-                output += "[tr][td]" + i + "[/td][td]" + p.DisplayName + "[/td][td]" + p.Wins + "[/td][td]" + p.ModifiedWins + "[/td][td]" + p.Draws + "[/td][td]" + p.Looses + "[/td][td]" + p.Points + "[/td][td]" + p.MarginOfVictory + "[/td][td]" + p.PointsOfEnemies + "[/td][/tr]\n";
+				output += "[tr][td]" + i + "[/td][td]" + p.DisplayName + "[/td][td]" + p.Points + "[/td][td]" + p.Wins + "[/td][td]" + p.Looses + "[/td][td]" + p.MarginOfVictory + "[/td][td]" + p.PointsOfEnemies + "[/td][/tr]\n";
             }
             output += "[/table]\n";
             return output;
@@ -318,7 +318,7 @@ namespace TXM.Core
 
         public static string PairingForForum(Tournament2 tournament, List<Pairing> pairing)
         {
-            string output = tournament.Name + " - Tabelle - Runde " + tournament.DisplayedRound + "\n[table][tr][td]Tisch Nr.[/td][td]Spieler 1[/td][td]Spieler 2[/td][td]Ergebnis[/td][/tr]\n";
+			string output = tournament.Name + " - Table - Round " + tournament.DisplayedRound + "\n[table][tr][td]Table No.[/td][td]Player 1[/td][td]Player 2[/td][td]Result[/td][/tr]\n";
             for (int i = 1; i <= pairing.Count; i++)
             {
                 Pairing p = pairing[i - 1];
@@ -330,18 +330,18 @@ namespace TXM.Core
 
         public void Print(Tournament2 tournament)
         {
-            string title = tournament.Name + " - Tabelle - Runde " + tournament.DisplayedRound; 
+			string title = tournament.Name + " - Table - Round " + tournament.DisplayedRound; 
 
             List<string> print = new List<string>();
             string temp = "<!DOCTYPE html><html><head><title>" + title + "</title></head><body><table>";
             print.Add(temp);
             temp = "<h2>" + title + "</h2></br>";
             print.Add(temp);
-            temp = "<tr><td>#</td><td>Name</td><td>Punkte</td><td>S</td><td>MS</td><td>U</td><td>N</td><td>HdS</td><td>GS</td></tr>";
+            temp = "<tr><td>#</td><td>Name</td><td>Points</td><td>W</td><td>L</td><td>MoV</td><td>SoS</td></tr>";
             print.Add(temp);
             foreach (Player p in tournament.Rounds[tournament.Rounds.Count - 1].Participants)
             {
-                temp = "<tr><td>" + p.Rank + "</td><td>" + p.DisplayName + "</td><td>" + p.Points + "</td><td>" + p.Wins + "</td><td>" + p.ModifiedWins + "</td><td>" + p.Draws + "</td><td>" + p.Looses + "</td><td>" + p.MarginOfVictory + "</td><td>" + p.PointsOfEnemies + "</td></tr>";
+                temp = "<tr><td>" + p.Rank + "</td><td>" + p.DisplayName + "</td><td>" + p.Points + "</td><td>" + p.Wins + "</td><td>" + p.Looses + "</td><td>" + p.MarginOfVictory + "</td><td>" + p.PointsOfEnemies + "</td></tr>";
                 print.Add(temp);
             }
             temp = "</table></body></html>";
@@ -361,17 +361,17 @@ namespace TXM.Core
         {
             string title;
             if (result)
-                title = tournament.Name + " - Ergebnisse - Runde " + tournament.DisplayedRound;
+				title = tournament.Name + " - Results - Round " + tournament.DisplayedRound;
             else
-                title = tournament.Name + " - Paarungen - Runde " + tournament.DisplayedRound;
+				title = tournament.Name + " - Pairings - Round " + tournament.DisplayedRound;
             List<string> print = new List<string>();
             string temp = "<!DOCTYPE html><html><head><title>" + title + "</title></head><body><table>";
             print.Add(temp);
             temp = "<h2>" + title + "</h2></br>";
             print.Add(temp);
-            temp = "<tr><td>Tisch-Nr</td><td>Spieler 1</td><td>Spieler2</td>";
+			temp = "<tr><td>Table-No</td><td>Player 1</td><td>Player 2</td>";
             if (result)
-                temp += "<td>Ergebnis</td>";
+                temp += "<td>Result</td>";
             temp += "</tr>";
             print.Add(temp);
             tournament.Sort();
@@ -429,10 +429,22 @@ namespace TXM.Core
                 file += Settings.FILEEXTENSION;
 
             IFormatter formatter = new BinaryFormatter();
-            using (Stream stream = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None))
-            {
-                formatter.Serialize(stream, tournament);
-            }
+			try
+			{
+				using (Stream stream = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None))
+				{
+					formatter.Serialize(stream, tournament);
+				}
+			}
+			catch (Exception)
+			{
+				file = AutosavePath;
+				file += "\\Autosave_" + DateTime.Now.ToFileTime() + "_A_Tournament_" + Autosavetype + Settings.FILEEXTENSION;
+				using (Stream stream = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None))
+				{
+					formatter.Serialize(stream, tournament);
+				}
+			}
             if (tournament.Statistics != null)
             {
                 tournament.Statistics.Path = file.Substring(0, file.LastIndexOf('.')) + ".txmstats";

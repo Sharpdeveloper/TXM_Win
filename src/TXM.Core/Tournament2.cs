@@ -117,8 +117,8 @@ namespace TXM.Core
             Nicknames = new List<string>();
             givenStartNr = new List<int>();
             FirstRound = firstround;
-            FreeTicket = new Player("Freilos");
-            WonFreeTicket = new Player("Gewonnenes Freilos");
+            FreeTicket = new Player("Bye");
+            WonFreeTicket = new Player("Won Bye");
             MaxSquadPoints = maxSquadPoints;
             Cut = cut;
             CutStarted = false;
@@ -817,6 +817,7 @@ namespace TXM.Core
             else
                 Rounds[Rounds.Count - 1].Pairings = results;
             PrePaired = new List<Pairing>();
+			Sort();
         }
 
         public void ChangePlayer(Player player)
