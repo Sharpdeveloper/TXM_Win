@@ -9,7 +9,7 @@ namespace TXM.Core
     [Serializable]
     public enum Faction
     {
-        Imperium,
+        Imperial,
         Rebels,
         Scum
     }
@@ -18,7 +18,6 @@ namespace TXM.Core
     public class Player
     {
         #region Player Informations
-        public static int DropNr = 0;
         public string Name { get; set; }
         public string Forename { get; set; }
         public string Nickname { get; set; }
@@ -115,7 +114,7 @@ namespace TXM.Core
         public int Points { get;  set; }
         public int PointsDestroyed { get;  set; }
         public int PointsLost { get;  set; }
-        public int PointsOfEnemies { get;  set; }
+        public double PointsOfEnemies { get;  set; }
         public int PointOfSquad { get; set; }
         public int MarginOfVictory { get;  set; }
         public Faction PlayersFaction { get; set; }
@@ -143,7 +142,7 @@ namespace TXM.Core
 
         }
 
-        public Player(string name, string forename, string nickname, string team, string city, int wins, int modifiedWins, int looses, int draws, int points, int pointsDestroyed, int pointsLost, int pointsOfEnemies,  int pointOfSquad, int marginOfVictory, Faction playersFaction, bool freeticket, bool paired, bool wonFreeticket, int t3ID, int rank, int armyRank, bool payed, bool squadListGiven, int nr = -1)
+        public Player(string name, string forename, string nickname, string team, string city, int wins, int modifiedWins, int looses, int draws, int points, int pointsDestroyed, int pointsLost, double pointsOfEnemies,  int pointOfSquad, int marginOfVictory, Faction playersFaction, bool freeticket, bool paired, bool wonFreeticket, int t3ID, int rank, int armyRank, bool payed, bool squadListGiven, int nr = -1)
         {
             Name = name;
             Forename = forename;
@@ -186,7 +185,7 @@ namespace TXM.Core
         { }
 
         public Player(string nickname)
-            : this(nickname, 100, Faction.Imperium)
+            : this(nickname, 100, Faction.Imperial)
         { }
         #endregion
 
@@ -227,11 +226,13 @@ namespace TXM.Core
             {
                 PointsOfEnemies += GetEnemyStrength(i);
             }
+            PointsOfEnemies = PointsOfEnemies / Results.Count;
         }
 
         public bool AddResult(Result result, bool update = false)
         {
             bool winner = false;
+            int mov;
             if (Results == null)
                 Results = new List<Result>();
             if (Freeticket)
@@ -259,7 +260,7 @@ namespace TXM.Core
             }
             else
             {
-                int mov = result.MaxSquadPoints + CalcuateMarginOfVictory(result.Destroyed, result.Lost, result.Enemy.PointOfSquad, result.MaxSquadPoints);
+                mov = result.MaxSquadPoints + CalcuateMarginOfVictory(result.Destroyed, result.Lost, result.Enemy.PointOfSquad, result.MaxSquadPoints);
                 PointsDestroyed += result.Destroyed;
                 PointsLost += result.Lost;
                 MarginOfVictory += mov;
@@ -343,9 +344,9 @@ namespace TXM.Core
         {
             disqualified = true;
             if (Nickname != null)
-                Nickname += " <disqualifiziert>";
+                Nickname += " <disqualified>";
             else
-                Name += " <disqualifiziert>";
+                Name += " <disqualified>";
         }
         #endregion
 
@@ -370,12 +371,12 @@ namespace TXM.Core
         {
             get
             {
-                if (PlayersFaction == Faction.Imperium)
-                    return "Imperium";
+                if (PlayersFaction == Faction.Imperial)
+                    return "Imperial";
                 else if (PlayersFaction == Faction.Scum)
-                    return "Abschaum und Kriminelle";
+                    return "Scum and Villainy";
                 else
-                    return "Rebellen";
+                    return "Rebels";
             }
         }
         #endregion
@@ -388,8 +389,8 @@ namespace TXM.Core
 
         public static string FactionToString(Faction faction)
         {
-            if (faction == Faction.Imperium)
-                return "Imperium";
+            if (faction == Faction.Imperial)
+                return "Imperial";
             else if (faction == Faction.Scum)
                 return "Scum and Villainy";
             else
@@ -398,37 +399,29 @@ namespace TXM.Core
 
         public static Faction StringToFaction(string faction)
         {
-            if (faction == "Imperium")
-                return Faction.Imperium;
+            if (faction == "Imperial")
+                return Faction.Imperial;
             else if (faction == "Scum and Villainy")
                 return Faction.Scum;
             else
                 return Faction.Rebels;
         }
 
-        public static Faction StringToFactionLang(string faction, Language lang)
-        {
-            if (faction == lang.GetTranslation(StaticLanguage.Imperium))
-                return Faction.Imperium;
-            else if (faction == lang.GetTranslation(StaticLanguage.Scum))
-                return Faction.Scum;
-            else
-                return Faction.Rebels;
-        }
+
         public static string[] GetFactions()
         {
-            return new string[] { "Imperium", "Rebels", "Scum and Villainy" };
+            return new string[] { "Imperial", "Rebels", "Scum and Villainy" };
         }
         #endregion
 
         #region private Functions
-        private int GetEnemyStrength(int enemyNr)
+        private double GetEnemyStrength(int enemyNr)
         {
             if (enemyNr < 0)
                 return 0;
             else
             {
-                return Enemies[enemyNr].Points;
+                return ((double) Enemies[enemyNr].Points) / Enemies[enemyNr].Results.Count;
             }
         }
 
@@ -460,8 +453,6 @@ namespace TXM.Core
 
         public void Drop()
         {
-            DropNr++;
-            dropPos = DropNr;
             dropped = true;
             if (Nickname != null)
                 Nickname += " <dropped>";

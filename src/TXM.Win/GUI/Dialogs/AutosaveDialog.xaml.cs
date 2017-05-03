@@ -24,7 +24,7 @@ namespace TXM.GUI.Dialogs
     {
         public bool DialogReturn { get; private set; }
         public string FileName { get; private set; }
-        public AutosaveDialog(IO io, Language l)
+        public AutosaveDialog(IO io)
         {
             InitializeComponent();
             string[] filenames = io.GetAutosaveFiles();
@@ -36,8 +36,8 @@ namespace TXM.GUI.Dialogs
             }
             DialogReturn = false;
 
-            ButtonCancel.Content = l.GetTranslation(StaticLanguage.Cancel);
-            ButtonLoad.Content = l.GetTranslation(StaticLanguage.Load);
+            ButtonCancel.Content = "Cancel";
+            ButtonLoad.Content = "Load";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

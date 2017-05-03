@@ -29,7 +29,7 @@ namespace TXM.GUI.Dialogs
         private bool uniqueName = false;
         private bool nicknameRequiered = true;
 
-        public NewPlayerDialog(List<string> nicknames, Language lang, Player player = null)
+        public NewPlayerDialog(List<string> nicknames, Player player = null)
         {
             InitializeComponent();
             Nicknames = nicknames;
@@ -37,7 +37,7 @@ namespace TXM.GUI.Dialogs
             Changes = false;
             //Noch steuern, welcher Spieler angelegt werden soll
             foreach (string s in Player.GetFactions())
-                ComboBoxFaction.Items.Add(lang.GetTranslation(s));
+                ComboBoxFaction.Items.Add(s);
             if(player !=null)
             {
                 CurrentPlayer = player;
@@ -45,7 +45,6 @@ namespace TXM.GUI.Dialogs
                 TextBoxName.Text = CurrentPlayer.Name;
                 TextBoxNickname.Text = CurrentPlayer.Nickname;
                 TextBoxTeam.Text = CurrentPlayer.Team;
-                TextBoxSquadPoints.Text = ((Player)CurrentPlayer).PointOfSquad.ToString();
                 if (Player.StringToFaction("Imperium") == ((Player)CurrentPlayer).PlayersFaction)
                     ComboBoxFaction.SelectedIndex = 0;
                 else if (Player.StringToFaction("Rebels") == ((Player)CurrentPlayer).PlayersFaction)
@@ -57,26 +56,10 @@ namespace TXM.GUI.Dialogs
                 CheckboxSquadListGiven.IsChecked = CurrentPlayer.SquadListGiven;
                 TextBoxNickname.IsEnabled = false;
                 uniqueName = true;
-                LabelWarning.Content = "";
                 nicknameRequiered = false;
                 TextBoxTableNR.Text = player.TableNr.ToString();
                 CheckboxPresent.IsChecked = CurrentPlayer.Present;
             }
-
-            ButtonOK.Content = lang.GetTranslation(StaticLanguage.CreateNewPlayer);
-            ButtonCancel.Content = lang.GetTranslation(StaticLanguage.Cancel);
-            LabelNick.Content = lang.GetTranslation(StaticLanguage.Nickname) + "*";
-            LabelName.Content = lang.GetTranslation(StaticLanguage.Name);
-            LabelTeam.Content = lang.GetTranslation(StaticLanguage.Team);
-            LabelObligate.Content = "*=" + lang.GetTranslation(StaticLanguage.Obligatory);
-            LabelListPoints.Content = lang.GetTranslation(StaticLanguage.ListPoints);
-            LabelFaction.Content = lang.GetTranslation(StaticLanguage.Faction) + "*";
-            LabelForename.Content = lang.GetTranslation(StaticLanguage.Forename);
-            CheckboxFreeticket.Content = lang.GetTranslation(StaticLanguage.WonBye);
-            CheckboxPayed.Content = lang.GetTranslation(StaticLanguage.Paid);
-            CheckboxSquadListGiven.Content = lang.GetTranslation(StaticLanguage.ListGiven);
-            LabelWarning.Content = lang.GetTranslation(StaticLanguage.DuplicateNickname);
-            this.Title = lang.GetTranslation(StaticLanguage.CreateNewPlayer);
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -126,20 +109,6 @@ namespace TXM.GUI.Dialogs
         public string GetTeam()
         {
             return TextBoxTeam.Text;
-        }
-
-        private void IntegerUpDownSquadPoints_ValueChanged(object sender, TextChangedEventArgs e)
-        {
-            try
-            {
-                SquadPoints = Int32.Parse(TextBoxSquadPoints.Text);
-            }
-            catch
-            {
-                SquadPoints = 100;
-            }
-            Changes = true;
-            e.Handled = true;
         }
 
         private void ValueChanged(object sender, TextChangedEventArgs e)
@@ -202,16 +171,12 @@ namespace TXM.GUI.Dialogs
         private void TextBoxNickname_TextChanged(object sender, TextChangedEventArgs e)
         {
             Changes = true;
-            //if(!Nicknames.Contains(TextBoxNickname.Text))
-            //{
-            //    uniqueName = true;
-            //    LabelWarning.Visibility = System.Windows.Visibility.Hidden;
-            //}
-            //else
-            //{
-            //    uniqueName = false;
-            //    LabelWarning.Visibility = System.Windows.Visibility.Visible;
-            //}
+            e.Handled = true;
+        }
+
+        private void IntegerUpDownTableNr_ValueChanged(object sender, TextChangedEventArgs e)
+        {
+            Changes = true;
             e.Handled = true;
         }
     }

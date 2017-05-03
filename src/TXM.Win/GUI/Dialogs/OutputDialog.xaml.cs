@@ -22,13 +22,9 @@ namespace TXM.GUI.Dialogs
     public partial class OutputDialog : Window
     {
         private static double width = 800, height = 600;
-        public OutputDialog(string text, Language lang)
+        public OutputDialog(string text)
         {
             InitializeComponent();
-
-            Title = lang.GetTranslation(StaticLanguage.OutputTitle);
-            ButtonCopy.Content = lang.GetTranslation(StaticLanguage.Copy);
-            ButtonClose.Content = lang.GetTranslation(StaticLanguage.Exit);
 
             this.textblockOutput.Text = text;
             this.Height = height;

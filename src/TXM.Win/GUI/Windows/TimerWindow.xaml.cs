@@ -35,7 +35,7 @@ namespace TXM.GUI.Windows
 
         public event ChangedEventHandler Changed;
 
-        public TimerWindow(IO io, Language lang)
+        public TimerWindow(IO io)
         {
             Io = io;
 
@@ -64,25 +64,7 @@ namespace TXM.GUI.Windows
             else
                 SliderText.Value = 2.0;
             ChangeLabelColor();
-            SetLanguage(lang);
             LabelTime.Content = emptyTime;
-        }
-
-        public void SetLanguage(Language lang)
-        {
-            this.Title = lang.GetTranslation(StaticLanguage.Timer); 
-            ButtonStart.Content = lang.GetTranslation(StaticLanguage.StartTime);
-            ButtonPause.Content = lang.GetTranslation(StaticLanguage.PauseTime);
-            ButtonReset.Content = lang.GetTranslation(StaticLanguage.Reset);
-            ButtonSetImage.Content = lang.GetTranslation(StaticLanguage.SetImage);
-            LabelMinutes.Content = lang.GetTranslation(StaticLanguage.Minutes);
-            LabelBlackText.Content = lang.GetTranslation(StaticLanguage.BlackText);
-            LabelWhiteText.Content = lang.GetTranslation(StaticLanguage.WhiteText);
-            emptyTime = lang.GetTranslation(StaticLanguage.EmptyHour) + ":" + lang.GetTranslation(StaticLanguage.EmptyMinute);
-            pauseText = lang.GetTranslation(StaticLanguage.PauseTime);
-            continueText = lang.GetTranslation(StaticLanguage.ContinueTime);
-            imageText = lang.GetTranslation(StaticLanguage.TheImage);
-            invalidText = lang.GetTranslation(StaticLanguage.IsInvalid);
         }
 
         private void ButtonStart_Click(object sender, RoutedEventArgs e)

@@ -37,7 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Leaderboard-100.ico</ApplicationIcon>
+    <ApplicationIcon>TXM_Logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ReachFramework" />
@@ -66,9 +66,6 @@
     <Compile Include="GUI\Dialogs\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Dialogs\LanguageDialog.xaml.cs">
-      <DependentUpon>LanguageDialog.xaml</DependentUpon>
-    </Compile>
     <Compile Include="GUI\Dialogs\ReportBugDialog.xaml.cs">
       <DependentUpon>ReportBugDialog.xaml</DependentUpon>
     </Compile>
@@ -82,10 +79,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GUI\Dialogs\AutosaveDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\Dialogs\LanguageDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -144,10 +137,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="GUI\Windows\StatisticsWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="GUI\Windows\TimerWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -156,9 +145,6 @@
   <ItemGroup>
     <Compile Include="GUI\Windows\RandomizerWindow.xaml.cs">
       <DependentUpon>RandomizerWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\Windows\StatisticsWindow.xaml.cs">
-      <DependentUpon>StatisticsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="GUI\Windows\TimerWindow.xaml.cs">
       <DependentUpon>TimerWindow.xaml</DependentUpon>
@@ -196,6 +182,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="TXM_Logo.ico" />
     <Resource Include="Leaderboard-100.ico" />
     <Content Include="ThirdPartyLibraries\Xceed.Wpf.Toolkit.dll" />
   </ItemGroup>

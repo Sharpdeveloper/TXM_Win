@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TXM.GUI.Dialogs"
         mc:Ignorable="d"
-        Title="About" Height="208.078" Width="391.086" ResizeMode="NoResize">
+        Title="About" Height="215.151" Width="391.086" ResizeMode="NoResize">
     <Grid>
-        <TextBox x:Name="textBox" TextWrapping="Wrap" Text="© 2014 - 2016 Sharpdeveloper aka TKundNobody&#xD;&#xA;&#xD;&#xA;Special Thanks to following Friends and Tester:&#xD;&#xA;&#xD;&#xA;Barlmoro - Tester, User and reason for at least half of the features.&#xD;&#xA;tgbrain - Teammate and tester&#xD;&#xA;Kyle_Nemesis - Tester&#xD;&#xA;Photon - User who finds every weird error&#xD;&#xA;&#xD;&#xA;© Icons: Icons8 (www.icons8.com)" IsEnabled="False"/>
+        <TextBox x:Name="textBox" TextWrapping="Wrap" Text="© 2014 - 2017 Sharpdeveloper aka TKundNobody&#xD;&#xA;&#xD;&#xA;Special Thanks to following Friends and Tester:&#xD;&#xA;&#xD;&#xA;Barlmoro - Tester, User and reason for at least half of the features.&#xD;&#xA;tgbrain - Teammate and tester&#xD;&#xA;Kyle_Nemesis - Tester&#xD;&#xA;Photon - User who finds every weird error&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;© Icons: Icons8 (www.icons8.com)" IsEnabled="False"/>
 
     </Grid>
 </Window>

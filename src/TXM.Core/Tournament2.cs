@@ -187,7 +187,7 @@ namespace TXM.Core
         public void Sort()
         {
             SetDeafetedValues();
-            List<Player> t = Participants.OrderByDescending(x => x.DropPos).ThenByDescending(x => x.Points).ThenByDescending(x => x.DefeatedAllInGroup).ThenByDescending(x => x.MarginOfVictory).ThenByDescending(x => x.PointsOfEnemies).ThenBy(x => x.Order).ToList<Player>();
+            List<Player> t = Participants.OrderByDescending(x => x.Points).ThenByDescending(x => x.DefeatedAllInGroup).ThenByDescending(x => x.MarginOfVictory).ThenByDescending(x => x.PointsOfEnemies).ThenBy(x => x.Order).ToList<Player>();
             Participants = new List<Player>();
             foreach (Player p in t)
                 Participants.Add(p);
@@ -769,9 +769,9 @@ namespace TXM.Core
             {
                 foreach (Pairing pairing in results)
                 {
-                    if (pairing.Winner == '1')
+                    if (pairing.Winner == "Player 1")
                         winnerID = pairing.Player1.Nr;
-                    else if(pairing.Winner == '2')
+                    else if(pairing.Winner == "Player 2")
                         winnerID = pairing.Player2.Nr;
                     else
                         winnerID = (pairing.Player1Score > pairing.Player2Score) ? pairing.Player1.Nr : pairing.Player2.Nr;
@@ -795,16 +795,16 @@ namespace TXM.Core
                 {
                     if (results[i].ResultEdited)
                     {
-                        if (results[i].Winner == '1')
+                        if (results[i].Winner == "Player 1")
                             winnerID = results[i].Player1.Nr;
-                        else if (results[i].Winner == '2')
+                        else if (results[i].Winner == "Player 2")
                             winnerID = results[i].Player2.Nr;
                         else
                             winnerID = (results[i].Player1Score > results[i].Player2Score) ? results[i].Player1.Nr : results[i].Player2.Nr;
-                        r = new Result(results[i].Player1Score, results[i].Player2Score, results[i].Player2, FirstRound, MaxSquadPoints, winnerID);
-                        results[i].Player1.Update(r, DisplayedRound);
-                        r = new Result(results[i].Player2Score, results[i].Player1Score, results[i].Player1, FirstRound, MaxSquadPoints, winnerID);
-                        results[i].Player2.Update(r, DisplayedRound);
+                        Result r1 = new Result(results[i].Player1Score, results[i].Player2Score, results[i].Player2, FirstRound, MaxSquadPoints, winnerID);
+                        Result r2 = new Result(results[i].Player2Score, results[i].Player1Score, results[i].Player1, FirstRound, MaxSquadPoints, winnerID);
+                        results[i].Player1.Update(r1, DisplayedRound);
+                        results[i].Player2.Update(r2, DisplayedRound);
                     }
                 }
             }
@@ -842,6 +842,16 @@ namespace TXM.Core
             for (int i = 0; i < Participants.Count; i++)
             {
                 if (Participants[i].Equals(player))
+                    return i;
+            }
+            return -1;
+        }
+
+        private int GetIndexOfInRound(Player player, int round)
+        {
+            for (int i = 0; i < Rounds[round].Participants.Count; i++)
+            {
+                if (Rounds[round].Participants[i].Equals(player))
                     return i;
             }
             return -1;

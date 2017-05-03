@@ -24,14 +24,9 @@ namespace TXM.GUI.Windows
     {
         private Random rnd;
 
-        public RandomizerWindow(Language lang)
+        public RandomizerWindow()
         {
             InitializeComponent();
-
-            ButtonClose.Content = lang.GetTranslation(StaticLanguage.Exit);
-            ButtonRandom.Content = lang.GetTranslation(StaticLanguage.ChooseRandomPlayer);
-            LabelInfo.Content = lang.GetTranslation(StaticLanguage.ChoosenPlayer);
-            LabelNumberOfPlayer.Content = lang.GetTranslation(StaticLanguage.CountOfPlayer);
 
             rnd = new Random();
         }

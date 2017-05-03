@@ -19,21 +19,21 @@ namespace TXM.Core
         public Player Player2 { get; set; }
         public int Player1Score { get; set; }
         public int Player2Score { get; set; }
-        public char Winner { get; set; }
+        public string Winner { get; set; }
         public bool ResultEdited { get; set; }
         #endregion
 
         #region Constructor
         public Pairing()
         {
-            Winner = 'A';
+            Winner = "Automatic";
             TableNr = ++tableNr;
             ResultEdited = false;
         }
 
         public Pairing(int tableNr)
         {
-            Winner = 'A';
+            Winner = "Automatic";
             TableNr = tableNr;
             ResultEdited = false;
         }

@@ -35,17 +35,12 @@ namespace TXM.GUI
         private bool started = false, firststart = false;
         private TimerWindow tw;
         private IO io;
-        private Language lang;
 
         public MainWindow()
         {
             InitializeComponent();
 
             io = new IO(new WindowsFile(), new WindowsMessage());
-            lang = io.GetCurrentLanguage();
-            CheckLanguages();
-
-            SetLanguage();
 
             ImageSource s = new BitmapImage(new Uri(io.IconFiles["ChangePairings"]));
             ButtonChangePairing.Content = new System.Windows.Controls.Image() { Source = s, Width=25, Height=25};
@@ -65,86 +60,6 @@ namespace TXM.GUI
             ButtonRemovePlayer.Content = new System.Windows.Controls.Image() { Source = s, Width = 25, Height = 25 };
             s = new BitmapImage(new Uri(io.IconFiles["Reset"]));
             ButtonResetLastResults.Content = new System.Windows.Controls.Image() { Source = s, Width = 25, Height = 25 };
-        }
-
-        private void CheckLanguages()
-        {
-            List<string> languages = io.GetLanguages();
-            foreach (var s in languages)
-            {
-                MenuItemLanguage.Items.Add(new MenuItem() { Header = s });
-                ((MenuItem)MenuItemLanguage.Items[MenuItemLanguage.Items.Count - 1]).Click += ChangeLanguage;
-            }
-        }
-
-        private void ChangeLanguage(object sender, RoutedEventArgs e)
-        {
-            lang = io.LoadLanguage(((MenuItem)sender).Header.ToString(), false);
-
-            SetLanguage();
-        }
-
-        private void SetLanguage()
-        {
-            MenuItemFile.Header = lang.GetTranslation(StaticLanguage.HeaderFile);
-            ButtonNewTournament.Header = lang.GetTranslation(StaticLanguage.NewTournament);
-            ButtonLoad.Header = lang.GetTranslation(StaticLanguage.Load);
-            MenuItemAutosave.Header = lang.GetTranslation(StaticLanguage.AutoSaveFiles);
-            ButtonAutosave.Header = lang.GetTranslation(StaticLanguage.LoadAutoSaveFile);
-            MenuItemShowAutoSaveFolder.Header = lang.GetTranslation(StaticLanguage.ShowAutoSaveFolder);
-            MenuItemDeleteAutosaveFolder.Header = lang.GetTranslation(StaticLanguage.DeleteAutoSaveFolder);
-            MenuItemImportExport.Header = lang.GetTranslation(StaticLanguage.GOEPPImportExport);
-            ButtonGOEPPImport.Header = lang.GetTranslation(StaticLanguage.GOEPPImport);
-            ButtonGOEPPExport.Header = lang.GetTranslation(StaticLanguage.GOEPPExport);
-            MenuItemPrintHeader.Header = lang.GetTranslation(StaticLanguage.Print);
-            MenuItemPrint.Header = lang.GetTranslation(StaticLanguage.PrintTable);
-            MenuItemPrintPairing.Header = lang.GetTranslation(StaticLanguage.PrintPairing);
-            MenuItemPrintResult.Header = lang.GetTranslation(StaticLanguage.PrintResults);
-            MenuItemExit.Header = lang.GetTranslation(StaticLanguage.Exit);
-            MenuItemTournament.Header = lang.GetTranslation(StaticLanguage.HeaderTournament);
-            MenuItemTSettings.Header = lang.GetTranslation(StaticLanguage.EditTournamentSettings);
-            ButtonStart.Header = lang.GetTranslation(StaticLanguage.StartTournament);
-            ButtonEndTournament.Header = lang.GetTranslation(StaticLanguage.EndTournament);
-            MenuItemPlayerManagement.Header = lang.GetTranslation(StaticLanguage.HeaderPlayerManagement);
-            MenuItemnOldPlayer.Header = lang.GetTranslation(StaticLanguage.AddExisitngPlayer);
-            MenuItemLoadStatistics.Header = lang.GetTranslation(StaticLanguage.LoadStatistics);
-            MenuItemView.Header = lang.GetTranslation(StaticLanguage.HeaderView);
-            MenuItemShowPairings.Header = lang.GetTranslation(StaticLanguage.ShowPairings);
-            MenuItemShowTable.Header = lang.GetTranslation(StaticLanguage.ShowTable);
-            MenuItemOutputForForum.Header = lang.GetTranslation(StaticLanguage.OutputForForums);
-            MenuItemTableForOutput.Header = lang.GetTranslation(StaticLanguage.TableOutput);
-            MenuItemPairingForOutput.Header = lang.GetTranslation(StaticLanguage.PairingOutput);
-            MenuItemResultForOutput.Header = lang.GetTranslation(StaticLanguage.ResultOutput);
-            MenuItemTools.Header = lang.GetTranslation(StaticLanguage.HeaderTools);
-            MenuItemHelp.Header = lang.GetTranslation(StaticLanguage.HeaderHelp);
-            MenuItemUserHelp.Header = lang.GetTranslation(StaticLanguage.UserHelp);
-            MenuItemAbout.Header = lang.GetTranslation(StaticLanguage.About);
-            MenuItemTime.Header = lang.GetTranslation(StaticLanguage.HeaderTime);
-            MenuItemTimeStart.Header = lang.GetTranslation(StaticLanguage.StartTime);
-            MenuItemTimePause.Header = lang.GetTranslation(StaticLanguage.PauseTime);
-            MenuItemTimeReset.Header = lang.GetTranslation(StaticLanguage.EndTime);
-            MenuItemLanguage.Header = lang.GetTranslation(StaticLanguage.Language);
-            MenuItemLoadLanguages.Header = lang.GetTranslation(StaticLanguage.LoadLanguages);
-            MenuItemLanguageDefault.Header = StaticLanguage.DefaultLanguage;
-
-            this.Title = lang.GetTranslation(StaticLanguage.Title);
-
-            LabelRounds.Content = lang.GetTranslation(StaticLanguage.Rounds);
-
-            ButtonGetResults.Content = lang.GetTranslation(StaticLanguage.GetResults);
-            ButtonNextRound.Content = lang.GetTranslation(StaticLanguage.NextRound);
-            ButtonCut.Content = lang.GetTranslation(StaticLanguage.StartCut);
-
-            SaveText = lang.GetTranslation(StaticLanguage.Save);
-            NewPlayerText = lang.GetTranslation(StaticLanguage.AddNewPlayer);
-            EditPlayerText = lang.GetTranslation(StaticLanguage.EditPlayer);
-            RemovePlayerText = lang.GetTranslation(StaticLanguage.RemovePlayer);
-            DisqualifyPlayerText = lang.GetTranslation(StaticLanguage.DisqualifyPlayer);
-            ChangePairingText = lang.GetTranslation(StaticLanguage.ChangeSetPairings);
-            RestLastResultsText = lang.GetTranslation(StaticLanguage.ResetLastResults);
-            TimerText = lang.GetTranslation(StaticLanguage.Timer);
-            RandomText = lang.GetTranslation(StaticLanguage.Randomizer);
-            StatisticText = lang.GetTranslation(StaticLanguage.Statistic);
 
             DataGridPlayer.CanUserSortColumns = false;
             DataGridPlayer.SelectionMode = DataGridSelectionMode.Single;
@@ -161,17 +76,17 @@ namespace TXM.GUI
             dgc.IsReadOnly = true;
             DataGridPlayer.Columns.Add(dgc);
             dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.Forename);
+            dgc.Header = "Forename";
             dgc.Binding = new Binding("Forename");
-            dgc.IsReadOnly = true; 
+            dgc.IsReadOnly = true;
             DataGridPlayer.Columns.Add(dgc);
             dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.Nickname);
+            dgc.Header = "Nickname";
             dgc.Binding = new Binding("Nickname");
             dgc.IsReadOnly = true;
             DataGridPlayer.Columns.Add(dgc);
             dgcb = new DataGridCheckBoxColumn();
-            dgcb.Header = "€";
+            dgcb.Header = "$";
             dgcb.Binding = new Binding("Payed");
             dgcb.IsReadOnly = false;
             DataGridPlayer.Columns.Add(dgcb);
@@ -186,172 +101,102 @@ namespace TXM.GUI
             dgcb.IsReadOnly = false;
             DataGridPlayer.Columns.Add(dgcb);
             dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.Team);
+            dgc.Header = "Team";
             dgc.Binding = new Binding("Team");
             dgc.IsReadOnly = true;
             DataGridPlayer.Columns.Add(dgc);
             dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.Faction);
+            dgc.Header = "Faction";
             dgc.Binding = new Binding("PlayersFactionAsString");
             dgc.IsReadOnly = true;
             DataGridPlayer.Columns.Add(dgc);
-            dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.ListPointsShort);
+            /*dgc = new DataGridTextColumn();
+            dgc.Header = "SquadPoints";
             dgc.Binding = new Binding("PointOfSquad");
             dgc.IsReadOnly = true;
-            DataGridPlayer.Columns.Add(dgc);
+            DataGridPlayer.Columns.Add(dgc);*/
             dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.Points);
+            dgc.Header = "TP";
             dgc.Binding = new Binding("Points");
             dgc.IsReadOnly = true;
             DataGridPlayer.Columns.Add(dgc);
             dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.WinsShort);
+            dgc.Header = "W";
             dgc.Binding = new Binding("Wins");
             dgc.IsReadOnly = true;
             DataGridPlayer.Columns.Add(dgc);
             dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.LoosesShort);
+            dgc.Header = "L";
             dgc.Binding = new Binding("Looses");
             dgc.IsReadOnly = true;
             DataGridPlayer.Columns.Add(dgc);
             dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.MarginOfVictoryShort);
+            dgc.Header = "MoV";
             dgc.Binding = new Binding("MarginOfVictory");
             dgc.IsReadOnly = true;
             DataGridPlayer.Columns.Add(dgc);
             dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.StrengthOfSceduleShort);
+            dgc.Header = "SoS";
             dgc.Binding = new Binding("PointsOfEnemies");
             dgc.IsReadOnly = true;
             DataGridPlayer.Columns.Add(dgc);
-    
+
+            initDataGridPairing();
+        }
+
+        private void initDataGridPairing(bool update = false)
+        {
+            List<String> winners = new List<string>();
+            winners.Add("Automatic");
+            winners.Add("Player 1");
+            winners.Add("Player 2");
+            DataGridPairing.Columns.Clear();
+
+            DataGridTextColumn dgc;
+            DataGridCheckBoxColumn dgcb;
+            DataGridComboBoxColumn dgcbc;
+
             dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.TableNr);
+            dgc.Header = "Table";
             dgc.Binding = new Binding("TableNr");
             dgc.IsReadOnly = true;
             DataGridPairing.Columns.Add(dgc);
             dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.Player) + " 1";
+            dgc.Header = "Player 1";
             dgc.Binding = new Binding("Player1Name");
             dgc.IsReadOnly = true;
             DataGridPairing.Columns.Add(dgc);
             dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.Player) + " 2";
+            dgc.Header = "Player 2";
             dgc.Binding = new Binding("Player2Name");
             dgc.IsReadOnly = true;
             DataGridPairing.Columns.Add(dgc);
             dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.Destroyed) + " (" + lang.GetTranslation(StaticLanguage.Player) + " 1)";
+            dgc.Header = "Score (P1)";
             dgc.Binding = new Binding("Player1Score");
             dgc.IsReadOnly = false;
             DataGridPairing.Columns.Add(dgc);
             dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation(StaticLanguage.Destroyed) + " (" + lang.GetTranslation(StaticLanguage.Player) + " 2)";
+            dgc.Header = "Score (P2)";
             dgc.Binding = new Binding("Player2Score");
             dgc.IsReadOnly = false;
             DataGridPairing.Columns.Add(dgc);
-            dgc = new DataGridTextColumn();
-            dgc.Header = lang.GetTranslation("Winner");
-            dgc.Binding = new Binding("Winner");
-            dgc.IsReadOnly = false;
-            DataGridPairing.Columns.Add(dgc);
-            dgcb = new DataGridCheckBoxColumn();
-            dgcb.Header = lang.GetTranslation(StaticLanguage.OK) + "?";
-            Binding b = new Binding("ResultEdited");
-            b.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            dgcb.Binding = b;
-            DataGridPairing.Columns.Add(dgcb);
-        }
-
-        private string SaveText
-        {
-            set
+            dgcbc = new DataGridComboBoxColumn();
+            dgcbc.Header = "Winner";
+            dgcbc.ItemsSource = winners;
+            dgcbc.TextBinding = new Binding("Winner");
+            dgcbc.IsReadOnly = false;
+            DataGridPairing.Columns.Add(dgcbc);
+            if (update)
             {
-                ButtonSave.ToolTip = value;
-                MenuItemSave.Header = value;
+                dgcb = new DataGridCheckBoxColumn();
+                dgcb.Header = "Changed?";
+                Binding b = new Binding("ResultEdited");
+                b.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                dgcb.Binding = b;
+                DataGridPairing.Columns.Add(dgcb);
             }
-        }
 
-        private string NewPlayerText
-        {
-            set
-            {
-                ButtonNewPlayer.ToolTip = value;
-                MenuItemNewPlayer.Header = value;
-            }
-        }
-
-        private string EditPlayerText
-        {
-            set
-            {
-                ButtonEditPlayer.ToolTip = value;
-                MenuItemEditPlayer.Header = value;
-            }
-        }
-
-        private string RemovePlayerText
-        {
-            set
-            {
-                ButtonRemovePlayer.ToolTip = value;
-                MenuItemRemovePlayer.Header = value;
-            }
-        }
-
-        private string DisqualifyPlayerText
-        {
-            set
-            {
-                ButtonDisqualifyPlayer.ToolTip = value;
-                MenuItemDisqualifyPlayer.Header = value;
-            }
-        }
-
-        private string ChangePairingText
-        {
-            set
-            {
-                ButtonChangePairing.ToolTip = value;
-                MenuItemChangePairing.Header = value;
-            }
-        }
-
-        private string RestLastResultsText
-        {
-            set
-            {
-                ButtonResetLastResults.ToolTip = value;
-                MenuItemResetLastResults.Header = value;
-            }
-        }
-
-        private string TimerText
-        {
-            set
-            {
-                ButtonTimer.ToolTip = value;
-                MenuItemTimer.Header = value;
-            }
-        }
-
-        private string RandomText
-        {
-            set
-            {
-                ButtonRandom.ToolTip = value;
-                MenuItemRandom.Header = value;
-            }
-        }
-
-        private string StatisticText
-        {
-            set
-            {
-                //ButtonStatistic.ToolTip = value;
-                MenuItemStatistic.Header = value;
-            }
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
@@ -361,11 +206,11 @@ namespace TXM.GUI
 
         private void NewPlayer_Click(object sender, RoutedEventArgs e)
         {
-            NewPlayerDialog npd = new NewPlayerDialog(activeTournament.Nicknames, lang);
+            NewPlayerDialog npd = new NewPlayerDialog(activeTournament.Nicknames);
             npd.ShowDialog();
             if (npd.DialogReturn)
             {
-                Player xwp = new Player(npd.GetNickName(), npd.SquadPoints, Player.StringToFactionLang(npd.GetFaction(), lang));
+                Player xwp = new Player(npd.GetNickName(), npd.SquadPoints, Player.StringToFaction(npd.GetFaction()));
                 xwp.Team = npd.GetTeam();
                 xwp.Name = npd.GetName();
                 xwp.Forename = npd.GetForename();
@@ -383,10 +228,10 @@ namespace TXM.GUI
         {
             if (activeTournament != null)
             {
-                if (!io.ShowMessageWithOKCancel(lang.GetTranslation(StaticLanguage.Overwrite)))
+                if (!io.ShowMessageWithOKCancel("The current tournament will be overwritten."))
                     return;
             }
-            NewTournamentDialog ntd = new NewTournamentDialog(lang);
+            NewTournamentDialog ntd = new NewTournamentDialog();
             ntd.ShowDialog();
             if (ntd.NewTournament)
             {
@@ -404,7 +249,7 @@ namespace TXM.GUI
 
         private void NewTimer_Click(object sender, RoutedEventArgs e)
         {
-            tw = new TimerWindow(io, lang);
+            tw = new TimerWindow(io);
             tw.Show();
             tw.Changed += tw_Changed;
         }
@@ -416,7 +261,7 @@ namespace TXM.GUI
 
         private void Random_Click(object sender, RoutedEventArgs e)
         {
-            RandomizerWindow rw = new RandomizerWindow(lang);
+            RandomizerWindow rw = new RandomizerWindow();
             rw.Show();
         }
 
@@ -429,7 +274,7 @@ namespace TXM.GUI
             }
             else
             {
-                io.ShowMessage(lang.GetTranslation(StaticLanguage.NoPlayer));
+                io.ShowMessage("Tournament can't be started without player");
             }
         }
 
@@ -479,7 +324,7 @@ namespace TXM.GUI
             ListBoxRounds.Items.Clear();
             if (autosave)
             {
-                AutosaveDialog ad = new AutosaveDialog(io, lang);
+                AutosaveDialog ad = new AutosaveDialog(io);
                 ad.ShowDialog();
                 overwrite = ad.DialogReturn;
                 filename = ad.FileName;
@@ -488,7 +333,7 @@ namespace TXM.GUI
             {
                 if (activeTournament != null)
                 {
-                    if (!io.ShowMessageWithOKCancel(lang.GetTranslation(StaticLanguage.Overwrite)))
+                    if (!io.ShowMessageWithOKCancel("The current tournament will be overwritten."))
                         overwrite = false;
                 }
             }
@@ -513,7 +358,7 @@ namespace TXM.GUI
                     {
                         SetGUIState(false, true);
                     }
-                    ButtonGetResults.Content = lang.GetTranslation(StaticLanguage.GetResults);
+                    ButtonGetResults.Content = "Get Results";
                     ButtonGetResults.IsEnabled = activeTournament.ButtonGetResultState == true;
                     ButtonNextRound.IsEnabled = activeTournament.ButtonNextRoundState == true;
                     ButtonCut.IsEnabled = activeTournament.ButtonCutState == true;
@@ -531,13 +376,6 @@ namespace TXM.GUI
             activeTournament.Io = new IO(new WindowsFile(), new WindowsMessage());
         }
 
-        private void Statistic_Click(object sender, RoutedEventArgs e)
-        {
-            bool english = lang.GetTranslation(StaticLanguage.LanguageName) != "Deutsch";
-            TXM.GUI.Windows.StatisticsWindow mw = new TXM.GUI.Windows.StatisticsWindow(io, lang, english);
-            mw.Show();
-        }
-
         public void AddPlayer(Player player)
         {
             activeTournament.AddPlayer(player);
@@ -549,7 +387,7 @@ namespace TXM.GUI
         {
             firststart = true;
             started = true;
-            io.Save(activeTournament, true, ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled, lang.GetTranslation(StaticLanguage.TournamentStart));
+            io.Save(activeTournament, true, ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled, "TournamentStart");
         }
 
         public void GetSeed(bool cut = false)
@@ -558,7 +396,7 @@ namespace TXM.GUI
             RefreshDataGridPairings(pairings);
             AddRoundButton();
             ChangeGUIState(true);
-            io.Save(activeTournament, true, ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled, lang.GetTranslation(StaticLanguage.Pairings) + "_" + lang.GetTranslation(StaticLanguage.Round) + activeTournament.Rounds.Count);
+            io.Save(activeTournament, true, ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled, "Pairings_Round" + activeTournament.Rounds.Count);
             firststart = false;
         }
 
@@ -570,7 +408,7 @@ namespace TXM.GUI
                     return false;
                 if (p.Player2Score != 0 && p.Player2Score < 12)
                     return false;
-                if (p.Player1Score == p.Player2Score && !(p.Winner == '1' || p.Winner == '2') && !p.Player1.Freeticket && !p.Player2.Freeticket)
+                if (p.Player1Score == p.Player2Score && p.Winner == "Automatic" && !p.Player1.Freeticket && !p.Player2.Freeticket)
                     return false;
             }
             return true;
@@ -582,14 +420,14 @@ namespace TXM.GUI
             if (pairings.Count == 1)
                 end = true;
             bool allResultsEdited = true;
-            foreach (Pairing p in pairings)
+            /*foreach (Pairing p in pairings)
             {
                 if (!p.ResultEdited)
                 {
                     allResultsEdited = false;
                     break;
                 }
-            }
+            }*/
             if (allResultsEdited)
             {
                 if (CheckResults(pairings))
@@ -604,7 +442,7 @@ namespace TXM.GUI
             }
             else
             {
-                io.ShowMessage(lang.GetTranslation(StaticLanguage.MissingResult));
+                io.ShowMessage("There is a result missing.");
                 return;
             }
 
@@ -623,7 +461,7 @@ namespace TXM.GUI
             }
             activeTournament.Sort();
             RefreshDataGridPlayer(activeTournament.Participants);
-            io.Save(activeTournament, true, ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled, lang.GetTranslation(StaticLanguage.Result) + "_" + lang.GetTranslation(StaticLanguage.Round) + activeTournament.Rounds.Count);
+            io.Save(activeTournament, true, ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled, "Result_Round" + activeTournament.Rounds.Count);
         }
 
         private void PariringCurrentCellChanged(object sender, EventArgs e)
@@ -669,25 +507,21 @@ namespace TXM.GUI
         {
             if (DataGridPlayer.SelectedIndex >= 0)
             {
-                Player player = activeTournament.Participants[DataGridPlayer.SelectedIndex];
-                NewPlayerDialog npd = new NewPlayerDialog(activeTournament.Nicknames, lang, player);
-                npd.Title = lang.GetTranslation(StaticLanguage.Player) + " " + player.Nickname + " " + lang.GetTranslation(StaticLanguage.ToChange);
-                npd.ButtonOK.Content = lang.GetTranslation(StaticLanguage.AcceptChanges);
+                Player xwp = activeTournament.Participants[DataGridPlayer.SelectedIndex];
+                NewPlayerDialog npd = new NewPlayerDialog(activeTournament.Nicknames, xwp);
+                npd.Title = "Player " + xwp.Nickname + " change";
+                npd.ButtonOK.Content = "Accept changes.";
                 npd.ShowDialog();
                 if (npd.DialogReturn && npd.Changes)
                 {
-                    Player xwp = new Player(npd.GetNickName(), npd.SquadPoints, Player.StringToFactionLang(npd.GetFaction(), lang));
-                    xwp.GetResults(player);
                     xwp.Team = npd.GetTeam();
                     xwp.Name = npd.GetName();
                     xwp.Forename = npd.GetForename();
-                    xwp.Nr = player.Nr;
                     xwp.WonFreeticket = npd.FreeTicket();
                     xwp.SquadListGiven = npd.SquadListGiven();
                     xwp.Payed = npd.Paid();
                     xwp.TableNr = npd.TableNr;
                     xwp.Present = npd.Present();
-                    activeTournament.ChangePlayer(xwp);
                     RefreshDataGridPlayer(activeTournament.Participants);
                 }
             }
@@ -746,20 +580,20 @@ namespace TXM.GUI
             ListBoxItem newListItem = new ListBoxItem();
             if (actRound == -1)
                 actRound = activeTournament.Rounds.Count;
-            newListItem.Content = lang.GetTranslation(StaticLanguage.Round) + " " + actRound;
+            newListItem.Content = "Round " + actRound;
             newListItem.MouseUp += ButtonRound_Click;
             ListBoxRounds.Items.Add(newListItem);
         }
 
         private void ButtonGetResults_Click(object sender, RoutedEventArgs e)
         {
-            if (ButtonGetResults.Content.ToString() == lang.GetTranslation(StaticLanguage.Update))
+            if (ButtonGetResults.Content.ToString() == "Update")
             {
                 activeTournament.GetResults((List<Pairing>)DataGridPairing.ItemsSource, true);
                 RefreshDataGridPlayer(activeTournament.Participants);
                 io.ShowMessage("Update done!");
                 ButtonGetResults.IsEnabled = activeTournament.ButtonGetResultState;
-                ButtonGetResults.Content = lang.GetTranslation(StaticLanguage.GetResults);
+                ButtonGetResults.Content = "Get Results";
                 ButtonNextRound.IsEnabled = activeTournament.ButtonNextRoundState;
                 ButtonCut.IsEnabled = activeTournament.ButtonCutState;
                 ListBoxRounds.SelectedIndex = ListBoxRounds.Items.Count - 1;
@@ -779,9 +613,10 @@ namespace TXM.GUI
             if (activeTournament.Rounds.Count == round)
             {
                 ButtonGetResults.IsEnabled = activeTournament.ButtonGetResultState;
-                ButtonGetResults.Content = lang.GetTranslation(StaticLanguage.GetResults);
+                ButtonGetResults.Content = "Get Results";
                 ButtonNextRound.IsEnabled = activeTournament.ButtonNextRoundState;
                 ButtonCut.IsEnabled = activeTournament.ButtonCutState;
+                initDataGridPairing();
             }
             else
             {
@@ -789,9 +624,10 @@ namespace TXM.GUI
                 activeTournament.ButtonNextRoundState = ButtonNextRound.IsEnabled;
                 activeTournament.ButtonCutState = ButtonCut.IsEnabled;
                 ButtonGetResults.IsEnabled = true;
-                ButtonGetResults.Content = lang.GetTranslation(StaticLanguage.Update);
+                ButtonGetResults.Content = "Update";
                 ButtonNextRound.IsEnabled = false;
                 ButtonCut.IsEnabled = false;
+                initDataGridPairing(true);
             }
             activeTournament.DisplayedRound = round;
         }
@@ -801,7 +637,7 @@ namespace TXM.GUI
             if (io.AutosavePathExists)
                 Load(true);
             else
-                io.ShowMessage(lang.GetTranslation(StaticLanguage.NoAutoSaveFolder));
+                io.ShowMessage("No Autosavefolder");
         }
 
         private void MenuItemShoAutoSaveFolder_Click(object sender, RoutedEventArgs e)
@@ -818,7 +654,7 @@ namespace TXM.GUI
 
         private void MenuItemTSettings_Click(object sender, RoutedEventArgs e)
         {
-            NewTournamentDialog ntd = new NewTournamentDialog(lang, activeTournament);
+            NewTournamentDialog ntd = new NewTournamentDialog(activeTournament);
             ntd.ShowDialog();
             if (ntd.Changes)
             {
@@ -848,12 +684,12 @@ namespace TXM.GUI
             {
                 if (activeTournament.Rounds.Count == activeTournament.DisplayedRound)
                 {
-                    OutputDialog od = new OutputDialog(IO.TableForForum(activeTournament, activeTournament.Participants), lang);
+                    OutputDialog od = new OutputDialog(IO.TableForForum(activeTournament, activeTournament.Participants));
                     od.Show();
                 }
                 else
                 {
-                    OutputDialog od = new OutputDialog(IO.TableForForum(activeTournament, activeTournament.Rounds[activeTournament.DisplayedRound - 1].Participants), lang);
+                    OutputDialog od = new OutputDialog(IO.TableForForum(activeTournament, activeTournament.Rounds[activeTournament.DisplayedRound - 1].Participants));
                     od.Show();
                 }
             }
@@ -865,12 +701,12 @@ namespace TXM.GUI
             {
                 if (activeTournament.Rounds.Count == activeTournament.DisplayedRound)
                 {
-                    OutputDialog od = new OutputDialog(IO.PairingForForum(activeTournament, activeTournament.Pairings), lang);
+                    OutputDialog od = new OutputDialog(IO.PairingForForum(activeTournament, activeTournament.Pairings));
                     od.Show();
                 }
                 else
                 {
-                    OutputDialog od = new OutputDialog(IO.PairingForForum(activeTournament, activeTournament.Rounds[activeTournament.DisplayedRound - 1].Pairings), lang);
+                    OutputDialog od = new OutputDialog(IO.PairingForForum(activeTournament, activeTournament.Rounds[activeTournament.DisplayedRound - 1].Pairings));
                     od.Show();
                 }
             }
@@ -882,7 +718,7 @@ namespace TXM.GUI
             {
                 if (activeTournament.Rounds.Count - 2 >= 0)
                 {
-                    OutputDialog od = new OutputDialog(IO.PairingForForum(activeTournament, activeTournament.Rounds[activeTournament.Rounds.Count - 2].Pairings), lang);
+                    OutputDialog od = new OutputDialog(IO.PairingForForum(activeTournament, activeTournament.Rounds[activeTournament.Rounds.Count - 2].Pairings));
                     od.Show();
                 }
             }
@@ -893,7 +729,7 @@ namespace TXM.GUI
             if (DataGridPlayer.SelectedIndex >= 0)
             {
                 Player player = ((List<Player>)DataGridPlayer.ItemsSource)[DataGridPlayer.SelectedIndex];
-                if (io.ShowMessageWithOKCancel(lang.GetTranslation(StaticLanguage.DoYouWant) + " " + player.DisplayName + " " + lang.GetTranslation(StaticLanguage.ToRemove) + "?"))
+                if (io.ShowMessageWithOKCancel("Do you really want to remove " + player.DisplayName + "?"))
                 {
                     activeTournament.RemovePlayer(player);
                 }
@@ -906,7 +742,7 @@ namespace TXM.GUI
             if (DataGridPlayer.SelectedIndex >= 0)
             {
                 Player player = ((List<Player>)DataGridPlayer.ItemsSource)[DataGridPlayer.SelectedIndex];
-                if (io.ShowMessageWithOKCancel(lang.GetTranslation(StaticLanguage.ThePlayer) + " " + player.DisplayName + " " + lang.GetTranslation(StaticLanguage.Dropped) + ". " + lang.GetTranslation(StaticLanguage.NoUndo) + "."))
+                if (io.ShowMessageWithOKCancel("The player " + player.DisplayName + " will be dropped. " + "This can't be undone."))
                 {
                     activeTournament.DropPlayer(player);
                     activeTournament.Sort();
@@ -917,13 +753,13 @@ namespace TXM.GUI
 
         private void ButtonChangePairing_Click(object sender, RoutedEventArgs e)
         {
-            SetPairingDialog spd = new SetPairingDialog(activeTournament.Participants, activeTournament.Pairings, lang);
+            SetPairingDialog spd = new SetPairingDialog(activeTournament.Participants, activeTournament.Pairings);
             spd.ShowDialog();
             if (spd.OK)
             {
                 activeTournament.Pairings = spd.PremadePairing;
                 RefreshDataGridPairings(activeTournament.Pairings);
-                io.Save(activeTournament, true, ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled, lang.GetTranslation(StaticLanguage.ChangeSetPairings));
+                io.Save(activeTournament, true, ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled, "ChangePairings");
             }
         }
 
@@ -943,7 +779,6 @@ namespace TXM.GUI
             if (start)
             {
                 NewPlayerIsEnabled = true;
-                MenuItemLoadStatistics.IsEnabled = true;
                 MenuItemTSettings.IsEnabled = activeTournament != null;
                 ButtonStart.IsEnabled = activeTournament != null;
                 ButtonNewTournament.IsEnabled = true;
@@ -955,7 +790,7 @@ namespace TXM.GUI
                 ResetLastResultsIsEnabled = false;
                 ButtonNextRound.IsEnabled = false;
                 ButtonGetResults.IsEnabled = false;
-                ButtonGetResults.Content = lang.GetTranslation(StaticLanguage.GetResults);
+                ButtonGetResults.Content = "Get Results";
                 DisqualifyPlayerIsEnabled = false;
             }
             if (tournamentStart)
@@ -964,7 +799,6 @@ namespace TXM.GUI
                     NewPlayerIsEnabled = false;
                 else
                     NewPlayerIsEnabled = true;
-                MenuItemLoadStatistics.IsEnabled = false;
                 MenuItemTSettings.IsEnabled = true;
                 ButtonStart.IsEnabled = false;
                 ButtonGOEPPExport.IsEnabled = true;
@@ -976,7 +810,7 @@ namespace TXM.GUI
                 ResetLastResultsIsEnabled = true;
                 ButtonNextRound.IsEnabled = true;
                 DisqualifyPlayerIsEnabled = true;
-                ButtonGetResults.Content = lang.GetTranslation(StaticLanguage.GetResults);
+                ButtonGetResults.Content = "Get Results";
             }
         }
 
@@ -1120,25 +954,12 @@ namespace TXM.GUI
             }
         }
 
-        public bool StatisticIsEnabled
-        {
-            get
-            {
-                return MenuItemStatistic.IsEnabled;
-            }
-            set
-            {
-                //ButtonStatistic.IsEnabled = value;
-                MenuItemStatistic.IsEnabled = value;
-            }
-        }
-
         private void DisqualifyPlayer_Click(object sender, RoutedEventArgs e)
         {
             if (DataGridPlayer.SelectedIndex >= 0)
             {
                 Player player = ((List<Player>)DataGridPlayer.ItemsSource)[DataGridPlayer.SelectedIndex];
-                if (io.ShowMessageWithOKCancel(lang.GetTranslation(StaticLanguage.ThePlayer) + " " + player.DisplayName + " " + lang.GetTranslation(StaticLanguage.GetsDisqualified) + ". " + lang.GetTranslation(StaticLanguage.NoUndo) + "." ))
+                if (io.ShowMessageWithOKCancel("The player " + player.DisplayName + " will be disqualified. This can't be undone." ))
                 {
                     activeTournament.DisqualifyPlayer(player);
                     activeTournament.Sort();
@@ -1151,7 +972,7 @@ namespace TXM.GUI
         {
             if (activeTournament != null)
             {
-                BeamerWindow bw = new Windows.BeamerWindow(DataGridPairing.ItemsSource, lang.GetTranslation(StaticLanguage.Pairings), false, lang);
+                BeamerWindow bw = new Windows.BeamerWindow(DataGridPairing.ItemsSource, "Pairings", false);
                 bw.Show();
             }
         }
@@ -1160,7 +981,7 @@ namespace TXM.GUI
         {
             if (activeTournament != null)
             {
-                BeamerWindow bw = new Windows.BeamerWindow(DataGridPlayer.ItemsSource, lang.GetTranslation(StaticLanguage.Table), true, lang);
+                BeamerWindow bw = new Windows.BeamerWindow(DataGridPlayer.ItemsSource, "Table", true);
                 bw.Show();
             }
         }
@@ -1177,7 +998,7 @@ namespace TXM.GUI
         {
             if (tw == null)
             {
-                io.ShowMessage(lang.GetTranslation(StaticLanguage.TimerMustBeStarted));
+                io.ShowMessage("Timer must be started first.");
             }
             else
                 tw.StartTimer();
@@ -1187,15 +1008,15 @@ namespace TXM.GUI
         {
             if (tw == null)
             {
-                io.ShowMessage(lang.GetTranslation(StaticLanguage.TimerMustBeStarted));
+                io.ShowMessage("Timer must be started first.");
             }
             else
             {
                 tw.PauseTimer();
                 if (tw.Started)
-                    MenuItemTimePause.Header = lang.GetTranslation(StaticLanguage.PauseTime);
+                    MenuItemTimePause.Header = "Pause";
                 else
-                    MenuItemTimePause.Header = lang.GetTranslation(StaticLanguage.ResumeTime);
+                    MenuItemTimePause.Header = "Resume";
             }
         }
 
@@ -1203,7 +1024,7 @@ namespace TXM.GUI
         {
             if (tw == null)
             {
-                io.ShowMessage(lang.GetTranslation(StaticLanguage.TimerMustBeStarted));
+                io.ShowMessage("Timer must be started first.");
             }
             else
                 tw.ResetTimer();
@@ -1220,23 +1041,6 @@ namespace TXM.GUI
             {
                 io.Print(activeTournament, false);
             }
-        }
-
-        private void MenuItemLoadLanguages_Click(object sender, RoutedEventArgs e)
-        {
-            LanguageDialog ld = new LanguageDialog(io);
-            ld.ShowDialog();
-            if(ld.DialogResult == true)
-            {
-                lang = io.LoadLanguage(ld.LanguageName, true);
-                SetLanguage();
-            }
-        }
-
-        private void MenuItemLanguageDefault_Click(object sender, RoutedEventArgs e)
-        {
-            lang = io.ResetLanguage();
-            SetLanguage();
         }
 
         private void RefreshPlayerList(object sender, RoutedEventArgs e)

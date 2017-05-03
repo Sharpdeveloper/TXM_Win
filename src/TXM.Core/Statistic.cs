@@ -341,7 +341,7 @@ namespace TXM.Core
             if (factionAdd)
                 UpdateFpoints(p.PilotsFaction, add);
             int f = -1;
-            if (p.PilotsFaction == Faction.Imperium)
+            if (p.PilotsFaction == Faction.Imperial)
                 f = 0;
             else if (p.PilotsFaction == Faction.Rebels)
                 f = 1;

@@ -28,23 +28,15 @@ namespace TXM.GUI.Dialogs
         private string Nick1;
         private string Nick2;
         public bool OK = false;
-        private Language lang;
         private List<int> unusedTables;
 
-        public SetPairingDialog(List<Player> players, List<Pairing> prePaired, Language _lang)
+        public SetPairingDialog(List<Player> players, List<Pairing> prePaired)
         {
             InitializeComponent();
 
             unusedTables = new List<int>();
 
-            lang = _lang;
-
             Players = players;
-
-            ButtonCancel.Content = lang.GetTranslation(StaticLanguage.Cancel);
-            ButtonOK.Content = lang.GetTranslation(StaticLanguage.OK);
-            LabelPairings.Content = lang.GetTranslation(StaticLanguage.Pairings);
-            Title = lang.GetTranslation(StaticLanguage.ChangeSetPairings);
 
             PlayerWithoutPairing = new List<Player>();
 
@@ -56,7 +48,7 @@ namespace TXM.GUI.Dialogs
             {
                 foreach (Pairing p in PremadePairing)
                 {
-                    ListboxPairings.Items.Add(p.Player1.DisplayName + " "+ lang.GetTranslation(StaticLanguage.VS) + " " + p.Player2.DisplayName);
+                    ListboxPairings.Items.Add(p.Player1.DisplayName + " VS " + p.Player2.DisplayName);
                     players[players.IndexOf(p.Player1)].Paired = true;
                     try {
                         players[players.IndexOf(p.Player2)].Paired = true;
@@ -73,7 +65,7 @@ namespace TXM.GUI.Dialogs
             }
 
             SetComboboxPlayer1();
-            ComboboxPlayer2.Items.Add(lang.GetTranslation(StaticLanguage.Player) + "  2");
+            ComboboxPlayer2.Items.Add("Player  2");
             ComboboxPlayer2.SelectedIndex = 0;
             ButtonAdd.IsEnabled = false;
         }
@@ -105,16 +97,16 @@ namespace TXM.GUI.Dialogs
                     PlayerWithoutPairing.Remove(player);
                     i--;
                 }
-                if (p.Player1 != null && (p.Player2 != null || Nick2 == lang.GetTranslation(StaticLanguage.Bye)))
+                if (p.Player1 != null && (p.Player2 != null || Nick2 == "Bye"))
                     break;
             }
-            if (Nick2 == lang.GetTranslation(StaticLanguage.Bye))
+            if (Nick2 == "Bye")
             {
                 p.Player1.Freeticket = true;
-                p.Player2 = new Player(lang.GetTranslation(StaticLanguage.Bye));
+                p.Player2 = new Player("Bye");
             }
             PremadePairing.Add(p);
-            ListboxPairings.Items.Add(Nick1 + " " + lang.GetTranslation(StaticLanguage.VS) + " " + Nick2);    
+            ListboxPairings.Items.Add(Nick1 + " VS " + Nick2);    
             SetComboboxPlayer1();
             ComboboxPlayer2.IsEnabled = false;
             ComboboxPlayer2.SelectedIndex = 0;
@@ -124,9 +116,6 @@ namespace TXM.GUI.Dialogs
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
         {
             OK = true;
-            //Pairing.ResetTableNr();
-            //foreach (var p in PremadePairing)
-            //    p.GetTableNr();
             PremadePairing = PremadePairing.OrderBy(x => x.TableNr).ToList<Pairing>();
             this.Close();
         }
@@ -139,7 +128,7 @@ namespace TXM.GUI.Dialogs
         private void Player1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string value = (string)ComboboxPlayer1.SelectedValue;
-            if (value != lang.GetTranslation(StaticLanguage.Player) + " 1" && value != null)
+            if (value != "Player 1" && value != null)
             {
                 Nick1 = value;
                 ComboboxPlayer2.IsEnabled = true;
@@ -155,7 +144,7 @@ namespace TXM.GUI.Dialogs
         private void Player2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string value = (string)ComboboxPlayer2.SelectedValue;
-            if (value != lang.GetTranslation(StaticLanguage.Player) + " 2" && value != null)
+            if (value != "Player 2" && value != null)
             {
                 Nick2 = value;
                 ButtonAdd.IsEnabled = true;
@@ -170,7 +159,7 @@ namespace TXM.GUI.Dialogs
         private void SetComboboxPlayer1()
         {
             ComboboxPlayer1.Items.Clear();
-            ComboboxPlayer1.Items.Add(lang.GetTranslation(StaticLanguage.Player) + " 1");
+            ComboboxPlayer1.Items.Add("Player 1");
             tempList = new List<string>();
             foreach (Player player in PlayerWithoutPairing)
                 tempList.Add(player.DisplayName);
@@ -183,8 +172,8 @@ namespace TXM.GUI.Dialogs
         private void SetComboboxPlayer2()
         {
             ComboboxPlayer2.Items.Clear();
-            ComboboxPlayer2.Items.Add(lang.GetTranslation(StaticLanguage.Player) + " 2");
-            ComboboxPlayer2.Items.Add(lang.GetTranslation(StaticLanguage.Bye));
+            ComboboxPlayer2.Items.Add("Player 2");
+            ComboboxPlayer2.Items.Add("Bye");
             tempList = new List<string>();
             foreach (Player player in PlayerWithoutPairing)
             {
@@ -200,15 +189,15 @@ namespace TXM.GUI.Dialogs
         private void ButtonSub_Click(object sender, RoutedEventArgs e)
         {
             int at = ListboxPairings.SelectedIndex;
-            if(PremadePairing[at].Player1.Nickname != lang.GetTranslation(StaticLanguage.Bye))
+            if(PremadePairing[at].Player1.Nickname != "Bye")
                 PlayerWithoutPairing.Add(PremadePairing[at].Player1);
-            if (PremadePairing[at].Player2.Nickname != lang.GetTranslation(StaticLanguage.Bye))
+            if (PremadePairing[at].Player2.Nickname != "Bye")
                 PlayerWithoutPairing.Add(PremadePairing[at].Player2);
             unusedTables.Add(PremadePairing[at].TableNr);
             PremadePairing.RemoveAt(at);
             ListboxPairings.Items.RemoveAt(at);
             string value = (string)ComboboxPlayer1.SelectedValue;
-            if (value == lang.GetTranslation(StaticLanguage.Player) + " 1")
+            if (value == "Player 1")
             {
                 SetComboboxPlayer1();
             }
@@ -217,7 +206,7 @@ namespace TXM.GUI.Dialogs
                 SetComboboxPlayer1();
                 ComboboxPlayer1.SelectedValue = value;
                 value = (string)ComboboxPlayer2.SelectedValue;
-                if (value == lang.GetTranslation(StaticLanguage.Player) + " 2")
+                if (value == "Player 2")
                 {
                     SetComboboxPlayer2();
                 }

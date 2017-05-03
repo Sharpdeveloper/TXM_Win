@@ -25,30 +25,18 @@ namespace TXM.GUI.Dialogs
         public bool Changes { get; private set; }
         private List<string> tournamentTypesXwing;
 
-        public NewTournamentDialog(Language lang, Tournament2 tournament = null)
+        public NewTournamentDialog(Tournament2 tournament = null)
         {
             InitializeComponent();
 
             tournamentTypesXwing = new List<string>();
-            tournamentTypesXwing.Add(lang.GetTranslation(StaticLanguage.SWISS));
+            tournamentTypesXwing.Add("SWISS");
 
             foreach (string s in tournamentTypesXwing)
                 ComboBoxTournamentType.Items.Add(s);
 
             ComboBoxTournamentType.SelectedIndex = 0;
             Changes = false;
-
-            LabelTournamentForm.Content = "1. " + lang.GetTranslation(StaticLanguage.ChooseTournamentType);
-            LabelCut.Content = "2. " +  lang.GetTranslation(StaticLanguage.CutOrNoCut);
-            LabelTournamentName.Content = "3. " + lang.GetTranslation(StaticLanguage.TournamentName);
-            LabelListsize.Content = "4. " + lang.GetTranslation(StaticLanguage.MaximalListPoints);
-            ButtonOK.Content = lang.GetTranslation(StaticLanguage.CreateTournament);
-            Title = lang.GetTranslation(StaticLanguage.CreateTournament);
-            RadioButtonTop4.Content = lang.GetTranslation(StaticLanguage.TOP4);
-            RadioButtonTop8.Content = lang.GetTranslation(StaticLanguage.TOP8);
-            RadioButtonTop16.Content = lang.GetTranslation(StaticLanguage.TOP16);
-            RadioButtonNoCut.Content = lang.GetTranslation(StaticLanguage.NoCut);
-            ButtonCancel.Content = lang.GetTranslation(StaticLanguage.Cancel);
 
             if(tournament != null)
             {
@@ -64,8 +52,6 @@ namespace TXM.GUI.Dialogs
                 radioButtonTPYes.IsChecked = tournament.TeamProtection;
                 radioButtonTPNo.IsChecked = !tournament.TeamProtection;
                 TextBoxMaxSquad.Text = tournament.MaxSquadPoints.ToString();
-                ButtonOK.Content = lang.GetTranslation(StaticLanguage.Save);
-                Title = lang.GetTranslation(StaticLanguage.ChangeTournament);
             }
         }
 
@@ -73,12 +59,12 @@ namespace TXM.GUI.Dialogs
         {
             if (ComboBoxTournamentType.SelectedValue == null)
             {
-                System.Windows.MessageBox.Show("Der Turniermodus muss ausgewählt werden.", "Hinweis");
+                System.Windows.MessageBox.Show("The tournamenttype must be choosen.", "Warning");
                 return;
             }
             if (TextboxName.Text == "")
             {
-                System.Windows.MessageBox.Show("Der Turniername muss ausgewählt werden.", "Hinweis");
+                System.Windows.MessageBox.Show("You have to choose a tournamentname.", "Warning");
                 return;
             }
             NewTournament = true;

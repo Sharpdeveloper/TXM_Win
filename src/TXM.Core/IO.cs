@@ -38,11 +38,7 @@ namespace TXM.Core
         private string cards;
         private string translations;
         private Statistic stats;
-        public Language Lang
-        {
-            get { return lang; }
-        }
-        private Language lang;
+
 
         public IO(IFile filemanager, IMessage messagemanager)
         {
@@ -56,7 +52,6 @@ namespace TXM.Core
             LanguagePath = Path.Combine(SavePath, "Language");
             BinLanguagePath = Path.Combine(LanguagePath, "Bin");
             langseturl = Path.Combine(SavePath, "language.txt");
-            lang = new Language();
             languageList = Path.Combine(TempPath, "LanguageList.txt");
             iconPath = Path.Combine(SavePath, "Icons");
             IconFiles = new Dictionary<string, string>();
@@ -67,21 +62,8 @@ namespace TXM.Core
             }
             else
                 SaveIcons(false);
-            if (File.Exists(langseturl))
-            {
-                string setFile = "";
-                using (StreamReader sr = new StreamReader(langseturl))
-                {
-                    setFile = sr.ReadLine();
-                }
-                lang = LoadLanguage(setFile, false, false);
-            }
         }
 
-        public Language GetCurrentLanguage()
-        {
-            return lang;
-        }
 
         public Tournament2 GOEPPImport()
         {
@@ -134,7 +116,7 @@ namespace TXM.Core
             string[] splitedLine = SplitLine(line);
             string faction = splitedLine[4];
             if (faction == "Imperium")
-                faction = "Imperium";
+                faction = "Imperial";
             else if (faction == "Abschaum und Kriminelle")
                 faction = "Scum and Villainy";
             else
@@ -228,77 +210,6 @@ namespace TXM.Core
                     {
                         l.Add(s.Substring(s.LastIndexOf(Path.DirectorySeparatorChar) + 1, s.Length - s.LastIndexOf('.') + 2));
                     }
-                }
-            }
-            return l;
-        }
-
-        public Language LoadLanguage(string name, bool download, bool writeLang = true)
-        {
-            string fileBin = Path.Combine(BinLanguagePath, name + ".binlang");
-            string file = Path.Combine(LanguagePath, name + ".lang");
-            Language l = new Language();
-            IFormatter formatter = new BinaryFormatter();
-            if (download)
-            {
-                if (!Directory.Exists(LanguagePath))
-                    Directory.CreateDirectory(LanguagePath);
-                string webfile = languageURL + name + ".lang";
-                WebClient wc = new WebClient();
-                wc.DownloadFile(webfile, file);
-                if (File.Exists(fileBin))
-                    File.Delete(fileBin);
-            }
-
-            if (File.Exists(fileBin))
-            {
-                using (Stream stream = new FileStream(fileBin, FileMode.Open, FileAccess.Read, FileShare.Read))
-                {
-                    l = (Language)formatter.Deserialize(stream);
-                }
-            }
-            else
-            {
-                List<string> langFile = new List<string>();
-                using (StreamReader sr = new StreamReader(file))
-                {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        langFile.Add(line);
-                    }
-                }
-                l.SetTranslations(langFile);
-                if (!Directory.Exists(BinLanguagePath))
-                    Directory.CreateDirectory(BinLanguagePath);
-                using (Stream stream = new FileStream(fileBin, FileMode.Create, FileAccess.Write, FileShare.None))
-                {
-                    formatter.Serialize(stream, l);
-                }
-                if(writeLang)
-                {
-                    using (StreamWriter f = new StreamWriter(langseturl))
-                    {
-                        f.WriteLine(name);
-                    }
-                }
-            }
-            lang = l;
-            return l;
-        }
-
-        public List<string> GetWebLanguages()
-        {
-            List<string> l = new List<string>();
-            SetTempPath();
-            WebClient wc = new WebClient();
-            wc.DownloadFile(Settings.LANGUAGELIST, languageList);
-            using (StreamReader sr = new StreamReader(languageList))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    l.Add(line);
                 }
             }
             return l;
@@ -554,7 +465,7 @@ namespace TXM.Core
                 }
                 catch (Exception e)
                 {
-                    messageManager.Show(lang.GetTranslation(StaticLanguage.ChooseValidFile));
+                    messageManager.Show("Choose a valid file.");
                     return null;
                 }
             return null;
@@ -912,7 +823,7 @@ namespace TXM.Core
                 if (f == "Rebel Alliance")
                     factions.Add(Faction.Rebels);
                 else if (f == "Galactic Empire")
-                    factions.Add(Faction.Imperium);
+                    factions.Add(Faction.Imperial);
                 else
                     factions.Add(Faction.Scum);
                 start = data.IndexOf("\"", end + 1) + 1;
@@ -1452,14 +1363,6 @@ namespace TXM.Core
             }
 
             Process.Start("file://" + PrintFile);
-        }
-
-        public Language ResetLanguage()
-        {
-            lang = new Language();
-            if (File.Exists(langseturl))
-                File.Delete(langseturl);
-            return lang;
         }
 
         private List<Title> GetTitles(string data)
