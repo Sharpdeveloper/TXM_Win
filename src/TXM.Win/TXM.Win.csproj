@@ -39,6 +39,24 @@
   <PropertyGroup>
     <ApplicationIcon>TXM_Logo.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ReachFramework" />
     <Reference Include="System" />
@@ -69,9 +87,10 @@
     <Compile Include="GUI\Dialogs\ReportBugDialog.xaml.cs">
       <DependentUpon>ReportBugDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GUI\Windows\BeamerWindow.xaml.cs">
-      <DependentUpon>BeamerWindow.xaml</DependentUpon>
+    <Compile Include="GUI\Windows\ProjectorWindow.xaml.cs">
+      <DependentUpon>ProjectorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WindowsClipboard.cs" />
     <Compile Include="WindowsFile.cs" />
     <Compile Include="WindowsMessage.cs" />
     <Page Include="GUI\Dialogs\AboutDialog.xaml">
@@ -129,13 +148,9 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="GUI\Windows\BeamerWindow.xaml">
+    <Page Include="GUI\Windows\ProjectorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\Windows\RandomizerWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="GUI\Windows\TimerWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -143,9 +158,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GUI\Windows\RandomizerWindow.xaml.cs">
-      <DependentUpon>RandomizerWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="GUI\Windows\TimerWindow.xaml.cs">
       <DependentUpon>TimerWindow.xaml</DependentUpon>
     </Compile>
@@ -183,8 +195,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="TXM_Logo.ico" />
-    <Resource Include="Leaderboard-100.ico" />
-    <Content Include="ThirdPartyLibraries\Xceed.Wpf.Toolkit.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

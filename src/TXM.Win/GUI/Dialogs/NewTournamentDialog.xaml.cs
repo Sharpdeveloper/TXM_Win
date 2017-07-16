@@ -19,76 +19,124 @@ namespace TXM.GUI.Dialogs
     /// <summary>
     /// Interaktionslogik für NewTournamentDilaog.xaml
     /// </summary>
-    public partial class NewTournamentDialog : Window
+    public partial class NewTournamentDialog : Window, ITournamentDialog
     {
-        public bool NewTournament { get; private set; }
-        public bool Changes { get; private set; }
-        private List<string> tournamentTypesXwing;
+        public bool dialogResult = false;
+        public bool changes = false;
+        private List<string> tournamentTypes;
+        private IO io;
 
-        public NewTournamentDialog(Tournament2 tournament = null)
+        public NewTournamentDialog()
         {
             InitializeComponent();
 
-            tournamentTypesXwing = new List<string>();
-            tournamentTypesXwing.Add("SWISS");
-
-            foreach (string s in tournamentTypesXwing)
+            tournamentTypes = new List<string>
+            {
+                "SWISS"
+            };
+            foreach (string s in tournamentTypes)
                 ComboBoxTournamentType.Items.Add(s);
 
-            ComboBoxTournamentType.SelectedIndex = 0;
-            Changes = false;
+            foreach (string s in AbstractRules.GetAllRuleNames())
+                ComboBoxGameSystem.Items.Add(s);
 
-            if(tournament != null)
+            ComboBoxTournamentType.SelectedIndex = 0;
+            changes = false;
+        }
+
+        public void SetTournament(Tournament tournament)
+        {
+            bool t3 = tournament == null ? false : tournament.T3ID != 0;
+
+            ComboBoxGameSystem.Items.Clear();
+
+            foreach (string s in AbstractRules.GetAllRuleNames(t3))
+                ComboBoxGameSystem.Items.Add(s);
+
+            TextboxName.Text = tournament.Name;
+            if (tournament.Cut == TournamentCut.Top4)
+                RadioButtonTop4.IsChecked = true;
+            else if (tournament.Cut == TournamentCut.Top8)
+                RadioButtonTop8.IsChecked = true;
+            else if (tournament.Cut == TournamentCut.Top16)
+                RadioButtonTop16.IsChecked = true;
+            else
+                RadioButtonNoCut.IsChecked = true;
+            radioButtonTPYes.IsChecked = tournament.TeamProtection;
+            radioButtonTPNo.IsChecked = !tournament.TeamProtection;
+            TextBoxMaxSquad.Text = tournament.MaxPoints.ToString();
+            if (tournament.Rule != null)
             {
-                TextboxName.Text = tournament.Name;
-                if (tournament.Cut == TournamentCut.Top4)
-                    RadioButtonTop4.IsChecked = true;
-                else if (tournament.Cut == TournamentCut.Top8)
-                    RadioButtonTop8.IsChecked = true;
-                else if (tournament.Cut == TournamentCut.Top16)
-                    RadioButtonTop16.IsChecked = true;
-                else
-                    RadioButtonNoCut.IsChecked = true;
-                radioButtonTPYes.IsChecked = tournament.TeamProtection;
-                radioButtonTPNo.IsChecked = !tournament.TeamProtection;
-                TextBoxMaxSquad.Text = tournament.MaxSquadPoints.ToString();
+                ComboBoxGameSystem.SelectedValue = tournament.Rule.GetName();
             }
+        }
+
+        public void SetGameSystemIsChangeable(bool isGametypeChangeable)
+        {
+            ComboBoxGameSystem.IsEnabled = isGametypeChangeable;
         }
 
         private void NewTournament_Click(object sender, RoutedEventArgs e)
         {
             if (ComboBoxTournamentType.SelectedValue == null)
             {
-                System.Windows.MessageBox.Show("The tournamenttype must be choosen.", "Warning");
+                io.ShowMessage("The tournamenttype must be choosen.");
                 return;
             }
             if (TextboxName.Text == "")
             {
-                System.Windows.MessageBox.Show("You have to choose a tournamentname.", "Warning");
+                io.ShowMessage("You have to choose a tournamentname.");
                 return;
             }
-            NewTournament = true;
+            if (ComboBoxGameSystem.SelectedValue == null)
+            {
+                io.ShowMessage("You didn't choose a gamesystem.");
+                return;
+            }
+            dialogResult = true;
             this.Close();
+        }
+
+        public Tournament GetTournament()
+        {
+            Tournament tournament = new Tournament(TextboxName.Text, GetMaxSquadSize(), GetCut(), GetRule())
+            {
+                TeamProtection = radioButtonTPYes.IsChecked == true,
+                Single = radioButtonTypeSingle.IsChecked == true,
+                PrintDDGER = PrintDDGER(),
+                PrintDDENG = PrintDDENG()
+            };
+            return tournament;
+        }
+
+        public bool IsChanged()
+        {
+            return changes;
+        }
+
+        public bool GetDialogResult()
+        {
+            return dialogResult;
+        }
+
+        public void SetIO (IO _io)
+        {
+            io = _io;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            NewTournament = false;
-            Changes = false;
+            dialogResult = false;
+            changes = false;
             this.Close();
         }
 
-        public string GetTournamentMode()
+        private string GetTournamentMode()
         {
             return ComboBoxTournamentType.SelectedValue.ToString();
         }
 
-        public string GetName()
-        {
-            return TextboxName.Text;
-        }
-
-        public int GetMaxSquadSize()
+        private int GetMaxSquadSize()
         {
             int t;
             try
@@ -97,12 +145,12 @@ namespace TXM.GUI.Dialogs
             }
             catch
             {
-                t = 100;
+                t = GetRule().DefaultMaxPoints;
             }
             return t;
         }
 
-        public TournamentCut GetCut()
+        private TournamentCut GetCut()
         {
             if (RadioButtonTop4.IsChecked == true)
                 return TournamentCut.Top4;
@@ -114,48 +162,74 @@ namespace TXM.GUI.Dialogs
                 return TournamentCut.NoCut;
         }
 
-        public bool TeamProtection()
+        private bool PrintDDGER()
         {
-            return radioButtonTPYes.IsChecked == true;
+            return false;
+            //return radioButtonPDD_GER.IsChecked == true;
         }
 
-        public bool PrintDDGER()
+        private bool PrintDDENG()
         {
-            return radioButtonPDD_GER.IsChecked == true;
+            return false;
+            //return radioButtonPDD_ENG.IsChecked == true;
         }
 
-        public bool PrintDDENG()
+        private AbstractRules GetRule()
         {
-            return radioButtonPDD_ENG.IsChecked == true;
-        }
-
-        public bool TournamentTypeSingle()
-        {
-            return radioButtonTypeSingle.IsChecked == true;
+            if (ComboBoxGameSystem.SelectedValue == null)
+                return AbstractRules.GetRule(XWingRules.GetRuleName());
+            return AbstractRules.GetRule(ComboBoxGameSystem.SelectedValue.ToString());
         }
 
         private void ComboBoxTournamentType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Changes = true;
+            changes = true;
+            if (ComboBoxGameSystem.SelectedValue == null)
+                return;
+            AbstractRules r = GetRule();
+            if (r.IsDoubleElimination)
+            {
+                RadioButtonNoCut.IsEnabled = false;
+                RadioButtonNoCut.IsChecked = true;
+                RadioButtonTop4.IsEnabled = false;
+                RadioButtonTop4.IsChecked = false;
+                RadioButtonTop8.IsEnabled = false;
+                RadioButtonTop8.IsChecked = false;
+                RadioButtonTop16.IsEnabled = false;
+                RadioButtonTop16.IsChecked = false;
+            }
+            else
+            {
+                RadioButtonNoCut.IsEnabled = true;
+                RadioButtonTop4.IsEnabled = true;
+                RadioButtonTop8.IsEnabled = true;
+                RadioButtonTop16.IsEnabled = true;
+            }
+            TextBoxMaxSquad.Text = GetRule().DefaultMaxPoints.ToString();
             e.Handled = true;
         }
 
         private void TextboxName_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Changes = true;
+            changes = true;
             e.Handled = true;
         }
 
         private void IntegerUpDownMaxSquad_ValueChanged(object sender, TextChangedEventArgs e)
         {
-            Changes = true;
+            changes = true;
             e.Handled = true;
         }
 
         private void RadioButton_Click(object sender, RoutedEventArgs e)
         {
-            Changes = true;
+            changes = true;
             e.Handled = true;
+        }
+
+        public new void ShowDialog()
+        {
+            base.ShowDialog();
         }
     }
 }

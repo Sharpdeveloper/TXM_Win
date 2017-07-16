@@ -1,27 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Resources;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 using TXM.GUI.Dialogs;
 using TXM.GUI.Windows;
 using TXM.Core;
-
-using System.ComponentModel;
-using System.Data;
-using System.Reflection;
 
 namespace TXM.GUI
 {
@@ -30,169 +19,268 @@ namespace TXM.GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Tournament2 activeTournament;
         private ICollectionView dataView;
-        private bool started = false, firststart = false;
-        private TimerWindow tw;
-        private IO io;
+        private TournamentController tournamentController;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            io = new IO(new WindowsFile(), new WindowsMessage());
+            tournamentController = new TournamentController(new IO(new WindowsFile(), new WindowsMessage()));
 
-            ImageSource s = new BitmapImage(new Uri(io.IconFiles["ChangePairings"]));
-            ButtonChangePairing.Content = new System.Windows.Controls.Image() { Source = s, Width=25, Height=25};
-            s = new BitmapImage(new Uri(io.IconFiles["Save"]));
-            ButtonSave.Content = new System.Windows.Controls.Image() { Source = s, Width = 25, Height = 25 };
-            s = new BitmapImage(new Uri(io.IconFiles["Disqualify"]));
-            ButtonDisqualifyPlayer.Content = new System.Windows.Controls.Image() { Source = s, Width = 25, Height = 25 };
-            s = new BitmapImage(new Uri(io.IconFiles["EditUser"]));
-            ButtonEditPlayer.Content = new System.Windows.Controls.Image() { Source = s, Width = 25, Height = 25 };
-            s = new BitmapImage(new Uri(io.IconFiles["AddUser"]));
-            ButtonNewPlayer.Content = new System.Windows.Controls.Image() { Source = s, Width = 25, Height = 25 };
-            s = new BitmapImage(new Uri(io.IconFiles["Randomizer"]));
-            ButtonRandom.Content = new System.Windows.Controls.Image() { Source = s, Width = 25, Height = 25 };
-            s = new BitmapImage(new Uri(io.IconFiles["Timer"]));
-            ButtonTimer.Content = new System.Windows.Controls.Image() { Source = s, Width = 25, Height = 25 };
-            s = new BitmapImage(new Uri(io.IconFiles["RemoveUser"]));
-            ButtonRemovePlayer.Content = new System.Windows.Controls.Image() { Source = s, Width = 25, Height = 25 };
-            s = new BitmapImage(new Uri(io.IconFiles["Reset"]));
-            ButtonResetLastResults.Content = new System.Windows.Controls.Image() { Source = s, Width = 25, Height = 25 };
+            tournamentController.ActiveTimer.Changed += Time_Changed;
 
-            DataGridPlayer.CanUserSortColumns = false;
+            ImageSource s = new BitmapImage(new Uri(tournamentController.ActiveIO.IconFiles["ChangePairings"]));
+            ButtonChangePairing.Content = new Image() { Source = s, Width=25, Height=25};
+            s = new BitmapImage(new Uri(tournamentController.ActiveIO.IconFiles["Save"]));
+            ButtonSave.Content = new Image() { Source = s, Width = 25, Height = 25 };
+            s = new BitmapImage(new Uri(tournamentController.ActiveIO.IconFiles["Disqualify"]));
+            ButtonDisqualifyPlayer.Content = new Image() { Source = s, Width = 25, Height = 25 };
+            s = new BitmapImage(new Uri(tournamentController.ActiveIO.IconFiles["EditUser"]));
+            ButtonEditPlayer.Content = new Image() { Source = s, Width = 25, Height = 25 };
+            s = new BitmapImage(new Uri(tournamentController.ActiveIO.IconFiles["AddUser"]));
+            ButtonNewPlayer.Content = new Image() { Source = s, Width = 25, Height = 25 };
+            s = new BitmapImage(new Uri(tournamentController.ActiveIO.IconFiles["Timer"]));
+            ButtonTimer.Content = new Image() { Source = s, Width = 25, Height = 25 };
+            s = new BitmapImage(new Uri(tournamentController.ActiveIO.IconFiles["RemoveUser"]));
+            ButtonRemovePlayer.Content = new Image() { Source = s, Width = 25, Height = 25 };
+            s = new BitmapImage(new Uri(tournamentController.ActiveIO.IconFiles["Reset"]));
+            ButtonResetLastResults.Content = new Image() { Source = s, Width = 25, Height = 25 };
+            s = new BitmapImage(new Uri(tournamentController.ActiveIO.IconFiles["TXM_Logo"]));
+            ImageLogo.Source = s;
+
             DataGridPlayer.SelectionMode = DataGridSelectionMode.Single;
 
+            InitDataGridPlayer();
+            InitDataGridPairing();
+        }
+
+        private void InitDataGridPlayer()
+        {
             DataGridPlayer.Columns.Clear();
-            DataGridPairing.Columns.Clear();
 
             DataGridTextColumn dgc;
             DataGridCheckBoxColumn dgcb;
 
-            dgc = new DataGridTextColumn();
-            dgc.Header = "#";
-            dgc.Binding = new Binding("Rank");
-            dgc.IsReadOnly = true;
+            dgc = new DataGridTextColumn()
+            {
+                Header = "#",
+                Binding = new Binding("Rank"),
+                IsReadOnly = true
+            };
             DataGridPlayer.Columns.Add(dgc);
-            dgc = new DataGridTextColumn();
-            dgc.Header = "Forename";
-            dgc.Binding = new Binding("Forename");
-            dgc.IsReadOnly = true;
+            dgc = new DataGridTextColumn()
+            {
+                Header = "Forename",
+                Binding = new Binding("Forename"),
+                IsReadOnly = true
+            };
             DataGridPlayer.Columns.Add(dgc);
-            dgc = new DataGridTextColumn();
-            dgc.Header = "Nickname";
-            dgc.Binding = new Binding("Nickname");
-            dgc.IsReadOnly = true;
+            dgc = new DataGridTextColumn()
+            {
+                Header = "Nickname",
+                Binding = new Binding("Nickname"),
+                IsReadOnly = true
+            };
             DataGridPlayer.Columns.Add(dgc);
-            dgcb = new DataGridCheckBoxColumn();
-            dgcb.Header = "$";
-            dgcb.Binding = new Binding("Payed");
-            dgcb.IsReadOnly = false;
+            dgcb = new DataGridCheckBoxColumn()
+            {
+                Header = "$",
+                Binding = new Binding("Paid"),
+                IsReadOnly = false
+            };
             DataGridPlayer.Columns.Add(dgcb);
-            dgcb = new DataGridCheckBoxColumn();
-            dgcb.Header = "L";
-            dgcb.Binding = new Binding("SquadListGiven");
-            dgcb.IsReadOnly = false;
+            dgcb = new DataGridCheckBoxColumn()
+            {
+                Header = "L",
+                Binding = new Binding("ListGiven"),
+                IsReadOnly = false
+            };
             DataGridPlayer.Columns.Add(dgcb);
-            dgcb = new DataGridCheckBoxColumn();
-            dgcb.Header = "!";
-            dgcb.Binding = new Binding("Present");
-            dgcb.IsReadOnly = false;
+            dgcb = new DataGridCheckBoxColumn()
+            {
+                Header = "!",
+                Binding = new Binding("Present"),
+                IsReadOnly = false
+            };
             DataGridPlayer.Columns.Add(dgcb);
-            dgc = new DataGridTextColumn();
-            dgc.Header = "Team";
-            dgc.Binding = new Binding("Team");
-            dgc.IsReadOnly = true;
+            dgc = new DataGridTextColumn()
+            {
+                Header = "Team",
+                Binding = new Binding("Team"),
+                IsReadOnly = true
+            };
             DataGridPlayer.Columns.Add(dgc);
-            dgc = new DataGridTextColumn();
-            dgc.Header = "Faction";
-            dgc.Binding = new Binding("PlayersFactionAsString");
-            dgc.IsReadOnly = true;
+            dgc = new DataGridTextColumn()
+            {
+                Header = "Faction",
+                Binding = new Binding("Faction"),
+                IsReadOnly = true
+            };
             DataGridPlayer.Columns.Add(dgc);
-            /*dgc = new DataGridTextColumn();
-            dgc.Header = "SquadPoints";
-            dgc.Binding = new Binding("PointOfSquad");
-            dgc.IsReadOnly = true;
-            DataGridPlayer.Columns.Add(dgc);*/
-            dgc = new DataGridTextColumn();
-            dgc.Header = "TP";
-            dgc.Binding = new Binding("Points");
-            dgc.IsReadOnly = true;
+            dgc = new DataGridTextColumn()
+            {
+                Header = "TP",
+                Binding = new Binding("TournamentPoints"),
+                IsReadOnly = true
+            };
             DataGridPlayer.Columns.Add(dgc);
-            dgc = new DataGridTextColumn();
-            dgc.Header = "W";
-            dgc.Binding = new Binding("Wins");
-            dgc.IsReadOnly = true;
+            dgc = new DataGridTextColumn()
+            {
+                Header = "W",
+                Binding = new Binding("Wins"),
+                IsReadOnly = true
+            };
             DataGridPlayer.Columns.Add(dgc);
-            dgc = new DataGridTextColumn();
-            dgc.Header = "L";
-            dgc.Binding = new Binding("Looses");
-            dgc.IsReadOnly = true;
+            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("ModWins"))
+            {
+                dgc = new DataGridTextColumn()
+                {
+                    Header = "MW",
+                    Binding = new Binding("ModifiedWins"),
+                    IsReadOnly = true
+                };
+                DataGridPlayer.Columns.Add(dgc);
+            }
+            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("Draws"))
+            {
+                dgc = new DataGridTextColumn()
+                {
+                    Header = "D",
+                    Binding = new Binding("Draws"),
+                    IsReadOnly = true
+                };
+                DataGridPlayer.Columns.Add(dgc);
+            }
+            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("ModLoss"))
+            {
+                dgc = new DataGridTextColumn()
+                {
+                    Header = "ML",
+                    Binding = new Binding("ModifiedLosses"),
+                    IsReadOnly = true
+                };
+                DataGridPlayer.Columns.Add(dgc);
+            }
+            dgc = new DataGridTextColumn()
+            {
+                Header = "L",
+                Binding = new Binding("Losses"),
+                IsReadOnly = true
+            };
             DataGridPlayer.Columns.Add(dgc);
-            dgc = new DataGridTextColumn();
-            dgc.Header = "MoV";
-            dgc.Binding = new Binding("MarginOfVictory");
-            dgc.IsReadOnly = true;
+            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("MoV"))
+            {
+                dgc = new DataGridTextColumn()
+                {
+                    Header = "MoV",
+                    Binding = new Binding("MarginOfVictory"),
+                    IsReadOnly = true
+                };
+                DataGridPlayer.Columns.Add(dgc);
+            }
+            dgc = new DataGridTextColumn()
+            {
+                Header = "SoS",
+                Binding = new Binding("StrengthOfSchedule"),
+                IsReadOnly = true
+            };
             DataGridPlayer.Columns.Add(dgc);
-            dgc = new DataGridTextColumn();
-            dgc.Header = "SoS";
-            dgc.Binding = new Binding("PointsOfEnemies");
-            dgc.IsReadOnly = true;
-            DataGridPlayer.Columns.Add(dgc);
-
-            initDataGridPairing();
+            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("eSoS"))
+            {
+                dgc = new DataGridTextColumn()
+                {
+                    Header = "eSoS",
+                    Binding = new Binding("ExtendedStrengthOfSchedule"),
+                    IsReadOnly = true
+                };
+                DataGridPlayer.Columns.Add(dgc);
+            }
         }
 
-        private void initDataGridPairing(bool update = false)
+        private void InitDataGridPairing(bool update = false)
         {
-            List<String> winners = new List<string>();
-            winners.Add("Automatic");
-            winners.Add("Player 1");
-            winners.Add("Player 2");
+            List<String> winners = new List<string>
+            {
+                "Automatic",
+                "Player 1",
+                "Player 2"
+            };
             DataGridPairing.Columns.Clear();
 
             DataGridTextColumn dgc;
             DataGridCheckBoxColumn dgcb;
             DataGridComboBoxColumn dgcbc;
 
-            dgc = new DataGridTextColumn();
-            dgc.Header = "Table";
-            dgc.Binding = new Binding("TableNr");
-            dgc.IsReadOnly = true;
-            DataGridPairing.Columns.Add(dgc);
-            dgc = new DataGridTextColumn();
-            dgc.Header = "Player 1";
-            dgc.Binding = new Binding("Player1Name");
-            dgc.IsReadOnly = true;
-            DataGridPairing.Columns.Add(dgc);
-            dgc = new DataGridTextColumn();
-            dgc.Header = "Player 2";
-            dgc.Binding = new Binding("Player2Name");
-            dgc.IsReadOnly = true;
-            DataGridPairing.Columns.Add(dgc);
-            dgc = new DataGridTextColumn();
-            dgc.Header = "Score (P1)";
-            dgc.Binding = new Binding("Player1Score");
-            dgc.IsReadOnly = false;
-            DataGridPairing.Columns.Add(dgc);
-            dgc = new DataGridTextColumn();
-            dgc.Header = "Score (P2)";
-            dgc.Binding = new Binding("Player2Score");
-            dgc.IsReadOnly = false;
-            DataGridPairing.Columns.Add(dgc);
-            dgcbc = new DataGridComboBoxColumn();
-            dgcbc.Header = "Winner";
-            dgcbc.ItemsSource = winners;
-            dgcbc.TextBinding = new Binding("Winner");
-            dgcbc.IsReadOnly = false;
-            DataGridPairing.Columns.Add(dgcbc);
-            if (update)
+            dgc = new DataGridTextColumn()
             {
-                dgcb = new DataGridCheckBoxColumn();
-                dgcb.Header = "Changed?";
-                Binding b = new Binding("ResultEdited");
-                b.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                Header = "T#",
+                Binding = new Binding("TableNr"),
+                IsReadOnly = true
+            };
+            DataGridPairing.Columns.Add(dgc);
+            dgc = new DataGridTextColumn()
+            {
+                Header = "Player 1",
+                Binding = new Binding("Player1Name"),
+                IsReadOnly = true
+            };
+            DataGridPairing.Columns.Add(dgc);
+            dgc = new DataGridTextColumn()
+            {
+                Header = "Player 2",
+                Binding = new Binding("Player2Name"),
+                IsReadOnly = true
+            };
+            DataGridPairing.Columns.Add(dgc);
+            dgc = new DataGridTextColumn()
+            {
+                Header = "Score (P1)",
+                Binding = new Binding("Player1Score"),
+                IsReadOnly = false
+            };
+            DataGridPairing.Columns.Add(dgc);
+            dgc = new DataGridTextColumn()
+            {
+                Header = "Score (P2)",
+                Binding = new Binding("Player2Score"),
+                IsReadOnly = false
+            };
+            DataGridPairing.Columns.Add(dgc);
+            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsWinnerDropDownNeeded)
+            {
+                dgcbc = new DataGridComboBoxColumn()
+                {
+                    Header = "Winner",
+                    ItemsSource = winners,
+                    TextBinding = new Binding("Winner"),
+                    IsReadOnly = false
+                };
+                DataGridPairing.Columns.Add(dgcbc);
+            }
+            if (!update && (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsDrawPossible))
+            {
+                dgcb = new DataGridCheckBoxColumn()
+                {
+                    Header = "OK?"
+                };
+                Binding b = new Binding("ResultEdited")
+                {
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                };
+                dgcb.Binding = b;
+                DataGridPairing.Columns.Add(dgcb);
+            }
+            if ((update))
+            {
+                dgcb = new DataGridCheckBoxColumn()
+                {
+                    Header = "Changed?"
+                };
+                Binding b = new Binding("ResultEdited")
+                {
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                };
                 dgcb.Binding = b;
                 DataGridPairing.Columns.Add(dgcb);
             }
@@ -206,110 +294,85 @@ namespace TXM.GUI
 
         private void NewPlayer_Click(object sender, RoutedEventArgs e)
         {
-            NewPlayerDialog npd = new NewPlayerDialog(activeTournament.Nicknames);
-            npd.ShowDialog();
-            if (npd.DialogReturn)
-            {
-                Player xwp = new Player(npd.GetNickName(), npd.SquadPoints, Player.StringToFaction(npd.GetFaction()));
-                xwp.Team = npd.GetTeam();
-                xwp.Name = npd.GetName();
-                xwp.Forename = npd.GetForename();
-                xwp.WonFreeticket = npd.FreeTicket();
-                xwp.SquadListGiven = npd.SquadListGiven();
-                xwp.Payed = npd.Paid();
-                xwp.TableNr = npd.TableNr;
-                xwp.Present = npd.Present();
-                AddPlayer(xwp);
-            }
+            tournamentController.NewPlayer(new NewPlayerDialog(tournamentController.ActiveTournament.Rule));
+            Refresh();
             e.Handled = true;
+        }
+
+        private void Refresh()
+        {
+            RefreshDataGridPairings(tournamentController.ActiveTournament.Pairings);
+            RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
         }
 
         private void NewTournament_Click(object sender, RoutedEventArgs e)
         {
-            if (activeTournament != null)
+            tournamentController.NewTournament(new NewTournamentDialog());
+            if(tournamentController.ActiveTournament != null)
             {
-                if (!io.ShowMessageWithOKCancel("The current tournament will be overwritten."))
-                    return;
-            }
-            NewTournamentDialog ntd = new NewTournamentDialog();
-            ntd.ShowDialog();
-            if (ntd.NewTournament)
-            {
-                activeTournament = new Tournament2(ntd.GetName(), ntd.GetMaxSquadSize(), ntd.GetCut());
-                activeTournament.TeamProtection = ntd.TeamProtection();
-                activeTournament.Single = ntd.TournamentTypeSingle();
-                activeTournament.PrintDDGER = ntd.PrintDDGER();
-                activeTournament.PrintDDENG = ntd.PrintDDENG();
                 SetGUIState(true);
-                RefreshDataGridPairings(activeTournament.Pairings);
-                RefreshDataGridPlayer(activeTournament.Participants);
-                SetIO();
+                Refresh();
+                InitDataGridPlayer();
+                InitDataGridPairing();
             }
+            e.Handled = true;
         }
 
         private void NewTimer_Click(object sender, RoutedEventArgs e)
         {
-            tw = new TimerWindow(io);
-            tw.Show();
-            tw.Changed += tw_Changed;
+            tournamentController.OpenTimerWindow(new TimerWindow());
         }
 
-        private void tw_Changed(object sender, EventArgs e)
+        private void Time_Changed(object sender, EventArgs e)
         {
             Dispatcher.Invoke(new Action(PrintTime));
         }
 
-        private void Random_Click(object sender, RoutedEventArgs e)
-        {
-            RandomizerWindow rw = new RandomizerWindow();
-            rw.Show();
-        }
-
         private void StartTournament_Click(object sender, RoutedEventArgs e)
         {
-            if (activeTournament.Participants.Count != 0)
+            if(tournamentController.StartTournament(ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled))
             {
-                StartTournament();
                 SetGUIState(false, true);
-            }
-            else
-            {
-                io.ShowMessage("Tournament can't be started without player");
             }
         }
 
         private void RibbonButtonEditPlayer_Click(object sender, RoutedEventArgs e)
         {
-            ChangePlayer();
+            EditPlayer();
             e.Handled = true;
+        }
+
+        private void EditPlayer()
+        {
+            if (DataGridPlayer.SelectedIndex >= 0)
+            {
+                tournamentController.EditPlayer(new NewPlayerDialog(tournamentController.ActiveTournament.Rule), DataGridPlayer.SelectedIndex);
+                RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+            }
         }
 
         private void GOEPPImport_Click(object sender, RoutedEventArgs e)
         {
-            activeTournament = io.GOEPPImport();
-            if (activeTournament != null)
+            tournamentController.Import(new NewTournamentDialog(), false);
+            if (tournamentController.ActiveTournament != null)
             {
+                ComboBoxRounds.Items.Clear();
+                InitDataGridPlayer();
+                InitDataGridPairing();
                 SetGUIState(true);
-                DataGridPlayer.ItemsSource = activeTournament.Participants;
-                RefreshDataGridPlayer(activeTournament.Participants);
-                SetIO();
+                DataGridPlayer.ItemsSource = tournamentController.ActiveTournament.Participants;
+                RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
             }
         }
 
         private void GOEPPExport_Click(object sender, RoutedEventArgs e)
         {
-            io.GOEPPExport(activeTournament);
-        }
-
-        private void EndTournament_Click(object sender, RoutedEventArgs e)
-        {
-            GetResults(true);
-            ButtonEndTournament.IsEnabled = false;
+            tournamentController.GOEPPExport();
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            io.Save(activeTournament, false, ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled);
+            tournamentController.Save(ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled);
         }
 
         private void Load_Click(object sender, RoutedEventArgs e)
@@ -319,38 +382,17 @@ namespace TXM.GUI
 
         private void Load(bool autosave = false)
         {
-            Nullable<bool> overwrite = true;
-            string filename = "";
-            ListBoxRounds.Items.Clear();
-            if (autosave)
+            tournamentController.Load(new AutosaveDialog(), autosave);
+            if(tournamentController.ActiveTournament != null)
             {
-                AutosaveDialog ad = new AutosaveDialog(io);
-                ad.ShowDialog();
-                overwrite = ad.DialogReturn;
-                filename = ad.FileName;
-            }
-            else
-            {
-                if (activeTournament != null)
+                ComboBoxRounds.Items.Clear();
+                if (tournamentController.ActiveTournament.Rounds != null)
                 {
-                    if (!io.ShowMessageWithOKCancel("The current tournament will be overwritten."))
-                        overwrite = false;
-                }
-            }
-            if (overwrite == true)
-            {
-                activeTournament = io.Load(filename);
-                //Load Actions
-                if (activeTournament != null)
-                {
-                    if (activeTournament.Rounds != null)
-                    {
-                        for (int i = 1; i <= activeTournament.Rounds.Count; i++)
-                            AddRoundButton(i);
-                    }
-                    if (activeTournament.Rounds != null && activeTournament.Rounds.Count > 0)
-                        DataGridPairing.ItemsSource = activeTournament.Rounds[activeTournament.Rounds.Count - 1].Pairings;
-                    if (activeTournament.FirstRound && (activeTournament.Rounds == null || activeTournament.Rounds.Count == 0))
+                    for (int i = 1; i <= tournamentController.ActiveTournament.Rounds.Count; i++)
+                        AddRoundButton(i);
+                    if (tournamentController.ActiveTournament.Rounds != null && tournamentController.ActiveTournament.Rounds.Count > 0)
+                        DataGridPairing.ItemsSource = tournamentController.ActiveTournament.Rounds[tournamentController.ActiveTournament.Rounds.Count - 1].Pairings;
+                    if (tournamentController.ActiveTournament.FirstRound && (tournamentController.ActiveTournament.Rounds == null || tournamentController.ActiveTournament.Rounds.Count == 0))
                     {
                         SetGUIState(true);
                     }
@@ -359,109 +401,28 @@ namespace TXM.GUI
                         SetGUIState(false, true);
                     }
                     ButtonGetResults.Content = "Get Results";
-                    ButtonGetResults.IsEnabled = activeTournament.ButtonGetResultState == true;
-                    ButtonNextRound.IsEnabled = activeTournament.ButtonNextRoundState == true;
-                    ButtonCut.IsEnabled = activeTournament.ButtonCutState == true;
-                    activeTournament.Sort();
-                    RefreshDataGridPlayer(activeTournament.Participants);
-                    if (activeTournament.Pairings != null)
-                        RefreshDataGridPairings(activeTournament.Pairings);
-                    SetIO();
+                    ButtonGetResults.IsEnabled = tournamentController.ActiveTournament.ButtonGetResultState == true;
+                    ButtonNextRound.IsEnabled = tournamentController.ActiveTournament.ButtonNextRoundState == true;
+                    ButtonCut.IsEnabled = tournamentController.ActiveTournament.ButtonCutState == true;
+                    tournamentController.ActiveTournament.Sort();
+                    RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+                    if (tournamentController.ActiveTournament.Pairings != null)
+                        RefreshDataGridPairings(tournamentController.ActiveTournament.Pairings);
+
+                    InitDataGridPlayer();
+                    InitDataGridPairing();
+
                 }
             }
         }
 
-        private void SetIO()
+        private void GetSeed(bool cut = false)
         {
-            activeTournament.Io = new IO(new WindowsFile(), new WindowsMessage());
-        }
-
-        public void AddPlayer(Player player)
-        {
-            activeTournament.AddPlayer(player);
-            RefreshDataGridPlayer(activeTournament.Participants);
-            RefreshDataGridPairings(activeTournament.Pairings);
-        }
-
-        public void StartTournament()
-        {
-            firststart = true;
-            started = true;
-            io.Save(activeTournament, true, ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled, "TournamentStart");
-        }
-
-        public void GetSeed(bool cut = false)
-        {
-            List<Pairing> pairings = activeTournament.GetSeed(firststart, cut);
+            List<Pairing> pairings = tournamentController.GetSeed(cut);
             RefreshDataGridPairings(pairings);
             AddRoundButton();
             ChangeGUIState(true);
-            io.Save(activeTournament, true, ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled, "Pairings_Round" + activeTournament.Rounds.Count);
-            firststart = false;
-        }
-
-        private bool CheckResults(List<Pairing> pairings)
-        {
-            foreach (Pairing p in pairings)
-            {
-                if (p.Player1Score != 0 && p.Player1Score < 12)
-                    return false;
-                if (p.Player2Score != 0 && p.Player2Score < 12)
-                    return false;
-                if (p.Player1Score == p.Player2Score && p.Winner == "Automatic" && !p.Player1.Freeticket && !p.Player2.Freeticket)
-                    return false;
-            }
-            return true;
-        }
-
-        public void GetResults(bool end = false)
-        {
-            List<Pairing> pairings = (List<Pairing>)DataGridPairing.ItemsSource;
-            if (pairings.Count == 1)
-                end = true;
-            bool allResultsEdited = true;
-            /*foreach (Pairing p in pairings)
-            {
-                if (!p.ResultEdited)
-                {
-                    allResultsEdited = false;
-                    break;
-                }
-            }*/
-            if (allResultsEdited)
-            {
-                if (CheckResults(pairings))
-                {
-                    activeTournament.GetResults(pairings);
-                }
-                else
-                {
-                    io.ShowMessage("One ore more results are invalid.\nWinner must be 1 for Player 1 or 2 for Player 2, if the Points are equal.");
-                    return;
-                }
-            }
-            else
-            {
-                io.ShowMessage("There is a result missing.");
-                return;
-            }
-
-            if (end)
-            {
-                if (!activeTournament.CutStarted)
-                {
-                    activeTournament.CalculateWonFreeticket();
-                }
-                DataGridPairing.Visibility = System.Windows.Visibility.Hidden;
-                ChangeGUIState(false, true);
-            }
-            else
-            {
-                ChangeGUIState(false);
-            }
-            activeTournament.Sort();
-            RefreshDataGridPlayer(activeTournament.Participants);
-            io.Save(activeTournament, true, ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled, "Result_Round" + activeTournament.Rounds.Count);
+            tournamentController.Save(ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled, true);
         }
 
         private void PariringCurrentCellChanged(object sender, EventArgs e)
@@ -476,11 +437,10 @@ namespace TXM.GUI
             dataView = CollectionViewSource.GetDefaultView(DataGridPlayer.ItemsSource);
             dataView.SortDescriptions.Clear();
 
-            activeTournament.Sort();
+            tournamentController.ActiveTournament.Sort();
 
-            dataView.SortDescriptions.Add(new System.ComponentModel.SortDescription("Rank", System.ComponentModel.ListSortDirection.Ascending));
+            dataView.SortDescriptions.Add(new SortDescription("Rank", ListSortDirection.Ascending));
             dataView.Refresh();
-            RefreshRanks();
         }
 
         private void RefreshDataGridPairings(List<Pairing> pairings)
@@ -491,7 +451,7 @@ namespace TXM.GUI
 
         private void DataGridPlayer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (DataGridPlayer.SelectedItem != null && !started)
+            if (DataGridPlayer.SelectedItem != null && !tournamentController.Started)
             {
                 RemovePlayerIsEnabled = true;
                 EditPlayerIsEnabled = true;
@@ -501,36 +461,6 @@ namespace TXM.GUI
                 RemovePlayerIsEnabled = false;
                 EditPlayerIsEnabled = false;
             }
-        }
-
-        public void ChangePlayer()
-        {
-            if (DataGridPlayer.SelectedIndex >= 0)
-            {
-                Player xwp = activeTournament.Participants[DataGridPlayer.SelectedIndex];
-                NewPlayerDialog npd = new NewPlayerDialog(activeTournament.Nicknames, xwp);
-                npd.Title = "Player " + xwp.Nickname + " change";
-                npd.ButtonOK.Content = "Accept changes.";
-                npd.ShowDialog();
-                if (npd.DialogReturn && npd.Changes)
-                {
-                    xwp.Team = npd.GetTeam();
-                    xwp.Name = npd.GetName();
-                    xwp.Forename = npd.GetForename();
-                    xwp.WonFreeticket = npd.FreeTicket();
-                    xwp.SquadListGiven = npd.SquadListGiven();
-                    xwp.Payed = npd.Paid();
-                    xwp.TableNr = npd.TableNr;
-                    xwp.Present = npd.Present();
-                    RefreshDataGridPlayer(activeTournament.Participants);
-                }
-            }
-        }
-
-        private void RefreshRanks()
-        {
-            for (int i = 1; i <= activeTournament.Participants.Count; i++)
-                activeTournament.Participants[i - 1].Rank = i;
         }
 
         private void DataGrid_GotFocus(object sender, RoutedEventArgs e)
@@ -553,21 +483,25 @@ namespace TXM.GUI
                 return;
             }
 
-            // Assume first column is the checkbox column.
-            if (grid.CurrentColumn == grid.Columns[5])
-            {
-                var gridCheckBox = (grid.CurrentColumn.GetCellContent(grid.SelectedItem) as CheckBox);
-
-                if (gridCheckBox != null)
+            try { 
+                // Assume first column is the checkbox column.
+                if (grid.CurrentColumn == grid.Columns[5])
                 {
-                    gridCheckBox.IsChecked = !gridCheckBox.IsChecked;
-                }
+                    var gridCheckBox = (grid.CurrentColumn.GetCellContent(grid.SelectedItem) as CheckBox);
+
+                    if (gridCheckBox != null)
+                    {
+                        gridCheckBox.IsChecked = !gridCheckBox.IsChecked;
+                    }
             }
+            }
+            catch (ArgumentOutOfRangeException) { }
         }
 
         private void DataGridPlayer_DoubleClicked(object sender, MouseButtonEventArgs e)
         {
-            ChangePlayer();
+            EditPlayer();
+            e.Handled = true;
         }
 
         private void ButtonNextRound_Click(object sender, RoutedEventArgs e)
@@ -577,95 +511,84 @@ namespace TXM.GUI
 
         private void AddRoundButton(int actRound = -1)
         {
-            ListBoxItem newListItem = new ListBoxItem();
+            ComboBoxItem newListItem = new ComboBoxItem();
             if (actRound == -1)
-                actRound = activeTournament.Rounds.Count;
-            newListItem.Content = "Round " + actRound;
-            newListItem.MouseUp += ButtonRound_Click;
-            ListBoxRounds.Items.Add(newListItem);
+                actRound = tournamentController.ActiveTournament.Rounds.Count;
+            newListItem.Content = actRound;
+            ComboBoxRounds.Items.Add(newListItem);
         }
 
         private void ButtonGetResults_Click(object sender, RoutedEventArgs e)
         {
             if (ButtonGetResults.Content.ToString() == "Update")
             {
-                activeTournament.GetResults((List<Pairing>)DataGridPairing.ItemsSource, true);
-                RefreshDataGridPlayer(activeTournament.Participants);
-                io.ShowMessage("Update done!");
-                ButtonGetResults.IsEnabled = activeTournament.ButtonGetResultState;
-                ButtonGetResults.Content = "Get Results";
-                ButtonNextRound.IsEnabled = activeTournament.ButtonNextRoundState;
-                ButtonCut.IsEnabled = activeTournament.ButtonCutState;
-                ListBoxRounds.SelectedIndex = ListBoxRounds.Items.Count - 1;
-                RefreshDataGridPairings(activeTournament.Pairings);
+                if (tournamentController.GetResults((List<Pairing>)DataGridPairing.ItemsSource, false, false, false, true))
+                {
+                    RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+                    tournamentController.ActiveIO.ShowMessage("Update done!");
+                    ButtonGetResults.IsEnabled = tournamentController.ActiveTournament.ButtonGetResultState;
+                    ButtonGetResults.Content = "Get Results";
+                    ButtonNextRound.IsEnabled = tournamentController.ActiveTournament.ButtonNextRoundState;
+                    ButtonCut.IsEnabled = tournamentController.ActiveTournament.ButtonCutState;
+                    ComboBoxRounds.SelectedIndex = ComboBoxRounds.Items.Count - 1;
+                    RefreshDataGridPairings(tournamentController.ActiveTournament.Pairings);
+                }
             }
             else
-                GetResults();
+            {
+                if (tournamentController.GetResults((List<Pairing>)DataGridPairing.ItemsSource, ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled))
+                {
+                    RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+                    ChangeGUIState(false);
+                }
+            }
         }
 
-        private void ButtonRound_Click(object sender, RoutedEventArgs e)
+        private void ComboBoxRounds_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string header = ((ListBoxItem)sender).Content.ToString();
+            string header = ((ComboBox)sender).SelectedValue.ToString();
             header = header.Remove(0, header.IndexOf(" "));
             int round = Int32.Parse(header);
-            RefreshDataGridPairings(activeTournament.Rounds[round - 1].Pairings);
-            RefreshDataGridPlayer(activeTournament.Rounds[round - 1].Participants);
-            if (activeTournament.Rounds.Count == round)
+            RefreshDataGridPairings(tournamentController.ActiveTournament.Rounds[round - 1].Pairings);
+            RefreshDataGridPlayer(tournamentController.ActiveTournament.Rounds[round - 1].Participants);
+            if (tournamentController.ActiveTournament.Rounds.Count == round)
             {
-                ButtonGetResults.IsEnabled = activeTournament.ButtonGetResultState;
+                ButtonGetResults.IsEnabled = tournamentController.ActiveTournament.ButtonGetResultState;
                 ButtonGetResults.Content = "Get Results";
-                ButtonNextRound.IsEnabled = activeTournament.ButtonNextRoundState;
-                ButtonCut.IsEnabled = activeTournament.ButtonCutState;
-                initDataGridPairing();
+                ButtonNextRound.IsEnabled = tournamentController.ActiveTournament.ButtonNextRoundState;
+                ButtonCut.IsEnabled = tournamentController.ActiveTournament.ButtonCutState;
+                InitDataGridPairing();
             }
             else
             {
-                activeTournament.ButtonGetResultState = ButtonGetResults.IsEnabled;
-                activeTournament.ButtonNextRoundState = ButtonNextRound.IsEnabled;
-                activeTournament.ButtonCutState = ButtonCut.IsEnabled;
+                tournamentController.ActiveTournament.ButtonGetResultState = ButtonGetResults.IsEnabled;
+                tournamentController.ActiveTournament.ButtonNextRoundState = ButtonNextRound.IsEnabled;
+                tournamentController.ActiveTournament.ButtonCutState = ButtonCut.IsEnabled;
                 ButtonGetResults.IsEnabled = true;
                 ButtonGetResults.Content = "Update";
                 ButtonNextRound.IsEnabled = false;
                 ButtonCut.IsEnabled = false;
-                initDataGridPairing(true);
+                InitDataGridPairing(true);
             }
-            activeTournament.DisplayedRound = round;
+            tournamentController.ActiveTournament.DisplayedRound = round;
         }
 
         private void ButtonAutosave_Click(object sender, RoutedEventArgs e)
         {
-            if (io.AutosavePathExists)
+            if (tournamentController.ActiveIO.AutosavePathExists)
                 Load(true);
             else
-                io.ShowMessage("No Autosavefolder");
+                tournamentController.ActiveIO.ShowMessage("No Autosavefolder");
         }
 
-        private void MenuItemShoAutoSaveFolder_Click(object sender, RoutedEventArgs e)
+        private void MenuItemOpenAutoSaveFolder_Click(object sender, RoutedEventArgs e)
         {
-            io.ShowAutosaveFolder();
-        }
-
-        private void MenuItemLoadStatistics_Click(object sender, RoutedEventArgs e)
-        {
-            activeTournament.Statistics = io.LoadContents();
-            io.LoadCSV(activeTournament);
-            RefreshDataGridPlayer(activeTournament.Participants);
+            tournamentController.ActiveIO.OpenAutosaveFolder();
         }
 
         private void MenuItemTSettings_Click(object sender, RoutedEventArgs e)
         {
-            NewTournamentDialog ntd = new NewTournamentDialog(activeTournament);
-            ntd.ShowDialog();
-            if (ntd.Changes)
-            {
-                activeTournament.Name = ntd.GetName();
-                activeTournament.Cut = ntd.GetCut();
-                activeTournament.MaxSquadPoints = ntd.GetMaxSquadSize();
-                activeTournament.TeamProtection = ntd.TeamProtection();
-                activeTournament.PrintDDGER = ntd.PrintDDGER();
-                activeTournament.PrintDDENG = ntd.PrintDDENG();
-                activeTournament.Single = ntd.TournamentTypeSingle();
-            }
+            tournamentController.EditTournament(new NewTournamentDialog());           
         }
 
         private void ButtonCut_Click(object sender, RoutedEventArgs e)
@@ -675,103 +598,30 @@ namespace TXM.GUI
 
         private void MenuItemDeleteAutosave_Click(object sender, RoutedEventArgs e)
         {
-            io.DeleteAutosaveFolder();
-        }
-
-        private void MenuItem_Click_Table_Output(object sender, RoutedEventArgs e)
-        {
-            if (activeTournament != null)
-            {
-                if (activeTournament.Rounds.Count == activeTournament.DisplayedRound)
-                {
-                    OutputDialog od = new OutputDialog(IO.TableForForum(activeTournament, activeTournament.Participants));
-                    od.Show();
-                }
-                else
-                {
-                    OutputDialog od = new OutputDialog(IO.TableForForum(activeTournament, activeTournament.Rounds[activeTournament.DisplayedRound - 1].Participants));
-                    od.Show();
-                }
-            }
-        }
-
-        private void MenuItem_Click_Pairing_Output(object sender, RoutedEventArgs e)
-        {
-            if (activeTournament != null)
-            {
-                if (activeTournament.Rounds.Count == activeTournament.DisplayedRound)
-                {
-                    OutputDialog od = new OutputDialog(IO.PairingForForum(activeTournament, activeTournament.Pairings));
-                    od.Show();
-                }
-                else
-                {
-                    OutputDialog od = new OutputDialog(IO.PairingForForum(activeTournament, activeTournament.Rounds[activeTournament.DisplayedRound - 1].Pairings));
-                    od.Show();
-                }
-            }
-        }
-
-        private void MenuItem_Click_Results_Output(object sender, RoutedEventArgs e)
-        {
-            if (activeTournament != null)
-            {
-                if (activeTournament.Rounds.Count - 2 >= 0)
-                {
-                    OutputDialog od = new OutputDialog(IO.PairingForForum(activeTournament, activeTournament.Rounds[activeTournament.Rounds.Count - 2].Pairings));
-                    od.Show();
-                }
-            }
+            tournamentController.ActiveIO.DeleteAutosaveFolder();
         }
 
         private void RemovePlayer_Click(object sender, RoutedEventArgs e)
         {
             if (DataGridPlayer.SelectedIndex >= 0)
             {
-                Player player = ((List<Player>)DataGridPlayer.ItemsSource)[DataGridPlayer.SelectedIndex];
-                if (io.ShowMessageWithOKCancel("Do you really want to remove " + player.DisplayName + "?"))
-                {
-                    activeTournament.RemovePlayer(player);
-                }
-                RefreshDataGridPlayer(activeTournament.Participants);
-            }
-        }
-
-        private void DropPlayer_Click(object sender, RoutedEventArgs e)
-        {
-            if (DataGridPlayer.SelectedIndex >= 0)
-            {
-                Player player = ((List<Player>)DataGridPlayer.ItemsSource)[DataGridPlayer.SelectedIndex];
-                if (io.ShowMessageWithOKCancel("The player " + player.DisplayName + " will be dropped. " + "This can't be undone."))
-                {
-                    activeTournament.DropPlayer(player);
-                    activeTournament.Sort();
-                    RefreshDataGridPlayer(activeTournament.Participants);
-                }
+                tournamentController.RemovePlayer(DataGridPlayer.SelectedIndex);
+                RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
             }
         }
 
         private void ButtonChangePairing_Click(object sender, RoutedEventArgs e)
         {
-            SetPairingDialog spd = new SetPairingDialog(activeTournament.Participants, activeTournament.Pairings);
-            spd.ShowDialog();
-            if (spd.OK)
-            {
-                activeTournament.Pairings = spd.PremadePairing;
-                RefreshDataGridPairings(activeTournament.Pairings);
-                io.Save(activeTournament, true, ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled, "ChangePairings");
-            }
+            tournamentController.EditPairings(new SetPairingDialog(), ButtonGetResults.IsEnabled, ButtonNextRound.IsEnabled, ButtonCut.IsEnabled);
+            RefreshDataGridPairings(tournamentController.ActiveTournament.Pairings);
         }
 
         private void MenuItemResetLastResults_Click(object sender, RoutedEventArgs e)
         {
-            List<Pairing> pl = new List<Pairing>();
-            foreach (var p in activeTournament.Rounds[activeTournament.Rounds.Count - 1].Pairings)
-                pl.Add(new Pairing(p) { ResultEdited = true, }) ;
-            activeTournament.RemoveLastRound();
+            List<Pairing> pl = tournamentController.ResetLastResults();
             ChangeGUIState(true);
             RefreshDataGridPairings(pl);
-            RefreshDataGridPlayer(activeTournament.Participants);
+            RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
         }
 
         private void SetGUIState(bool start, bool tournamentStart = false)
@@ -779,14 +629,14 @@ namespace TXM.GUI
             if (start)
             {
                 NewPlayerIsEnabled = true;
-                MenuItemTSettings.IsEnabled = activeTournament != null;
-                ButtonStart.IsEnabled = activeTournament != null;
+                MenuItemTSettings.IsEnabled = tournamentController.ActiveTournament != null;
+                ButtonStart.IsEnabled = tournamentController.ActiveTournament != null;
                 ButtonNewTournament.IsEnabled = true;
                 ButtonGOEPPImport.IsEnabled = true;
-                EditPlayerIsEnabled = activeTournament != null;
-                RemovePlayerIsEnabled = activeTournament != null;
-                ChangePairingIsEnabled = activeTournament.Pairings != null;
-                SaveIsEnabled = activeTournament != null;
+                EditPlayerIsEnabled = tournamentController.ActiveTournament != null;
+                RemovePlayerIsEnabled = tournamentController.ActiveTournament != null;
+                ChangePairingIsEnabled = tournamentController.ActiveTournament.Pairings != null;
+                SaveIsEnabled = tournamentController.ActiveTournament != null;
                 ResetLastResultsIsEnabled = false;
                 ButtonNextRound.IsEnabled = false;
                 ButtonGetResults.IsEnabled = false;
@@ -795,14 +645,14 @@ namespace TXM.GUI
             }
             if (tournamentStart)
             {
-                if (activeTournament.Rounds.Count > 1)
+                if (tournamentController.ActiveTournament.Rounds.Count > 1)
                     NewPlayerIsEnabled = false;
                 else
                     NewPlayerIsEnabled = true;
                 MenuItemTSettings.IsEnabled = true;
                 ButtonStart.IsEnabled = false;
                 ButtonGOEPPExport.IsEnabled = true;
-                ButtonEndTournament.IsEnabled = true;
+                //ButtonEndTournament.IsEnabled = true;
                 EditPlayerIsEnabled = false;
                 RemovePlayerIsEnabled = false;
                 ChangePairingIsEnabled = true;
@@ -829,7 +679,7 @@ namespace TXM.GUI
                 ButtonGetResults.IsEnabled = false;
                 MenuItemResetLastResults.IsEnabled = !end;
                 ButtonNextRound.IsEnabled = !end;
-                if (activeTournament.Cut == TournamentCut.NoCut || activeTournament.CutStarted)
+                if (tournamentController.ActiveTournament.Cut == TournamentCut.NoCut || tournamentController.ActiveTournament.CutStarted)
                     ButtonCut.IsEnabled = false;
                 else
                     ButtonCut.IsEnabled = true;
@@ -898,7 +748,6 @@ namespace TXM.GUI
             {
                 ButtonDisqualifyPlayer.IsEnabled = value;
                 MenuItemDisqualifyPlayer.IsEnabled = value;
-                MenuItemDropPlayer.IsEnabled = value;
             }
         }
 
@@ -941,128 +790,81 @@ namespace TXM.GUI
             }
         }
 
-        public bool RandomIsEnabled
-        {
-            get
-            {
-                return ButtonRandom.IsEnabled;
-            }
-            set
-            {
-                ButtonRandom.IsEnabled = value;
-                MenuItemRandom.IsEnabled = value;
-            }
-        }
-
         private void DisqualifyPlayer_Click(object sender, RoutedEventArgs e)
         {
             if (DataGridPlayer.SelectedIndex >= 0)
             {
-                Player player = ((List<Player>)DataGridPlayer.ItemsSource)[DataGridPlayer.SelectedIndex];
-                if (io.ShowMessageWithOKCancel("The player " + player.DisplayName + " will be disqualified. This can't be undone." ))
-                {
-                    activeTournament.DisqualifyPlayer(player);
-                    activeTournament.Sort();
-                    RefreshDataGridPlayer(activeTournament.Participants);
-                }
+                tournamentController.RemovePlayer(DataGridPlayer.SelectedIndex, true);
+                RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
             }
         }
 
         private void MenuItemShowPairings_Click(object sender, RoutedEventArgs e)
         {
-            if (activeTournament != null)
-            {
-                BeamerWindow bw = new Windows.BeamerWindow(DataGridPairing.ItemsSource, "Pairings", false);
-                bw.Show();
-            }
+            tournamentController.ShowProjector(new ProjectorWindow(), false);
         }
 
         private void MenuItemShowTable_Click(object sender, RoutedEventArgs e)
         {
-            if (activeTournament != null)
-            {
-                BeamerWindow bw = new Windows.BeamerWindow(DataGridPlayer.ItemsSource, "Table", true);
-                bw.Show();
-            }
+            tournamentController.ShowProjector(new ProjectorWindow(), true);
         }
 
         private void MenuItemPrint_Click(object sender, RoutedEventArgs e)
         {
-            if (activeTournament != null)
-            {
-                io.Print(activeTournament);
-            }
+            tournamentController.Print(true);
         }
 
         private void MenuItemTimeStart_Click(object sender, RoutedEventArgs e)
         {
-            if (tw == null)
-            {
-                io.ShowMessage("Timer must be started first.");
-            }
-            else
-                tw.StartTimer();
+            tournamentController.StartTimer();
         }
 
         private void MenuItemTimePause_Click(object sender, RoutedEventArgs e)
         {
-            if (tw == null)
-            {
-                io.ShowMessage("Timer must be started first.");
-            }
+            tournamentController.PauseTimer();
+            if (tournamentController.ActiveTimer.Started)
+                ButtonPause.Content = "Pause";
             else
-            {
-                tw.PauseTimer();
-                if (tw.Started)
-                    MenuItemTimePause.Header = "Pause";
-                else
-                    MenuItemTimePause.Header = "Resume";
-            }
+                ButtonPause.Content = "Resume";
         }
 
         private void MenuItemTimeReset_Click(object sender, RoutedEventArgs e)
         {
-            if (tw == null)
-            {
-                io.ShowMessage("Timer must be started first.");
-            }
-            else
-                tw.ResetTimer();
+            tournamentController.ResetTimer();
         }
 
         private void PrintTime()
         {
-            MenuItemTime.Header = tw.ActualTime;
+            LabelTime.Content = tournamentController.ActiveTimer.ActualTime;
         }
 
         private void MenuItemPrintPairing_Click(object sender, RoutedEventArgs e)
         {
-            if (activeTournament != null)
-            {
-                io.Print(activeTournament, false);
-            }
+            tournamentController.Print(true, true);
         }
 
         private void RefreshPlayerList(object sender, RoutedEventArgs e)
         {
-            RefreshDataGridPlayer(activeTournament.Participants);
+            RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
         }
 
         private void RefreshPairingsList(object sender, RoutedEventArgs e)
         {
-            RefreshDataGridPairings(activeTournament.Pairings);
+            RefreshDataGridPairings(tournamentController.ActiveTournament.Pairings);
         }
 
         private void MenuItemPrintParingScore_Click(object sender, RoutedEventArgs e)
         {
-            io.PrintScoreSheet(activeTournament);
+            tournamentController.PrintScoreSheet();
         }
 
         private void MenuItemAbout_Click(object sender, RoutedEventArgs e)
         {
-            AboutDialog ad = new AboutDialog();
-            ad.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            ad.ShowDialog();
+            AboutDialog ad = new AboutDialog()
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            tournamentController.ShowAbout(ad);
         }
 
         private void DataGridPlayer_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -1070,7 +872,7 @@ namespace TXM.GUI
             //(List<Player>)Data.ItemsSource
             if(e.EditAction == DataGridEditAction.Commit)
             {
-                Player player = activeTournament.Participants[DataGridPlayer.SelectedIndex];
+                Player player = tournamentController.ActiveTournament.Participants[DataGridPlayer.SelectedIndex];
                 player.Present = !player.Present;
                 //activeTournament.ChangePlayer(player);
             }
@@ -1078,10 +880,31 @@ namespace TXM.GUI
 
         private void MenuItemPrintResult_Click(object sender, RoutedEventArgs e)
         {
-            if (activeTournament != null)
+            tournamentController.Print(true, true, true);
+        }
+
+        private void MenuItemBBCode_Click(object sender, RoutedEventArgs e)
+        {
+            tournamentController.GetBBCode(new OutputDialog(), new WindowsClipboard());
+        }
+
+        private void MenuItemCSVImport_Click(object sender, RoutedEventArgs e)
+        {
+            tournamentController.Import(new NewTournamentDialog(), true);
+            if (tournamentController.ActiveTournament != null)
             {
-                io.Print(activeTournament, true);
+                ComboBoxRounds.Items.Clear();
+                InitDataGridPlayer();
+                InitDataGridPairing();
+                SetGUIState(true);
+                DataGridPlayer.ItemsSource = tournamentController.ActiveTournament.Participants;
+                RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
             }
+        }
+
+        private void TextBoxTime_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBoxTime.Text = tournamentController.SetTimer(TextBoxTime.Text);
         }
     }
 }

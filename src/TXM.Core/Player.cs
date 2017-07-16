@@ -1,27 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace TXM.Core
 {
     [Serializable]
-    public enum Faction
-    {
-        Imperial,
-        Rebels,
-        Scum
-    }
-
-    [Serializable]
     public class Player
     {
+        private static int currentID = 0;
+        private int version = 0;
+
         #region Player Informations
         public string Name { get; set; }
         public string Forename { get; set; }
         public string Nickname { get; set; }
-        public int TableNr { get; set; }
+        public int TableNo { get; set; }
         public string DisplayName
         {
             get
@@ -35,114 +28,57 @@ namespace TXM.Core
         public string Team { get; set; }
         public string City { get; private set; }
         public string SquadList { get; set; }
-        public bool Disqualified
-        {
-            get
-            {
-                if (disqualified == null)
-                    disqualified = false;
-                return disqualified;
-            }                
-        }
-        private bool disqualified;
-        public bool Dropped
-        {
-            get
-            {
-                if (dropped == null)
-                    dropped = false;
-                return dropped;
-            }
-        }
-        private bool dropped;
-        public int DropPos
-        {
-            get
-            {
-                if (dropPos == 0)
-                    dropPos = 999999999;
-                return dropPos;
-            }
-        }
-        private int dropPos = 999999999;
-        public bool DefeatedAllInGroup
-        {
-            get
-            {
-                if (defeatedAllInGroup == null)
-                    defeatedAllInGroup = false;
-                return defeatedAllInGroup;
-            }
-            set
-            {
-                defeatedAllInGroup = value;
-            }
-        }
-        private bool present;
-        public bool Present
-        {
-            get
-            {
-                if (present == null)
-                    present = false;
-                return present;
-            }
-            set
-            {
-                present = value;
-            }
-        }
-        private bool defeatedAllInGroup;
-        private static int currentStartNr = 0;
+        public bool Disqualified { get; set; }              
+        public bool Dropped { get; set; }
+        public bool Present { get; set; }
         public int Order
         {
             get
             {
-                Random r = new Random();
-                return r.Next(0, 99999);
+                return new Random().Next(0, 99999);
             }
         }
-
         #endregion
 
         #region Game Infomations
-        public int Nr { get; set; }
+        public int ID { get; set; }
         public int Wins { get;  set; }
         public int ModifiedWins { get;  set; }
-        public int Looses { get;  set; }
+        public int Losses { get;  set; }
+        public int ModifiedLosses { get; set; }
         public int Draws { get;  set; }
-        public int Points { get;  set; }
-        public int PointsDestroyed { get;  set; }
-        public int PointsLost { get;  set; }
-        public double PointsOfEnemies { get;  set; }
-        public int PointOfSquad { get; set; }
+        public int TournamentPoints { get;  set; }
+        public int DestroyedPoints { get;  set; }
+        public int LostPoints { get;  set; }
+        public double StrengthOfSchedule { get;  set; }
+        public double ExtendedStrengthOfSchedule { get; set; }
         public int MarginOfVictory { get;  set; }
-        public Faction PlayersFaction { get; set; }
+        public string Faction { get; set; }
         public List<Result> Results { get; set; }
         #endregion
 
         #region Tournament Informations
-        public List<Player> Enemies { get; private set; }
-        public bool Freeticket { get; set; }
+        public List<Player> Enemies { get; set; }
+        public bool Bye { get; set; }
         public bool Paired { get; set; }
-        public bool WonFreeticket { get; set; }
+        public bool WonBye { get; set; }
         #endregion
 
         #region T3 Informations
         public int T3ID { get; private set; }
         public int Rank { get; set; }
         public int ArmyRank { get; set; }
-        public bool Payed { get; set; }
-        public bool SquadListGiven { get; set; }
+        public bool Paid { get; set; }
+        public bool ListGiven { get; set; }
         #endregion
 
         #region Constructors
-        public Player(Player p):this(p.Name, p.Forename, p.Nickname, p.Team,p.City,p.Wins,p.ModifiedWins,p.Looses,p.Draws,p.Points,p.PointsDestroyed,p.PointsLost,p.PointsOfEnemies,p.PointOfSquad,p.MarginOfVictory,p.PlayersFaction,p.Freeticket,p.Paired,p.WonFreeticket,p.T3ID,p.Rank,p.ArmyRank,p.Payed,p.SquadListGiven,p.Nr)
+        public Player(Player p):this(p.Name, p.Forename, p.Nickname, p.Team,p.City,p.Wins,p.ModifiedWins,p.Losses,p.Draws,p.TournamentPoints,p.DestroyedPoints,p.LostPoints,p.StrengthOfSchedule,p.MarginOfVictory,p.Faction,p.Bye,p.Paired,p.WonBye,p.T3ID,p.Rank,p.ArmyRank,p.Paid,p.ListGiven,p.ID)
         {
 
         }
 
-        public Player(string name, string forename, string nickname, string team, string city, int wins, int modifiedWins, int looses, int draws, int points, int pointsDestroyed, int pointsLost, double pointsOfEnemies,  int pointOfSquad, int marginOfVictory, Faction playersFaction, bool freeticket, bool paired, bool wonFreeticket, int t3ID, int rank, int armyRank, bool payed, bool squadListGiven, int nr = -1)
+        public Player(string name, string forename, string nickname, string team, string city, int wins, int modifiedWins, int looses, int draws, int points, int pointsDestroyed, int pointsLost, double pointsOfEnemies, int marginOfVictory, string playersFaction, bool freeticket, bool paired, bool wonFreeticket, int t3ID, int rank, int armyRank, bool payed, bool squadListGiven, int nr = -1)
         {
             Name = name;
             Forename = forename;
@@ -151,52 +87,69 @@ namespace TXM.Core
             City = city;
             Wins = wins;
             ModifiedWins = modifiedWins;
-            Looses = looses;
+            Losses = looses;
             Draws = draws;
-            Points = points;
-            PointsDestroyed = pointsDestroyed;
-            PointsLost = pointsLost;
-            PointsOfEnemies = pointsOfEnemies;
-            PointOfSquad = pointOfSquad;
+            TournamentPoints = points;
+            DestroyedPoints = pointsDestroyed;
+            LostPoints = pointsLost;
+            StrengthOfSchedule = pointsOfEnemies;
             MarginOfVictory = marginOfVictory;
-            PlayersFaction = playersFaction;
-            Freeticket = freeticket;
+            Faction = playersFaction;
+            Bye = freeticket;
             Paired = paired;
-            WonFreeticket = wonFreeticket;
+            WonBye = wonFreeticket;
             T3ID = t3ID;
             Rank = rank;
             ArmyRank = armyRank;
-            Payed = payed;
-            SquadListGiven = squadListGiven;
+            Paid = payed;
+            ListGiven = squadListGiven;
             if (nr == -1)
-                Nr = ++currentStartNr;
+                ID = ++currentID;
             else
-                Nr = nr;
+                ID = nr;
             Enemies = new List<Player>();
             Results = new List<Result>();
         }
 
-        public Player(int t3ID, string forename, string name, string nickname, string faction, string city, string team, bool payed, bool armylistgiven, int pointOfSquad = 100)
-            : this(name, forename, nickname, team, city, 0, 0, 0, 0, 0, 0, 0, 0, pointOfSquad, 0, StringToFaction(faction), false, false, false, t3ID, 0, 0, payed, armylistgiven)
+        public Player(int t3ID, string forename, string name, string nickname, string faction, string city, string team, bool payed, bool armylistgiven)
+            : this(name, forename, nickname, team, city, 0, 0, 0, 0, 0, 0, 0, 0, 0, faction, false, false, false, t3ID, 0, 0, payed, armylistgiven)
         { }
 
-        public Player(string nickname, int pointOfSquad, Faction playersFaction)
-            : this(0, "", "", nickname, FactionToString(playersFaction), "", "", false, false, pointOfSquad)
+        public Player(string nickname, string playersFaction)
+            : this(0, "", "", nickname, playersFaction, "", "", false, false)
         { }
 
         public Player(string nickname)
-            : this(nickname, 100, Faction.Imperial)
+            : this(nickname, "Imperial")
         { }
         #endregion
 
         #region Public Functions
+        public static Player GetWonBye()
+        {
+            Player p = new Player("WonBye")
+            {
+                ID = -2
+            };
+            return p;
+        }
+
+        public static Player GetBye()
+        {
+            Player p = new Player("Bye")
+            {
+                ID = -1
+            };
+            return p;
+        }
+
         public bool HasPlayedVS(Player enemy)
         {
             if (Enemies == null)
                 return false;
-            foreach (Player enemie in Enemies)
+            foreach (Player _enemy in Enemies)
             {
-                if (enemie.Nr == enemy.Nr)
+                if (_enemy.ID == enemy.ID)
                 {
                     return true;
                 }
@@ -210,8 +163,8 @@ namespace TXM.Core
                 return false;
             for(int i = 0; i < Enemies.Count; i++)
             {
-                var enemie = Enemies[i];
-                if (enemie.Nr == enemy.Nr)
+                var _enemy = Enemies[i];
+                if (_enemy.ID == enemy.ID)
                 {
                     return Results[i].Destroyed - Results[i].Lost > 0;
                 }
@@ -219,93 +172,30 @@ namespace TXM.Core
             return false;
         }
 
-        public void SumEnemiesStrength()
+        public void SumStrengthOfSchedule()
         {
-            PointsOfEnemies = 0;
+            StrengthOfSchedule = 0;
             for (int i = 0; i < Enemies.Count; i++)
             {
-                PointsOfEnemies += GetEnemyStrength(i);
+                StrengthOfSchedule += GetEnemyTournamentPoints(i);
             }
-            PointsOfEnemies = PointsOfEnemies / Results.Count;
+            StrengthOfSchedule = StrengthOfSchedule / Results.Count;
         }
 
-        public bool AddResult(Result result, bool update = false)
+        public void SumExtendedStrengthOfSchedule()
         {
-            bool winner = false;
-            int mov;
-            if (Results == null)
-                Results = new List<Result>();
-            if (Freeticket)
+            ExtendedStrengthOfSchedule = 0;
+            for (int i = 0; i < Enemies.Count; i++)
             {
-                MarginOfVictory += (int)(1.5 * result.MaxSquadPoints);
-
-                Wins++;
-                winner = true;
-
-                Points ++;
-
-                Enemies.Add(result.Enemy);
-
-                Freeticket = false;
+                ExtendedStrengthOfSchedule += Enemies[i].StrengthOfSchedule;
             }
-            else if (result.FirstRound && WonFreeticket)
-            {
-                MarginOfVictory += 2 * result.MaxSquadPoints;
-
-                Wins++;
-                winner = true;
-
-                Points ++;
-
-            }
-            else
-            {
-                mov = result.MaxSquadPoints + CalcuateMarginOfVictory(result.Destroyed, result.Lost, result.Enemy.PointOfSquad, result.MaxSquadPoints);
-                PointsDestroyed += result.Destroyed;
-                PointsLost += result.Lost;
-                MarginOfVictory += mov;
-
-                if (result.Destroyed <= result.Lost)
-                {
-                    if (result.Destroyed == result.Lost && result.WinnerID == this.Nr)
-                    {
-                        Wins++;
-                        Points++;
-                    }
-                    else
-                        Looses++;
-                }
-                else
-                {
-                    Points ++;
-                    Wins++;
-                    winner = true;
-                }
-            }
-
-            if (!update)
-            {
-                Results.Add(result);
-                Enemies.Add(result.Enemy);
-            }
-
-            return winner;
+            ExtendedStrengthOfSchedule = ExtendedStrengthOfSchedule / Results.Count;
         }
 
         public void AddLastEnemy(Player enemy)
         {
             Enemies.Add(enemy);
-
-            SumEnemiesStrength();
-        }
-
-        public void Update(Result r, int round)
-        {
-            RemoveRound(round-1);
-
-            //Add new Result:
-            AddResult(r, true);
-            Results[round - 1] = r;
+            SumStrengthOfSchedule();
         }
 
         public void RemoveLastResult()
@@ -317,24 +207,24 @@ namespace TXM.Core
         public void RemoveRound(int round)
         {           
             Result result = Results[round];
-            int mov = result.MaxSquadPoints + CalcuateMarginOfVictory(result.Destroyed, result.Lost, result.Enemy.PointOfSquad, result.MaxSquadPoints);
-            PointsDestroyed -= result.Destroyed;
-            PointsLost -= result.Lost;
+            int mov = result.MaxPoints;// + CalcuateMarginOfVictory(result.Destroyed, result.Lost, result.Enemy.PointOfSquad, result.MaxPoints);
+            DestroyedPoints -= result.Destroyed;
+            LostPoints -= result.Lost;
             MarginOfVictory -= mov;
 
             if (result.Destroyed <= result.Lost)
             {
-                if (result.Destroyed == result.Lost && result.WinnerID == this.Nr)
+                if (result.Destroyed == result.Lost && result.WinnerID == this.ID)
                 {
                     Wins--;
-                    Points--;
+                    TournamentPoints--;
                 }
                 else
-                    Looses--;
+                    Losses--;
             }
             else
             {
-                    Points --;
+                    TournamentPoints --;
                     Wins--;
             }
             Enemies.RemoveAt(Enemies.Count - 1);
@@ -342,11 +232,16 @@ namespace TXM.Core
 
         public void Disqualify()
         {
-            disqualified = true;
+            Disqualified = true;
             if (Nickname != null)
                 Nickname += " <disqualified>";
             else
                 Name += " <disqualified>";
+        }
+
+        public static void ResetID()
+        {
+            currentID = 0;
         }
         #endregion
 
@@ -358,94 +253,37 @@ namespace TXM.Core
                 return Enemies.Count;
             }
         }
-
-        public string PrintName
-        {
-            get
-            {
-                return Forename + " " + Nickname;
-            }
-        }
-
-        public string PlayersFactionAsString
-        {
-            get
-            {
-                if (PlayersFaction == Faction.Imperial)
-                    return "Imperial";
-                else if (PlayersFaction == Faction.Scum)
-                    return "Scum and Villainy";
-                else
-                    return "Rebels";
-            }
-        }
         #endregion
 
         #region Static Functions
         public bool Equals(Player other)
         {
-            return Nr == other.Nr;
-        }
-
-        public static string FactionToString(Faction faction)
-        {
-            if (faction == Faction.Imperial)
-                return "Imperial";
-            else if (faction == Faction.Scum)
-                return "Scum and Villainy";
-            else
-                return "Rebels";
-        }
-
-        public static Faction StringToFaction(string faction)
-        {
-            if (faction == "Imperial")
-                return Faction.Imperial;
-            else if (faction == "Scum and Villainy")
-                return Faction.Scum;
-            else
-                return Faction.Rebels;
+            return ID == other.ID;
         }
 
 
-        public static string[] GetFactions()
-        {
-            return new string[] { "Imperial", "Rebels", "Scum and Villainy" };
-        }
         #endregion
 
         #region private Functions
-        private double GetEnemyStrength(int enemyNr)
+        private double GetEnemyTournamentPoints(int enemyNr)
         {
             if (enemyNr < 0)
                 return 0;
             else
             {
-                return ((double) Enemies[enemyNr].Points) / Enemies[enemyNr].Results.Count;
-            }
-        }
-
-        private int CalcuateMarginOfVictory(int destroyed, int lost, int enemySquadPoints, int maxSquadPoints)
-        {
-            if (destroyed >= enemySquadPoints)
-                return maxSquadPoints - lost;
-            else
-            {
-                if (lost >= PointOfSquad)
-                    lost = maxSquadPoints;
-                return destroyed - lost;
+                return ((double) Enemies[enemyNr].TournamentPoints) / Enemies[enemyNr].Results.Count;
             }
         }
 
         public void GetResults(Player p)
         {
             Draws = p.Draws;
-            Looses = p.Looses;
+            Losses = p.Losses;
             Wins = p.Wins;
-            Points = p.Points;
-            PointsDestroyed = p.PointsDestroyed;
-            PointsLost = p.PointsLost;
-            PointsOfEnemies = p.PointsOfEnemies;
+            TournamentPoints = p.TournamentPoints;
+            DestroyedPoints = p.DestroyedPoints;
+            LostPoints = p.LostPoints;
+            StrengthOfSchedule = p.StrengthOfSchedule;
             ModifiedWins = p.ModifiedWins;
             MarginOfVictory = p.MarginOfVictory;
         }
@@ -453,11 +291,92 @@ namespace TXM.Core
 
         public void Drop()
         {
-            dropped = true;
+            Dropped = true;
             if (Nickname != null)
                 Nickname += " <dropped>";
             else
                 Name += " <dropped>";
         }
+
+		public Player(SerializationInfo info, StreamingContext context)
+		{
+			version = (int)info.GetValue("Player_Version", typeof(int));
+			if (version == 0)
+			{
+				currentID = (int)info.GetValue("Player_currentID", typeof(int));
+                Name = (string)info.GetValue("Player_Name", typeof(string));
+                Forename = (string)info.GetValue("Player_Forename", typeof(string));
+                Nickname = (string)info.GetValue("Player_Nickname", typeof(string));
+                TableNo = (int)info.GetValue("Player_TableNo", typeof(int));
+                Team = (string)info.GetValue("Player_Team", typeof(string));
+                City = (string)info.GetValue("Player_City", typeof(string));
+                SquadList = (string)info.GetValue("Player_SquadList", typeof(string));
+                Disqualified = (bool)info.GetValue("Player_Disqualified", typeof(bool));
+                Dropped = (bool)info.GetValue("Player_Dropped", typeof(bool));
+                Present = (bool)info.GetValue("Player_Present", typeof(bool));
+                ID = (int)info.GetValue("Player_ID", typeof(int));
+                Wins = (int)info.GetValue("Player_Wins", typeof(int));
+                ModifiedWins = (int)info.GetValue("Player_ModifiedWins", typeof(int));
+                Losses = (int)info.GetValue("Player_Losses", typeof(int));
+                ModifiedLosses = (int)info.GetValue("Player_ModifiedLosses", typeof(int));
+                Draws = (int)info.GetValue("Player_Draws", typeof(int));
+                TournamentPoints = (int)info.GetValue("Player_TournamentPoints", typeof(int));
+                DestroyedPoints = (int)info.GetValue("Player_DestroyedPoints", typeof(int));
+                LostPoints = (int)info.GetValue("Player_LostPoints", typeof(int));
+                StrengthOfSchedule = (double)info.GetValue("Player_StrengthOfSchedule", typeof(double));
+                ExtendedStrengthOfSchedule = (double)info.GetValue("Player_ExtendedStrengthOfSchedule", typeof(double));
+                MarginOfVictory = (int)info.GetValue("Player_MarginOfVictory", typeof(int));
+                Faction = (string)info.GetValue("Player_Faction", typeof(string));
+                Results = (List<Result>)info.GetValue("Player_Results", typeof(List<Result>));
+                Enemies = (List<Player>)info.GetValue("Player_Enemies", typeof(List<Player>));
+                Bye = (bool)info.GetValue("Player_Bye", typeof(bool));
+                Paired = (bool)info.GetValue("Player_Paired", typeof(bool));
+                WonBye = (bool)info.GetValue("Player_WonBye", typeof(bool));
+                T3ID = (int)info.GetValue("Player_T3ID", typeof(int));
+                Rank = (int)info.GetValue("Player_Rank", typeof(int));
+                ArmyRank = (int)info.GetValue("Player_ArmyRank", typeof(int));
+                Paid = (bool)info.GetValue("Player_Paid", typeof(bool));
+                ListGiven = (bool)info.GetValue("Player_ListGiven", typeof(bool));
+			}
+		}
+
+		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			info.AddValue("Player_Version", version, typeof(int));
+			info.AddValue("Player_currentID", currentID, typeof(int));
+			info.AddValue("Player_Name", Name, typeof(string));
+			info.AddValue("Player_Forename", Forename, typeof(string));
+			info.AddValue("Player_Nickname", Nickname, typeof(string));
+			info.AddValue("Player_TableNo", TableNo, typeof(int));
+			info.AddValue("Player_Team", Team, typeof(string));
+			info.AddValue("Player_City", City, typeof(string));
+			info.AddValue("Player_SquadList", SquadList, typeof(string));
+			info.AddValue("Player_Disqualified", Disqualified, typeof(bool));
+			info.AddValue("Player_Dropped", Dropped, typeof(bool));
+			info.AddValue("Player_Present", Present, typeof(bool));
+			info.AddValue("Player_ID", ID, typeof(int));
+			info.AddValue("Player_Wins", Wins, typeof(int));
+			info.AddValue("Player_ModifiedWins", ModifiedWins, typeof(int));
+			info.AddValue("Player_Losses", Losses, typeof(int));
+			info.AddValue("Player_ModifiedLosses", ModifiedLosses, typeof(int));
+			info.AddValue("Player_Draws", Draws, typeof(int));
+			info.AddValue("Player_TournamentPoints", TournamentPoints, typeof(int));
+			info.AddValue("Player_DestroyedPoints", DestroyedPoints, typeof(int));
+			info.AddValue("Player_LostPoints", LostPoints, typeof(int));
+			info.AddValue("Player_StrengthOfSchedule", StrengthOfSchedule, typeof(double));
+			info.AddValue("Player_ExtendedStrengthOfSchedule", ExtendedStrengthOfSchedule, typeof(double));
+			info.AddValue("Player_MarginOfVictory", MarginOfVictory, typeof(int));
+			info.AddValue("Player_Faction", Faction, typeof(string));
+			info.AddValue("Player_Results", Results, typeof(List<Result>));
+			info.AddValue("Player_Enemies", Enemies, typeof(List<Player>));
+			info.AddValue("Player_Bye", Bye, typeof(bool));
+			info.AddValue("Player_Paired", Paired, typeof(bool));
+			info.AddValue("Player_WonBye", WonBye, typeof(bool));
+			info.AddValue("Player_T3ID", T3ID, typeof(int));
+			info.AddValue("Player_Rank", Rank, typeof(int));
+			info.AddValue("Player_ArmyRank", ArmyRank, typeof(int));
+			info.AddValue("Player_Paid", Paid, typeof(bool));
+			info.AddValue("Player_ListGiven", ListGiven, typeof(bool));
+		}
     }
 }

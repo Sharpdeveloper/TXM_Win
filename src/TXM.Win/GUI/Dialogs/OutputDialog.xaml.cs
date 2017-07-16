@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
 using TXM.Core;
 
@@ -19,32 +7,49 @@ namespace TXM.GUI.Dialogs
     /// <summary>
     /// Interaktionslogik für OuputDialog.xaml
     /// </summary>
-    public partial class OutputDialog : Window
+    public partial class OutputDialog : Window, IOutputDialog
     {
-        private static double width = 800, height = 600;
-        public OutputDialog(string text)
+        private bool ok = false;
+
+        public OutputDialog()
         {
             InitializeComponent();
+        }
 
-            this.textblockOutput.Text = text;
-            this.Height = height;
-            this.Width = width;
+        public bool GetDialogResult()
+        {
+            return ok;
+        }
+
+        public bool IsPairingOutput()
+        {
+            return CheckBoxCurrentPairings.IsChecked == true;
+        }
+
+        public bool IsResultOutput()
+        {
+            return CheckBoxLastResult.IsChecked == true;
+        }
+
+        public bool IsTableOutput()
+        {
+            return CheckBoxCurrentTable.IsChecked == true;
+        }
+
+        public new void ShowDialog()
+        {
+            base.ShowDialog();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            ok = true;
             this.Close();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetText(this.textblockOutput.Text);
-        }
-
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            height = this.Height;
-            width = this.Width;
+            this.Close();
         }
     }
 }

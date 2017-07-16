@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 using TXM.Core;
 
@@ -19,28 +11,45 @@ namespace TXM.GUI.Dialogs
     /// <summary>
     /// Interaktionslogik für SetPairingDialog.xaml
     /// </summary>
-    public partial class SetPairingDialog : Window
+    public partial class SetPairingDialog : Window, IPairingDialog
     {
         private List<Player> Players;
         private List<Player> PlayerWithoutPairing;
-        public List<Pairing> PremadePairing;
+        private List<Pairing> PremadePairing;
         private List<string> tempList; 
         private string Nick1;
         private string Nick2;
         public bool OK = false;
         private List<int> unusedTables;
 
-        public SetPairingDialog(List<Player> players, List<Pairing> prePaired)
+        public SetPairingDialog()
         {
             InitializeComponent();
 
             unusedTables = new List<int>();
 
-            Players = players;
-
             PlayerWithoutPairing = new List<Player>();
 
-            PremadePairing = prePaired;
+            SetComboboxPlayer1();
+            ComboboxPlayer2.Items.Add("Player  2");
+            ComboboxPlayer2.SelectedIndex = 0;
+            ButtonAdd.IsEnabled = false;
+        }
+
+        public void SetParticipants(List<Player> participants)
+        {
+            Players = participants;
+
+            foreach (Player player in Players)
+            {
+                if (!player.Paired)
+                    PlayerWithoutPairing.Add(player);
+            }
+        }
+
+        public void SetPairings(List<Pairing> pairings)
+        {
+            PremadePairing = pairings;
 
             if (PremadePairing == null)
                 PremadePairing = new List<Pairing>();
@@ -49,25 +58,25 @@ namespace TXM.GUI.Dialogs
                 foreach (Pairing p in PremadePairing)
                 {
                     ListboxPairings.Items.Add(p.Player1.DisplayName + " VS " + p.Player2.DisplayName);
-                    players[players.IndexOf(p.Player1)].Paired = true;
-                    try {
-                        players[players.IndexOf(p.Player2)].Paired = true;
+                    Players[Players.IndexOf(p.Player1)].Paired = true;
+                    try
+                    {
+                        Players[Players.IndexOf(p.Player2)].Paired = true;
                     }
-                    catch(ArgumentOutOfRangeException e)
+                    catch (ArgumentOutOfRangeException)
                     { }
                 }
             }
+        }
 
-            foreach (Player player in Players)
-            {
-                if (!player.Paired)
-                    PlayerWithoutPairing.Add(player);
-            }
+        public List<Pairing> GetPairings()
+        {
+            return PremadePairing;
+        }
 
-            SetComboboxPlayer1();
-            ComboboxPlayer2.Items.Add("Player  2");
-            ComboboxPlayer2.SelectedIndex = 0;
-            ButtonAdd.IsEnabled = false;
+        public bool GetDialogResult()
+        {
+            return OK;
         }
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
@@ -102,7 +111,7 @@ namespace TXM.GUI.Dialogs
             }
             if (Nick2 == "Bye")
             {
-                p.Player1.Freeticket = true;
+                p.Player1.Bye = true;
                 p.Player2 = new Player("Bye");
             }
             PremadePairing.Add(p);
@@ -226,6 +235,11 @@ namespace TXM.GUI.Dialogs
                 ButtonSub.IsEnabled = true;
             else
                 ButtonSub.IsEnabled = false;
+        }
+
+        public new void ShowDialog()
+        {
+            base.ShowDialog();
         }
     }
 }

@@ -33,8 +33,10 @@ namespace TXM
 
         public bool Open()
         {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "";
+            OpenFileDialog dlg = new OpenFileDialog()
+            {
+                Filter = ""
+            };
             dlg.Filter += filterName[0] + " |" + filter[0];
             for (int i = 1; i < filter.Count; i++) 
                 dlg.Filter += "|" + filterName[i] + " |" + filter[i];
@@ -46,8 +48,10 @@ namespace TXM
 
         public bool Save()
         {
-            SaveFileDialog dlg = new SaveFileDialog();
-            dlg.Filter = "";
+            SaveFileDialog dlg = new SaveFileDialog()
+            {
+                Filter = ""
+            };
             for (int i = 0; i < filter.Count; i++)
                 dlg.Filter += filterName[i] + " |" + filter[i];
             Nullable<bool> result = dlg.ShowDialog();

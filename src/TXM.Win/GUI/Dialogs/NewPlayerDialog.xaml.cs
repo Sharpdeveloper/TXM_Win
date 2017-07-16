@@ -19,52 +19,77 @@ namespace TXM.GUI.Dialogs
     /// <summary>
     /// Interaktionslogik für NewPlayerDialog.xaml
     /// </summary>
-    public partial class NewPlayerDialog : Window
+    public partial class NewPlayerDialog : Window, IPlayerDialog
     {
-        public bool DialogReturn { get; private set; }
-        public bool Changes { get; private set; }
-        public int SquadPoints { get; private set; }
-        public Player CurrentPlayer { get; private set; }
-        private List<string> Nicknames;
-        private bool uniqueName = false;
+        private bool dialogResult = false;
+        private bool changes = false;
+        private Player CurrentPlayer;
         private bool nicknameRequiered = true;
 
-        public NewPlayerDialog(List<string> nicknames, Player player = null)
+        public NewPlayerDialog(AbstractRules rules)
         {
             InitializeComponent();
-            Nicknames = nicknames;
             TextBoxNickname.Focus();
-            Changes = false;
+            changes = false;
             //Noch steuern, welcher Spieler angelegt werden soll
-            foreach (string s in Player.GetFactions())
+            foreach (string s in rules.Factions)
                 ComboBoxFaction.Items.Add(s);
-            if(player !=null)
-            {
-                CurrentPlayer = player;
-                TextBoxForename.Text = CurrentPlayer.Forename;
-                TextBoxName.Text = CurrentPlayer.Name;
-                TextBoxNickname.Text = CurrentPlayer.Nickname;
-                TextBoxTeam.Text = CurrentPlayer.Team;
-                if (Player.StringToFaction("Imperium") == ((Player)CurrentPlayer).PlayersFaction)
-                    ComboBoxFaction.SelectedIndex = 0;
-                else if (Player.StringToFaction("Rebels") == ((Player)CurrentPlayer).PlayersFaction)
-                    ComboBoxFaction.SelectedIndex = 1;
-                else
-                    ComboBoxFaction.SelectedIndex = 2;
-                CheckboxFreeticket.IsChecked = ((Player)CurrentPlayer).WonFreeticket;
-                CheckboxPayed.IsChecked = CurrentPlayer.Payed;
-                CheckboxSquadListGiven.IsChecked = CurrentPlayer.SquadListGiven;
-                TextBoxNickname.IsEnabled = false;
-                uniqueName = true;
-                nicknameRequiered = false;
-                TextBoxTableNR.Text = player.TableNr.ToString();
-                CheckboxPresent.IsChecked = CurrentPlayer.Present;
-            }
+        }
+
+        public void SetPlayer(Player player)
+        {
+            CurrentPlayer = player;
+            TextBoxForename.Text = CurrentPlayer.Forename;
+            TextBoxName.Text = CurrentPlayer.Name;
+            TextBoxNickname.Text = CurrentPlayer.Nickname;
+            TextBoxTeam.Text = CurrentPlayer.Team;
+            ComboBoxFaction.SelectedValue = CurrentPlayer.Faction;
+            CheckboxFreeticket.IsChecked = ((Player)CurrentPlayer).WonBye;
+            CheckboxPayed.IsChecked = CurrentPlayer.Paid;
+            CheckboxSquadListGiven.IsChecked = CurrentPlayer.ListGiven;
+            TextBoxNickname.IsEnabled = false;
+            nicknameRequiered = false;
+            TextBoxTableNR.Text = player.TableNo.ToString();
+            CheckboxPresent.IsChecked = CurrentPlayer.Present;
+        }
+
+        public Player GetPlayer()
+        {
+            Player player = new Player(TextBoxNickname.Text, ComboBoxFaction.SelectedValue.ToString());
+            player.Team = TextBoxTeam.Text;
+            player.Name = TextBoxName.Text;
+            player.Forename = TextBoxForename.Text;
+            player.WonBye = CheckboxFreeticket.IsChecked == true;
+            player.ListGiven = CheckboxSquadListGiven.IsChecked == true;
+            player.Paid = CheckboxPayed.IsChecked == true;
+            player.TableNo = TableNr;
+            player.Present = CheckboxPresent.IsChecked == true;
+            return player;
+        }
+
+        public bool GetDialogResult()
+        {
+            return dialogResult;
+        }
+
+        public bool IsChanged()
+        {
+            return changes;
+        }
+
+        public void SetButtonOKText(string text)
+        {
+            ButtonOK.Content = text;
+        }
+
+        public void SetTitle(string text)
+        {
+            Title = text;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            DialogReturn = false;
+            dialogResult = false;
             this.Close();
         }
 
@@ -81,56 +106,21 @@ namespace TXM.GUI.Dialogs
                 return;
             else
             {
-                DialogReturn = true;
+                dialogResult = true;
                 this.Close();
             }
         }
 
-        public string GetFaction()
-        {
-            return ComboBoxFaction.SelectedValue.ToString();
-        }
-
-        public string GetNickName()
-        {
-            return TextBoxNickname.Text;                
-        }
-
-        public string GetName()
-        {
-            return TextBoxName.Text;
-        }
-
-        public string GetForename()
-        {
-            return TextBoxForename.Text;
-        }
-
-        public string GetTeam()
-        {
-            return TextBoxTeam.Text;
-        }
-
         private void ValueChanged(object sender, TextChangedEventArgs e)
         {
-            Changes = true;
+            changes = true;
             e.Handled = true;
         }
 
         private void ValueChanged(object sender, SelectionChangedEventArgs e)
         {
-            Changes = true;
+            changes = true;
             e.Handled = true;
-        }
-
-        public bool FreeTicket()
-        {
-            return CheckboxFreeticket.IsChecked == true;
-        }
-
-        public bool Present()
-        {
-            return CheckboxPresent.IsChecked == true;
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
@@ -141,7 +131,7 @@ namespace TXM.GUI.Dialogs
             }
         }
 
-        public int TableNr
+        private int TableNr
         {
             get
             {
@@ -158,26 +148,21 @@ namespace TXM.GUI.Dialogs
             }
         }
 
-        public bool Paid()
-        {
-            return CheckboxPayed.IsChecked == true;
-        }
-
-        public bool SquadListGiven()
-        {
-            return CheckboxSquadListGiven.IsChecked == true;
-        }
-
         private void TextBoxNickname_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Changes = true;
+            changes = true;
             e.Handled = true;
         }
 
         private void IntegerUpDownTableNr_ValueChanged(object sender, TextChangedEventArgs e)
         {
-            Changes = true;
+            changes = true;
             e.Handled = true;
+        }
+
+        public new void ShowDialog()
+        {
+            base.ShowDialog();
         }
     }
 }

@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Timers;
-using System.Reflection;
 
 using TXM.Core;
 
@@ -24,38 +13,24 @@ namespace TXM.GUI.Windows
     /// <summary>
     /// Interaktionslogik für MainWindow.xaml
     /// </summary>
-    public partial class TimerWindow : Window
+    public partial class TimerWindow : Window, ITimerWindow
     {
-        private Timer timer;
-        private int min, sec, Minute = 75;
-        public bool Started { get; private set; }
+        private TournamentTimer timer;
         private bool whiteText = false;
-        public IO Io { get; set; }
-        private string emptyTime, pauseText, continueText, imageText, invalidText;
+        private IO io;
 
-        public event ChangedEventHandler Changed;
-
-        public TimerWindow(IO io)
+        public TimerWindow()
         {
-            Io = io;
-
             whiteText = io.GetColor();
             
             bool whiteTextTemp = whiteText;
             InitializeComponent();
             whiteText = whiteTextTemp;
-            Started = false;
 
-            TextBoxMinutes.Text = Minute.ToString();
-                    
-            timer = new Timer();
-            timer.Interval = 1000;
-            timer.Elapsed += new ElapsedEventHandler(timer_Tick);
-
-            string imgurl = Io.GetImagePath();
+            string imgurl = io.GetImagePath();
             if(imgurl != "" && imgurl != null)
             {
-                Io.CopyImage();
+                io.CopyImage();
                 SetImage();
             }
 
@@ -64,105 +39,48 @@ namespace TXM.GUI.Windows
             else
                 SliderText.Value = 2.0;
             ChangeLabelColor();
-            LabelTime.Content = emptyTime;
+            LabelTime.Content = "MM:SS";
+        }
+
+        public void SetTimer(TournamentTimer t)
+        {
+            timer = t;
+            t.Changed += TimeChanged;
+        }
+
+        public void SetIO(IO _io)
+        {
+            io = _io;
+        }
+
+        private void TimeChanged(object sender, EventArgs e)
+        {
+            Dispatcher.Invoke(new Action(AktZeit));
+        }
+
+        private void AktZeit()
+        {
+            LabelTime.Content = timer.ActualTime;
         }
 
         private void ButtonStart_Click(object sender, RoutedEventArgs e)
         {
-            StartTimer();
-        }
-
-        public void StartTimer()
-        {
-            min = Minute;
-            sec = 0;
-            aktZeit();
-            start();
-        }
-
-        private void timer_Tick(object sender, EventArgs e)
-        {
-            if (sec == 0)
-            {
-                if (min == 0)
-                    stop();
-                else
-                {
-                    min--;
-                    sec = 59;
-                }
-            }
-            else
-                sec--;
-
-            Dispatcher.Invoke(new Action(aktZeit));
-
-            if (Changed != null)
-            {
-                Changed(this, new EventArgs());
-            }
-        }
-
-        public string ActualTime
-        {
-            get
-            {
-                return LabelTime.Content.ToString();
-            }
-        }
-
-        private void aktZeit()
-        {
-            LabelTime.Content = min.ToString("D2") + ":" + sec.ToString("D2");
+            timer.StartTimer();
         }
 
         private void ButtonPause_Click(object sender, RoutedEventArgs e)
         {
-            PauseTimer();
-        }
-
-        public void PauseTimer()
-        {
-            if (Started)
-                stop();
-            else
-                start();
+            timer.PauseTimer();
         }
 
         private void ButtonReset_Click(object sender, RoutedEventArgs e)
         {
-            ResetTimer();
-        }
-
-        public void ResetTimer()
-        {
-            stop();
-            min = Minute;
-            sec = 0;
-            aktZeit();
-            if (Changed != null)
-            {
-                Changed(this, new EventArgs());
-            }
-        }
-
-        private void stop()
-        {
-            timer.Stop();
-            //ButtonPause.Content = continueText;
-            Started = false;
-        }
-
-        private void start()
-        {
-            timer.Start();
-            //ButtonPause.Content = pauseText;
-            Started = true;
+            timer.ResetTimer();
         }
 
         private void SetImage_Click(object sender, RoutedEventArgs e)
         {
-            Io.NewImage();
+            io.NewImage();
             SetImage();
         }
 
@@ -175,15 +93,15 @@ namespace TXM.GUI.Windows
             }
             catch
             {
-                t = 75;
+                t = 60;
             }
-            Minute = t;
+            timer.DefaultTime = t;
         }
 
         private void Slider_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             whiteText = SliderText.Value == 1.0;
-            Io.WriteColor(whiteText);
+            io.WriteColor(whiteText);
             ChangeLabelColor();
         }
 
@@ -205,12 +123,17 @@ namespace TXM.GUI.Windows
         {
             try
             {
-                BackGroundImage.Source = new BitmapImage(new Uri(Io.TempImgPath));
+                BackGroundImage.Source = new BitmapImage(new Uri(io.TempImgPath));
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Io.ShowMessage(imageText + " " + Io.TempImgPath + " " + invalidText + ".");
+                io.ShowMessage("The Image " + io.TempImgPath + " is invalid.");
             }
+        }
+
+        private new void Show()
+        {
+            base.Show();
         }
     }
 }

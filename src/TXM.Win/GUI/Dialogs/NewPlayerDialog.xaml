@@ -18,7 +18,7 @@
         <TextBox x:Name="TextBoxForename" HorizontalAlignment="Left" Height="23" Margin="166,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="ValueChanged" TabIndex="3"/>
         <CheckBox x:Name="CheckboxFreeticket" Content="Won Bye" HorizontalAlignment="Left" Margin="130,258,0,0" VerticalAlignment="Top" TabIndex="9" RenderTransformOrigin="0.849,0.467"/>
         <CheckBox x:Name="CheckboxPayed" Content="Paid ($)" HorizontalAlignment="Left" Margin="20,238,0,0" VerticalAlignment="Top" TabIndex="7"/>
-        <CheckBox x:Name="CheckboxSquadListGiven" Content="SquadList given" HorizontalAlignment="Left" Margin="130,238,0,0" VerticalAlignment="Top" TabIndex="8"/>
+        <CheckBox x:Name="CheckboxSquadListGiven" Content="List given" HorizontalAlignment="Left" Margin="130,238,0,0" VerticalAlignment="Top" TabIndex="8"/>
         <Label x:Name="LabelListTable" Content="Fixed Table**" HorizontalAlignment="Left" Margin="12,207,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="TextBoxTableNR" HorizontalAlignment="Left" Height="23" Margin="166,210,0,0" VerticalAlignment="Top" Width="120" TextChanged="IntegerUpDownTableNr_ValueChanged" TabIndex="6"/>
         <Label x:Name="LabelFixedInfo" Content="**=For wheelchair users, so they always get the" HorizontalAlignment="Left" Margin="12,304,0,0" VerticalAlignment="Top"/>

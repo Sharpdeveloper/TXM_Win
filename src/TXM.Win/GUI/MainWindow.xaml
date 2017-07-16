@@ -9,22 +9,24 @@
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100px"/>
             <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="5px"/>
             <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="150px"/>
         </Grid.ColumnDefinitions>
-        <Menu Height="18" VerticalAlignment="Top" Grid.Row="0" Grid.ColumnSpan="3">
+        <Menu Height="18" VerticalAlignment="Top" Grid.Row="0" Grid.ColumnSpan="4">
             <MenuItem x:Name="MenuItemFile" Header="File">
                 <MenuItem x:Name="ButtonNewTournament" Header="New Tournament" Click="NewTournament_Click"/>
                 <MenuItem x:Name="ButtonLoad" Header="Load" Click="Load_Click"/>
                 <MenuItem x:Name="MenuItemSave" Header="Save" Click="Save_Click" IsEnabled="False"/>
                 <MenuItem x:Name="MenuItemAutosave" Header="Autosave Files">
                     <MenuItem x:Name="ButtonAutosave" Header="Load Autosave Files" Click="ButtonAutosave_Click"/>
-                    <MenuItem x:Name="MenuItemShowAutoSaveFolder"  Header="Show Autosave Folder" Click="MenuItemShoAutoSaveFolder_Click"/>
+                    <MenuItem x:Name="MenuItemShowAutoSaveFolder"  Header="Show Autosave Folder" Click="MenuItemOpenAutoSaveFolder_Click"/>
                     <MenuItem x:Name="MenuItemDeleteAutosaveFolder" Header="Delete Autosave Folder" Click="MenuItemDeleteAutosave_Click"/>
                 </MenuItem>
-                <MenuItem x:Name="MenuItemImportExport" Header="T3 Import/Export">
+                <MenuItem x:Name="MenuItemImportExport" Header="Import/Export">
                     <MenuItem x:Name="ButtonGOEPPImport" Header="T3 Import" Click="GOEPPImport_Click"/>
+                    <MenuItem x:Name="MenuItemCSVImport" Header="Excel (CSV) Import" Click="MenuItemCSVImport_Click"/>
                     <MenuItem x:Name="ButtonGOEPPExport" Header="T3 Export" IsEnabled="false" Click="GOEPPExport_Click"/>
                 </MenuItem>
                 <MenuItem x:Name="MenuItemPrintHeader" Header="Print">
@@ -40,63 +42,60 @@
                 <MenuItem x:Name="MenuItemResetLastResults" Header="Reset Last Results" IsEnabled="False" Click="MenuItemResetLastResults_Click"/>
                 <MenuItem x:Name="MenuItemTSettings" Header="Change Tournamentsettings" IsEnabled="False" Click="MenuItemTSettings_Click"/>
                 <MenuItem x:Name="ButtonStart" Header="Start Tournament" IsEnabled="false" Click="StartTournament_Click"/>
-                <MenuItem x:Name="ButtonEndTournament" Header="End Tournament" IsEnabled="false" Click="EndTournament_Click"/>
+                <!--<MenuItem x:Name="ButtonEndTournament" Header="Calculate SoS for Won Byes" IsEnabled="true" Click="EndTournament_Click"/>-->
             </MenuItem>
             <MenuItem x:Name="MenuItemPlayerManagement" Header="Playermanagement">
                 <MenuItem x:Name="MenuItemNewPlayer"  Header="Create new Player" Click="NewPlayer_Click" IsEnabled="False"/>
                 <MenuItem x:Name="MenuItemEditPlayer" Header="Edit Player" IsEnabled="False" Click="RibbonButtonEditPlayer_Click"/>
-                <MenuItem x:Name="MenuItemRemovePlayer" Header="Delete Player" Click="RemovePlayer_Click" IsEnabled="False"/>
-                <MenuItem x:Name="MenuItemDropPlayer" Header="Drop Player" Click="DropPlayer_Click" IsEnabled="False"/>
+                <MenuItem x:Name="MenuItemRemovePlayer" Header="Delete/Drop Player" Click="RemovePlayer_Click" IsEnabled="False"/>
                 <MenuItem x:Name="MenuItemDisqualifyPlayer" Header="Disqualify Player" Click="DisqualifyPlayer_Click" IsEnabled="False"/>
             </MenuItem>
             <MenuItem x:Name="MenuItemView" Header="View">
                 <MenuItem x:Name="MenuItemShowPairings" Header="Show Pairings" Click="MenuItemShowPairings_Click"/>
                 <MenuItem x:Name="MenuItemShowTable" Header="Show Table"  Click="MenuItemShowTable_Click"/>
-                <MenuItem x:Name="MenuItemOutputForForum" Header="BBCode (Forum)">
-                    <MenuItem x:Name="MenuItemTableForOutput" Header="Table of the current round" Click="MenuItem_Click_Table_Output"/>
-                    <MenuItem x:Name="MenuItemPairingForOutput" Header="Pairings of the current round" Click="MenuItem_Click_Pairing_Output"/>
-                    <MenuItem x:Name="MenuItemResultForOutput" Header="Results of the last round" Click="MenuItem_Click_Results_Output"/>
-                </MenuItem>
+                <MenuItem x:Name="MenuItemBBCode" Header="Get BBCode for Forum" Click="MenuItemBBCode_Click"/>
                 <MenuItem x:Name="MenuItemRefreshPlayerList" Header="Refresh Player List" Click="RefreshPlayerList"/>
                 <MenuItem x:Name="MenuItemRefreshPairingsList" Header="Refresh Pairings List" Click="RefreshPairingsList"/>
             </MenuItem>
             <MenuItem x:Name="MenuItemTools" Header="Tools">
                 <MenuItem x:Name="MenuItemTimer" Header="Timer" Click="NewTimer_Click" />
-                <MenuItem x:Name="MenuItemRandom" Header="Randomizer" Click="Random_Click" />
             </MenuItem>
             <MenuItem x:Name="MenuItemHelp" Header="Help">
                 <MenuItem x:Name="MenuItemUserHelp" Header="User Manual" IsEnabled="False"/>
                 <MenuItem x:Name="MenuItemAbout" Header="About TXM" Click="MenuItemAbout_Click"/>
             </MenuItem>
-            <MenuItem x:Name="MenuItemTime" Header="Shows Time for TO" ToolTip="Shows Time for TO">
-                <MenuItem x:Name="MenuItemTimeStart" Header="Start Timer" Click="MenuItemTimeStart_Click"/>
-                <MenuItem x:Name="MenuItemTimePause" Header="Pause Timer" Click="MenuItemTimePause_Click"/>
-                <MenuItem x:Name="MenuItemTimeReset" Header="Reset Timer" Click="MenuItemTimeReset_Click"/>
-            </MenuItem>         
         </Menu>
-        <ToolBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+        <ToolBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
+            <Button IsEnabled="False" x:Name="ButtonGetResults" Content="Get Results" ToolTip="Get Results" Click="ButtonGetResults_Click"/>
+            <Button IsEnabled="False" x:Name="ButtonNextRound" Content="Next Round" ToolTip="Next Round" Click="ButtonNextRound_Click"/>
+            <Button IsEnabled="False" x:Name="ButtonCut" Content="Start Cut" ToolTip="Start Cut" Click="ButtonCut_Click"/>
+            <Separator/>
+            <Label Content="Round"/>
+            <ComboBox x:Name="ComboBoxRounds" Text="Rounds" ToolTip="Rounds" SelectionChanged="ComboBoxRounds_SelectionChanged"/>
+            <Separator/>
             <Button x:Name="ButtonSave" Content="Save" ToolTip="Save" Click="Save_Click" IsEnabled="False"/>
             <Button x:Name="ButtonNewPlayer" Content="Create new Player" ToolTip="Create new Player" Click="NewPlayer_Click" IsEnabled="False"/>
             <Button x:Name="ButtonEditPlayer" Content="Edit Player" ToolTip="Edit Player" IsEnabled="False" Click="RibbonButtonEditPlayer_Click"/>
-            <Button x:Name="ButtonRemovePlayer" Content="Delete Player" ToolTip="Delete Player" Click="RemovePlayer_Click" IsEnabled="False"/>
+            <Button x:Name="ButtonRemovePlayer" Content="Delete/Drop Player" ToolTip="Delete/Drop Player" Click="RemovePlayer_Click" IsEnabled="False"/>
             <Button x:Name="ButtonDisqualifyPlayer" Content="Disqualify Player" ToolTip="Disqualify Player" Click="DisqualifyPlayer_Click" IsEnabled="False"/>
             <Button x:Name="ButtonChangePairing" Content="Change Pairings" ToolTip="Change Pairings" IsEnabled="false" Click="ButtonChangePairing_Click"/>
             <Button x:Name="ButtonResetLastResults" Content="Reset last results" ToolTip="Reset last results" IsEnabled="False" Click="MenuItemResetLastResults_Click"/>
             <Button x:Name="ButtonTimer" Content="Timer" ToolTip="Timer" Click="NewTimer_Click" />
-            <Button x:Name="ButtonRandom" Content="Randomizer" ToolTip="Randomizer" Click="Random_Click" />
         </ToolBar>
-        <Grid Grid.Row="2" Grid.Column="1">
+        <Grid Grid.Row="2" Grid.Column="0">
             <DataGrid x:Name="DataGridPlayer" AutoGenerateColumns="False" SelectionChanged="DataGridPlayer_SelectionChanged" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" MouseDoubleClick="DataGridPlayer_DoubleClicked" CellEditEnding="DataGridPlayer_CellEditEnding"/>
         </Grid>
+        <GridSplitter Grid.Column="1" Grid.Row="2" Width="5" HorizontalAlignment="Stretch" />
         <Grid Grid.Row="2" Grid.Column="2">
             <DataGrid x:Name="DataGridPairing" DataGridCell.Selected="DataGrid_GotFocus" AutoGenerateColumns="False" CurrentCellChanged="PariringCurrentCellChanged" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" MouseLeftButtonUp="GridMouseLeftButtonUp" CanUserAddRows="False"/>
         </Grid>
-        <Grid Grid.Column="0" Grid.Row="2" Grid.RowSpan="1">
-            <Label x:Name="LabelRounds" Content="Rounds" VerticalAlignment="Top" Height="30"/>
-            <Button IsEnabled="False" x:Name="ButtonGetResults" Content="Get Results" Height="21" VerticalAlignment="Top" Margin="0,30,0,0" Click="ButtonGetResults_Click"/>
-            <Button IsEnabled="False" x:Name="ButtonNextRound" Content="Next Round" Height="21" VerticalAlignment="Top" Margin="0,52,0,0" Click="ButtonNextRound_Click"/>
-            <Button IsEnabled="False" x:Name="ButtonCut" Content="Start Cut" Height="21" VerticalAlignment="Top" Margin="0,74,0,0" Click="ButtonCut_Click"/>
-            <ListBox x:Name="ListBoxRounds" VerticalAlignment="Top" Margin="0,96,0,0"/>
+        <Grid Grid.Column="3" Grid.Row="2">
+            <Label x:Name="LabelTime" Content="MM:SS" VerticalAlignment="Top" Height="40" FontSize="20" Margin="0,0,0,0" HorizontalAlignment="Center"/>
+            <Button x:Name="ButtonStartTimer" Content="Start" ToolTip="Start" VerticalAlignment="Top" Click="MenuItemTimeStart_Click" Margin="0,40,0,0" Height="20"/>
+            <Button x:Name="ButtonPause" Content="Pause" ToolTip="Pause" VerticalAlignment="Top" Click="MenuItemTimePause_Click" Margin="0,60,0,0" Height="20"/>
+            <Button x:Name="ButtonReset" Content="Reset" ToolTip="Reset" VerticalAlignment="Top" Click="MenuItemTimeReset_Click" Margin="0,80,0,0" Height="20"/>
+            <TextBox x:Name="TextBoxTime" Text="" VerticalAlignment="Top" Margin="0,100,0,0" Height="20" TextChanged="TextBoxTime_TextChanged"/>
+            <Image x:Name="ImageLogo" VerticalAlignment="Bottom"/>
         </Grid>
     </Grid>
 </Window>

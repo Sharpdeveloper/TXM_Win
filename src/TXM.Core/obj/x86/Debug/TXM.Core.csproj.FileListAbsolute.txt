@@ -1,0 +1,7 @@
+C:\Users\martin\Documents\GitHub\TXM\src\TXM.Core\bin\x86\Debug\TXM.Core.dll
+C:\Users\martin\Documents\GitHub\TXM\src\TXM.Core\bin\x86\Debug\TXM.Core.pdb
+C:\Users\martin\Documents\GitHub\TXM\src\TXM.Core\obj\x86\Debug\TXM.Core.csprojResolveAssemblyReference.cache
+C:\Users\martin\Documents\GitHub\TXM\src\TXM.Core\obj\x86\Debug\TXM.Core.Icons.resources
+C:\Users\martin\Documents\GitHub\TXM\src\TXM.Core\obj\x86\Debug\TXM.Core.csproj.GenerateResource.Cache
+C:\Users\martin\Documents\GitHub\TXM\src\TXM.Core\obj\x86\Debug\TXM.Core.dll
+C:\Users\martin\Documents\GitHub\TXM\src\TXM.Core\obj\x86\Debug\TXM.Core.pdb
