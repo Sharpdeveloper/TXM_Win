@@ -205,6 +205,8 @@ namespace TXM.Core
         public void OpenTimerWindow(ITimerWindow itw)
         {
             timerWindow = itw;
+            timerWindow.SetIO(ActiveIO);
+            timerWindow.SetTimer(ActiveTimer);
             timerWindow.Show();
         }
 
@@ -303,8 +305,9 @@ namespace TXM.Core
 
         public void EditPairings(IPairingDialog ipd, bool GetResultsIsEnabled, bool NextRoundIsEnabled, bool CutIsEnabled)
         {
-            ipd.SetPairings(ActiveTournament.Pairings);
+            
             ipd.SetParticipants(ActiveTournament.Participants);
+            ipd.SetPairings(ActiveTournament.Pairings);
             ipd.ShowDialog();
             if (ipd.GetDialogResult())
             {

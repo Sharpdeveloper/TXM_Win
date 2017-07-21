@@ -39,16 +39,11 @@ namespace TXM.GUI.Dialogs
         public void SetParticipants(List<Player> participants)
         {
             Players = participants;
-
-            foreach (Player player in Players)
-            {
-                if (!player.Paired)
-                    PlayerWithoutPairing.Add(player);
-            }
         }
 
         public void SetPairings(List<Pairing> pairings)
         {
+            
             PremadePairing = pairings;
 
             if (PremadePairing == null)
@@ -65,6 +60,12 @@ namespace TXM.GUI.Dialogs
                     }
                     catch (ArgumentOutOfRangeException)
                     { }
+                }
+
+                foreach (Player player in Players)
+                {
+                    if (!player.Paired)
+                        PlayerWithoutPairing.Add(player);
                 }
             }
         }

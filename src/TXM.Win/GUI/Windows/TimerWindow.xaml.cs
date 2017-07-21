@@ -21,24 +21,8 @@ namespace TXM.GUI.Windows
 
         public TimerWindow()
         {
-            whiteText = io.GetColor();
-            
-            bool whiteTextTemp = whiteText;
+
             InitializeComponent();
-            whiteText = whiteTextTemp;
-
-            string imgurl = io.GetImagePath();
-            if(imgurl != "" && imgurl != null)
-            {
-                io.CopyImage();
-                SetImage();
-            }
-
-            if (whiteText)
-                SliderText.Value = 1.0;
-            else
-                SliderText.Value = 2.0;
-            ChangeLabelColor();
             LabelTime.Content = "MM:SS";
         }
 
@@ -51,6 +35,21 @@ namespace TXM.GUI.Windows
         public void SetIO(IO _io)
         {
             io = _io;
+
+            whiteText = io.GetColor();
+
+            bool whiteTextTemp = whiteText;
+            
+            whiteText = whiteTextTemp;
+
+            string imgurl = io.GetImagePath();
+            if (imgurl != "" && imgurl != null)
+            {
+                io.CopyImage();
+                SetImage();
+            }
+
+            ChangeLabelColor();
         }
 
         private void TimeChanged(object sender, EventArgs e)
@@ -84,37 +83,14 @@ namespace TXM.GUI.Windows
             SetImage();
         }
 
-        private void Minutes_Changed(object sender, TextChangedEventArgs e)
-        {
-            int t;
-            try
-            {
-                t = Int32.Parse(TextBoxMinutes.Text);
-            }
-            catch
-            {
-                t = 60;
-            }
-            timer.DefaultTime = t;
-        }
-
-        private void Slider_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            whiteText = SliderText.Value == 1.0;
-            io.WriteColor(whiteText);
-            ChangeLabelColor();
-        }
-
         private void ChangeLabelColor()
         {
             if (whiteText)
             {
-                LabelMinutes.Foreground = new SolidColorBrush(Colors.White);
                 LabelTime.Foreground = new SolidColorBrush(Colors.White);
             }
             else
             {
-                LabelMinutes.Foreground = new SolidColorBrush(Colors.Black);
                 LabelTime.Foreground = new SolidColorBrush(Colors.Black);
             }
         }
