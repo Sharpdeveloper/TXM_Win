@@ -19,6 +19,7 @@ namespace TXM.Core
             DefaultMaxPoints = 0;
             Factions = new string[] { "Light Side", "Dark Side" };
             DefaultTime = 70;
+            base.name = name;
         }
 
         public static string GetRuleName()

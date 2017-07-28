@@ -69,6 +69,7 @@ namespace TXM.GUI.Dialogs
             {
                 ComboBoxGameSystem.SelectedValue = tournament.Rule.GetName();
             }
+            ComboBoxGameSystem.IsEnabled = true;
         }
 
         public void SetGameSystemIsChangeable(bool isGametypeChangeable)

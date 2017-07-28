@@ -19,6 +19,7 @@ namespace TXM.Core
             DefaultMaxPoints = 0;
             Factions = new string[] { "House Baratheon", "House Greyjoy", "House Lannister", "House Martell", "House Stark", "House Targaryen", "House Tyrell", "The Night's Watch" };
             DefaultTime = 55;
+            base.name = name;
         }
 
         public static string GetRuleName()

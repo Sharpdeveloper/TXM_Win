@@ -32,7 +32,7 @@
                 <MenuItem x:Name="MenuItemPrintHeader" Header="Print">
                     <MenuItem x:Name="MenuItemPrint" Header="Print Table" Click="MenuItemPrint_Click"/>
                     <MenuItem x:Name="MenuItemPrintPairing" Header="Print Pairings (without Results)" Click="MenuItemPrintPairing_Click"/>
-                    <MenuItem x:Name="MenuItemPrintResult" Header="Print Pairings (with Results))" Click="MenuItemPrintResult_Click"/>
+                    <MenuItem x:Name="MenuItemPrintResult" Header="Print Pairings (with Results)" Click="MenuItemPrintResult_Click"/>
                     <MenuItem x:Name="MenuItemPrintPairingScoreSheet" Header="Print Pairing with Score Sheet" Click="MenuItemPrintParingScore_Click"/>
                 </MenuItem>
                 <MenuItem x:Name="MenuItemExit" Header="Close" Click="Close_Click"/>

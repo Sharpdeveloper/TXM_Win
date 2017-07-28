@@ -19,6 +19,7 @@ namespace TXM.Core
             DefaultMaxPoints = 100;
             Factions = new string[] { "Rebel", "Imperial", "Scum & Villainy" };
             DefaultTime = 75;
+            base.name = name;
         }
 
         public static string GetRuleName()

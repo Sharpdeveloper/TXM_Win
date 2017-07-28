@@ -414,6 +414,9 @@ namespace TXM.GUI
 
                 }
             }
+            ButtonGetResults.IsEnabled = true;
+            ButtonCut.IsEnabled = true;
+            ButtonNextRound.IsEnabled = true;
         }
 
         private void GetSeed(bool cut = false)

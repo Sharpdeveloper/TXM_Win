@@ -100,9 +100,9 @@ namespace TXM.Core
             if (faction == "Imperium")
                 faction = "Imperial";
             else if (faction == "Abschaum und Kriminelle")
-                faction = "Scum";
+                faction = "Scum & Villainy";
             else
-                faction = "Rebels";
+                faction = "Rebel";
             return new Player(Int32.Parse(splitedLine[0]), splitedLine[1], splitedLine[2], splitedLine[3], faction, splitedLine[5], splitedLine[6], Int32.Parse(splitedLine[9]) == 1, Int32.Parse(splitedLine[7]) == 3);
         }
 
@@ -556,7 +556,7 @@ namespace TXM.Core
                 name = name.Replace('\\', ' ');
                 name = name.Replace('/', ' ');
                 name = name.Replace('_', ' ');
-                Path.Combine(file, "Autosave_" + DateTime.Now.ToFileTime() + "_" + name + "_" + Autosavetype + Settings.FILEEXTENSION);
+                file = Path.Combine(file, "Autosave_" + DateTime.Now.ToFileTime() + "_" + name + "_" + Autosavetype + Settings.FILEEXTENSION);
             }
             else
             {

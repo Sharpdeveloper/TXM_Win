@@ -22,6 +22,7 @@ namespace TXM.Core
                 "NBN/Anarch", "NBN/Criminal", "NBN/Shaper",
                 "Weyland Consortium/Anarch", "Weyland Consortium/Criminal", "Weyland Consortium/Shaper" };
             DefaultTime = 65;
+            base.name = name;
         }
 
         public static string GetRuleName()

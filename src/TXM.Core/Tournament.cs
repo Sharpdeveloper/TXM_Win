@@ -171,6 +171,7 @@ namespace TXM.Core
         {
             Pairing.ResetTableNr();
             int temp, pos = 0;
+            bool swappedGroup = false;
 
             #region Cut
             if (Cut != TournamentCut.NoCut && (cut || CutStarted))
@@ -321,7 +322,15 @@ namespace TXM.Core
                         while (PointGroup[i].Count >= 2)
                         {
                             Pairings.Add(new Pairing());
-                            temp = random.Next(0, PointGroup[i].Count);
+                            if (swappedGroup)
+                            {
+                                temp = PointGroup[i].Count - 1;
+                                swappedGroup = false;
+                            }
+                            else
+                            {
+                                temp = random.Next(0, PointGroup[i].Count);
+                            }
                             Pairings[pos].Player1 = PointGroup[i][temp];
                             PointGroup[i].RemoveAt(temp);
                             temp = random.Next(0, PointGroup[i].Count);
@@ -362,7 +371,10 @@ namespace TXM.Core
                                 Pairings[pos].ResultEdited = true;
                             }
                             else
+                            {
                                 PointGroup[i + 1].Add(PointGroup[i][0]);
+                                swappedGroup = true;
+                            }
                         }
                     }
                 }

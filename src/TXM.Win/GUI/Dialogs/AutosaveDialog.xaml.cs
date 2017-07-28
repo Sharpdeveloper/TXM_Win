@@ -101,6 +101,10 @@ namespace TXM.GUI.Dialogs
 
         private void DataGridAutosave_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            if(DataGridAutosave.SelectedItem == null)
+            {
+                return;
+            }
             dialogReturn = true;
             filename = ((AutosaveFile)DataGridAutosave.SelectedItem).Filename;
             Close();

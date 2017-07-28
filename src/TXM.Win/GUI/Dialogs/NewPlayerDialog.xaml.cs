@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 using TXM.Core;
 
@@ -44,6 +35,11 @@ namespace TXM.GUI.Dialogs
             TextBoxNickname.Text = CurrentPlayer.Nickname;
             TextBoxTeam.Text = CurrentPlayer.Team;
             ComboBoxFaction.SelectedValue = CurrentPlayer.Faction;
+            if(ComboBoxFaction.SelectedValue == null)
+            {
+                ComboBoxFaction.Items.Add(CurrentPlayer.Faction);
+                ComboBoxFaction.SelectedValue = CurrentPlayer.Faction;
+            }
             CheckboxFreeticket.IsChecked = ((Player)CurrentPlayer).WonBye;
             CheckboxPayed.IsChecked = CurrentPlayer.Paid;
             CheckboxSquadListGiven.IsChecked = CurrentPlayer.ListGiven;
@@ -51,6 +47,7 @@ namespace TXM.GUI.Dialogs
             nicknameRequiered = false;
             TextBoxTableNR.Text = player.TableNo.ToString();
             CheckboxPresent.IsChecked = CurrentPlayer.Present;
+            
         }
 
         public Player GetPlayer()

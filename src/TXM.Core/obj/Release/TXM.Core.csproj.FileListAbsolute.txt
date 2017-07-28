@@ -4,4 +4,3 @@ C:\Users\martin\Documents\GitHub\TXM\src\TXM.Core\obj\Release\TXM.Core.Icons.res
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Core\obj\Release\TXM.Core.csproj.GenerateResource.Cache
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Core\obj\Release\TXM.Core.dll
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Core\obj\Release\TXM.Core.pdb
-C:\Users\martin\Documents\GitHub\TXM\src\TXM.Core\obj\Release\TXM.Core.csprojResolveAssemblyReference.cache

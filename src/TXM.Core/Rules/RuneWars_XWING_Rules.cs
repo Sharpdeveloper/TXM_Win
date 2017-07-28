@@ -19,6 +19,7 @@ namespace TXM.Core
             DefaultMaxPoints = 200;
             Factions = new string[] { "Daqan", "Latari", "Waiqar" };
             DefaultTime = 105;
+            base.name = name;
         }
 
         public static string GetRuleName()
