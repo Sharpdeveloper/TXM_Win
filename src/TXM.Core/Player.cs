@@ -267,7 +267,7 @@ namespace TXM.Core
         #region private Functions
         private double GetEnemyTournamentPoints(int enemyNr)
         {
-            if (enemyNr < 0)
+            if (enemyNr < 0 || Enemies[enemyNr].TournamentPoints == 0)
                 return 0;
             else
             {

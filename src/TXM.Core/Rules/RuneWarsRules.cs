@@ -5,11 +5,11 @@ using System.Linq;
 namespace TXM.Core
 {
     [Serializable]
-	public class RuneWars_Armada_Rules : AbstractRules
+	public class RuneWarsRules : AbstractRules
 	{
-        private new static string name = "Experimental - Runewars (With Armada Rules)";
+        private new static string name = "Runewars Miniatures Game";
 
-        public RuneWars_Armada_Rules()
+        public RuneWarsRules()
         {
             IsDrawPossible = false;
             OptionalFields = new List<string>() { "MoV" };
@@ -17,8 +17,8 @@ namespace TXM.Core
             IsRandomSeeding = true;
             IsWinnerDropDownNeeded = true;
             DefaultMaxPoints = 200;
-            Factions = new string[] { "Daqan", "Latari", "Waiqar" };
-            DefaultTime = 105;
+            Factions = new string[] { "Daqan", "Latari", "Uthuk", "Waiqar" };
+            DefaultTime = 90;
             base.name = name;
         }
 

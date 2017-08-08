@@ -9,6 +9,8 @@ namespace TXM.Core
     public enum TournamentCut
     {
         NoCut,
+        Top64,
+        Top32,
         Top16,
         Top8,
         Top4
@@ -83,6 +85,7 @@ namespace TXM.Core
             Pairings = new List<Pairing>();
             Rounds = new List<Round>();
             Rule = rules;
+            Single = true;
         }
         public Tournament(int t3ID, string name, AbstractRules rules, string GOEPPversion = "")
             : this(name, t3ID, GOEPPversion, rules)
@@ -185,6 +188,10 @@ namespace TXM.Core
                         currentCountOfPlayer = 8;
                     else if (Cut == TournamentCut.Top16)
                         currentCountOfPlayer = 16;
+                    else if (Cut == TournamentCut.Top32)
+                        currentCountOfPlayer = 32;
+                    else if (Cut == TournamentCut.Top64)
+                        currentCountOfPlayer = 64;
                     else
                         currentCountOfPlayer = 4;
 

@@ -90,11 +90,10 @@
     <Compile Include="Rules\GameOfThrones2ndRules.cs" />
     <Compile Include="Rules\AndroidNetrunnerRules.cs" />
     <Compile Include="Rules\SWLCGRules.cs" />
-    <Compile Include="Rules\RuneWars_Armada_Rules.cs" />
+    <Compile Include="Rules\RuneWarsRules.cs" />
     <Compile Include="Rules\DestinyRules.cs" />
     <Compile Include="Rules\IARules.cs" />
     <Compile Include="Rules\ArmadaRules.cs" />
-    <Compile Include="Rules\RuneWars_XWING_Rules.cs" />
     <Compile Include="Rules\XWingRules.cs" />
     <Compile Include="Setting.cs" />
     <Compile Include="TournamentController.cs" />

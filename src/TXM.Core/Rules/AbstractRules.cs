@@ -11,21 +11,19 @@ namespace TXM.Core
         {
             AndroidNetrunnerRules.GetRuleName(),
             GameOfThrones2ndRules.GetRuleName(),
+            RuneWarsRules.GetRuleName(),
             ArmadaRules.GetRuleName(),
             DestinyRules.GetRuleName(),
             IARules.GetRuleName(),
             SWLCGRules.GetRuleName(),
-            XWingRules.GetRuleName(),
-            RuneWars_Armada_Rules.GetRuleName(),
-            RuneWars_XWING_Rules.GetRuleName()
+            XWingRules.GetRuleName()
         };
         private static string[] RuleNamesT3Able =
         {
+            RuneWarsRules.GetRuleName(),
             ArmadaRules.GetRuleName(),
             IARules.GetRuleName(),
-            XWingRules.GetRuleName(),
-            RuneWars_Armada_Rules.GetRuleName(),
-            RuneWars_XWING_Rules.GetRuleName()
+            XWingRules.GetRuleName()
         };
 
         public static AbstractRules GetRule(string name)
@@ -38,10 +36,8 @@ namespace TXM.Core
                 return new IARules();
             else if (name == ArmadaRules.GetRuleName())
                 return new ArmadaRules();
-            else if (name == RuneWars_Armada_Rules.GetRuleName())
-                return new RuneWars_Armada_Rules();
-            else if (name == RuneWars_XWING_Rules.GetRuleName())
-                return new RuneWars_XWING_Rules();
+            else if (name == RuneWarsRules.GetRuleName())
+                return new RuneWarsRules();
             else if (name == SWLCGRules.GetRuleName())
                 return new SWLCGRules();
             else if (name == GameOfThrones2ndRules.GetRuleName())

@@ -15,7 +15,7 @@ namespace TXMTest
         static void Main(string[] args)
         {
             string file = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "test.txt");
-            int rounds = 4;
+            int rounds = 12;
 
             if (!File.Exists(file))
             {
@@ -23,43 +23,47 @@ namespace TXMTest
             }
 
             Pairing p = new Pairing();
-            Tournament2 xt = new Tournament2("Test");
-            xt.MaxSquadPoints = 100;
-            Player xp = new Player("TKundNobody", 100, Faction.Rebels);
+            Tournament xt = new Tournament("Test", new XWingRules());
+            /*Player xp = new Player("TKundNobody", "Rebels");
             xt.AddPlayer(xp);
-            xp = new Player("Tesdeor", 100, Faction.Imperium);
+            xp = new Player("Tesdeor", "Imperium");
             xt.AddPlayer(xp);
-            xp = new Player("Psychohomer", 100, Faction.Imperium);
+            xp = new Player("Psychohomer", "Imperium");
             xt.AddPlayer(xp);
-            xp = new Player("Darth Bane", 98, Faction.Imperium);
-            xp.WonFreeticket = true;
+            xp = new Player("Darth Bane", "Imperium");
+            xp.WonBye = true;
             xt.AddPlayer(xp);
-            xp = new Player("D.J.", 100, Faction.Rebels);
+            xp = new Player("D.J.", "Rebels");
             xt.AddPlayer(xp);
-            xp = new Player("CountGermaine", 98, Faction.Rebels);
+            xp = new Player("CountGermaine", "Rebels");
             xt.AddPlayer(xp);
             p.Player1 = xp;
-            xp = new Player("Hui Buh", 100, Faction.Rebels);
+            xp = new Player("Hui Buh", "Rebels");
             xt.AddPlayer(xp);
             p.Player2 = xp;
-            xp = new Player("TheApprentice", 100, Faction.Imperium);
+            xp = new Player("TheApprentice", "Imperium");
             xt.AddPlayer(xp);
-            xp = new Player("Sarge", 99, Faction.Imperium);
+            xp = new Player("Sarge", "Imperium");
             xp.Team = "MER";
             xt.AddPlayer(xp);
-            xp = new Player("Ruskal", 99, Faction.Imperium);
+            xp = new Player("Ruskal", "Imperium");
             xp.Team = "MER";
             xt.AddPlayer(xp);
-            xp = new Player("Farlander", 96, Faction.Imperium);
+            xp = new Player("Farlander", "Imperium");
             xp.Team = "MER";
             xt.AddPlayer(xp);
-            xp = new Player("Quexxes", 100, Faction.Imperium);
+            xp = new Player("Quexxes", "Imperium");
             xp.Team = "MER";
-            xt.AddPlayer(xp);
+            xt.AddPlayer(xp);*/
 
-            List<Pairing> lp = new List<Pairing>();
-            lp.Add(p);
-            xt.PrePaired = lp;
+            for (int i = 0; i < 512; i++)
+                xt.AddPlayer(new Player("T" + i, "Rebel"));
+
+            //List<Pairing> lp = new List<Pairing>();
+            //lp.Add(p);
+            //xt.PrePaired = lp;
+
+            xt.Cut = TournamentCut.Top64;
 
             TestTournament(xt, file, rounds);
 
@@ -67,7 +71,7 @@ namespace TXMTest
             Console.Read();
         }
 
-        private static void TestTournament(Tournament2 t, string file, int rounds)
+        private static void TestTournament(Tournament t, string file, int rounds)
         {
             Random rnd = new Random();
             WriteTournamentStart(t, file);
@@ -98,7 +102,31 @@ namespace TXMTest
                 {
                     foreach (Player player in t.Participants)
                     {
-                        if (player.WonFreeticket)
+                        if (player.WonBye)
+                        {
+                            player.AddLastEnemy(t.GetStrongestUnplayedEnemy(player));
+                        }
+                    }
+                }
+                t.Sort();
+                WriteTable(t, file, i + 1);
+            }
+            Pairing.ResetTableNr();
+            for (int i = rounds; i < rounds + 6; i++)
+            {
+                p = t.GetSeed(false, i == rounds);
+                foreach (Pairing pa in p)
+                {
+                    pa.Player1Score = rnd.Next(12, 101);
+                    pa.Player2Score = rnd.Next(12, 101);
+                }
+                WritePairing(p, file, i + 1);
+                t.GetResults(p);
+                if (i == rounds - 1)
+                {
+                    foreach (Player player in t.Participants)
+                    {
+                        if (player.WonBye)
                         {
                             player.AddLastEnemy(t.GetStrongestUnplayedEnemy(player));
                         }
@@ -110,31 +138,31 @@ namespace TXMTest
             Pairing.ResetTableNr();
         }
 
-        private static void WriteTable(Tournament2 t, string file, int round)
+        private static void WriteTable(Tournament t, string file, int round)
         {
             using (System.IO.StreamWriter f = new System.IO.StreamWriter(file, true))
             {
                 f.WriteLine("---Atkuelle Tabelle nach der " + round + ". Runde---");
-                f.WriteLine("Nr. Nickname   Punkte S MS U N  HdS Punkte der Gegner");
+                f.WriteLine("#.   Nickname   Punkte S N  HdS Punkte der Gegner");
                 foreach (Player player in t.Participants)
                 {
-                    f.WriteLine(string.Format("{0,2:d}", player.Nr) + "  " + GetName(player.Nickname) + "   " + string.Format("{0,2:d}", player.Points) + "   " + string.Format("{0,1:d}", player.Wins) + " " + string.Format("{0,1:d}", player.ModifiedWins) + "  " + string.Format("{0,1:d}", player.Draws) + " " + string.Format("{0,1:d}", player.Looses) + " " + string.Format("{0,4:d}", ((Player)player).MarginOfVictory) + "    " + string.Format("{0,4:d}", ((Player)player).PointsOfEnemies));
+                    f.WriteLine(string.Format("{0,3:d}", player.Rank) + "  " + GetName(player.Nickname) + "   " + string.Format("{0,2:d}", player.TournamentPoints) + "   " + string.Format("{0,1:d}", player.Wins)  + " " + string.Format("{0,1:d}", player.Losses) + " " + string.Format("{0,4:d}", ((Player)player).MarginOfVictory) + "    " + string.Format("{0,4:R}", ((Player)player).StrengthOfSchedule));
                 }
                 f.WriteLine();
             }
         }
 
-        private static void WriteTournamentStart(Tournament2 t, string file)
+        private static void WriteTournamentStart(Tournament t, string file)
         {
             using (System.IO.StreamWriter f = new System.IO.StreamWriter(file))
             {
                 f.WriteLine("---Neues Turnier---");
-                f.WriteLine("Nr. Nickname   Squad Team");
+               /* f.WriteLine("Nr. Nickname   Squad Team");
                 foreach (Player player in t.Participants)
                 {
-                    f.WriteLine(string.Format("{0,2:d}", player.Nr) + "  " + GetName(player.Nickname) + "   " + string.Format("{0,3:d}", ((Player)player).PointOfSquad) + "  " + player.Team);
+                    f.WriteLine(string.Format("{0,2:d}", player.ID) + "  " + GetName(player.Nickname) + "   " + string.Format("{0,3:d}", 100) + "  " + player.Team);
                 }
-                f.WriteLine();
+                f.WriteLine();*/
             }
 
         }
@@ -144,10 +172,10 @@ namespace TXMTest
             using (System.IO.StreamWriter f = new System.IO.StreamWriter(file, true))
             {
                 f.WriteLine("---" + count + ". Paarung---");
-                f.WriteLine("Nr. Spieler 1  Spieler 2  P(S1)  P(S2)");
+                f.WriteLine("No.  Spieler 1  Spieler 2  P(S1)  P(S2)");
                 foreach (Pairing pairing in p)
                 {
-                    f.WriteLine(string.Format("{0,2:d}", pairing.TableNr) + "  " + GetName(pairing.Player1Name) + " " + GetName(pairing.Player2Name) + " " + string.Format("{0,3:d}", pairing.Player1Score) + "    " + string.Format("{0,3:d}", pairing.Player2Score));
+                    f.WriteLine(string.Format("{0,3:d}", pairing.TableNr) + "  " + GetName(pairing.Player1Name) + " " + GetName(pairing.Player2Name) + " " + string.Format("{0,3:d}", pairing.Player1Score) + "    " + string.Format("{0,3:d}", pairing.Player2Score));
                 }
                 f.WriteLine();
             }
