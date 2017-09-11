@@ -7,7 +7,7 @@ namespace TXM.Core
     [Serializable]
 	public class GameOfThrones2ndRules : AbstractRules
 	{
-        private new static string name = "A Game of Thrones: The Card Game 2nd Edition";
+        private new static string name = "A Game of Thrones\u2122: The Card Game 2nd Edition";
 
         public GameOfThrones2ndRules()
         {

@@ -16,14 +16,17 @@ namespace TXM.Core
             DestinyRules.GetRuleName(),
             IARules.GetRuleName(),
             SWLCGRules.GetRuleName(),
-            XWingRules.GetRuleName()
+            XWingRules.GetRuleName(),
+            LegionRules.GetRuleName(),
+            LegendOfThe5RingesRules.GetRuleName()
         };
         private static string[] RuleNamesT3Able =
         {
             RuneWarsRules.GetRuleName(),
             ArmadaRules.GetRuleName(),
             IARules.GetRuleName(),
-            XWingRules.GetRuleName()
+			XWingRules.GetRuleName(),
+			LegionRules.GetRuleName()
         };
 
         public static AbstractRules GetRule(string name)
@@ -44,6 +47,10 @@ namespace TXM.Core
                 return new GameOfThrones2ndRules();
             else if (name == AndroidNetrunnerRules.GetRuleName())
                 return new AndroidNetrunnerRules();
+            else if (name == LegionRules.GetRuleName())
+                return new LegionRules();
+            else if (name == LegendOfThe5RingesRules.GetRuleName())
+                return new LegendOfThe5RingesRules();
             return null;
         }
 

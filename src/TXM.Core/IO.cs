@@ -260,6 +260,12 @@ namespace TXM.Core
 
             sb.Append(head);
 
+            //Added marquee to see all Pairings without manually scrolling
+            if(!bbcode)
+            {
+                sb.Append("<marquee direction=\"up\" behavior=\"alternate\">");
+            }
+
             sb.Append(tb);
             sb.Append(rb);
             sb.Append(db);
@@ -387,6 +393,13 @@ namespace TXM.Core
             }
 
             sb.Append(te);
+
+            //end marquee tag
+            if (!bbcode)
+            {
+                sb.Append("</marquee>");
+            }
+
             sb.Append(end);
             return sb.ToString();
         }
@@ -423,6 +436,12 @@ namespace TXM.Core
             }
 
             sb.Append(head);
+
+			//Added marquee to see all Pairings without manually scrolling
+            if (!bbcode)
+			{
+				sb.Append("<marquee direction=\"up\" behavior=\"alternate\">");
+			}
 
             sb.Append(tb);
             sb.Append(rb);
@@ -488,6 +507,13 @@ namespace TXM.Core
             }
 
             sb.Append(te);
+
+			//end marquee tag
+			if (!bbcode)
+			{
+				sb.Append("</marquee>");
+			}
+
             sb.Append(end);
             return sb.ToString();
         }

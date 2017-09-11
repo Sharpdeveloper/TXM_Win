@@ -7,7 +7,7 @@ namespace TXM.Core
     [Serializable]
 	public class AndroidNetrunnerRules : AbstractRules
 	{
-        protected new static string name = "Android: Netrunner";
+        protected new static string name = "Android: Netrunner - The Card Game";
 
         public AndroidNetrunnerRules()
         {

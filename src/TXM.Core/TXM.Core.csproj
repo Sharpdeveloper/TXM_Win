@@ -99,6 +99,9 @@
     <Compile Include="TournamentController.cs" />
     <Compile Include="TournamentTimer.cs" />
     <Compile Include="Tournament.cs" />
+    <Compile Include="Rules\LegionRules.cs" />
+    <Compile Include="Rules\LegendOfThe5RingesRules.cs" />
+    <Compile Include="Rules\InfinityRules.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Add User-100.png" />
