@@ -1,7 +1,8 @@
 ﻿<Properties StartupConfiguration="{BF337492-7F07-4B0D-A34B-5FD7D2411F27}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="TXM.Mac/AppDelegate.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TXM.Mac/WindowController.cs">
     <Files>
-      <File FileName="TXM.Mac/AppDelegate.cs" Line="11" Column="4" />
+      <File FileName="TXM.Mac/ViewController.designer.cs" Line="27" Column="4" />
+      <File FileName="TXM.Mac/WindowController.cs" Line="13" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
@@ -9,6 +10,6 @@
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.TXM.Mac PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.ItemProperties.TXM.Mac PreferredExecutionTarget="Test1" />
   <MultiItemStartupConfigurations />
 </Properties>

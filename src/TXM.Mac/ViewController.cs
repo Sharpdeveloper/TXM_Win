@@ -7,6 +7,8 @@ namespace TXM.Mac
 {
 	public partial class ViewController : NSViewController
 	{
+        private int numberOfTimesClicked = 0;
+
 		public ViewController(IntPtr handle) : base(handle)
 		{
 		}
@@ -16,6 +18,8 @@ namespace TXM.Mac
 			base.ViewDidLoad();
 
 			// Do any additional setup after loading the view.
+
+            ClickedLabel.StringValue = "Button has not been clicked yet.";
 		}
 
 		public override NSObject RepresentedObject
@@ -29,6 +33,13 @@ namespace TXM.Mac
 				base.RepresentedObject = value;
 				// Update the view, if already loaded.
 			}
+		}
+
+		partial void ClickedButton(Foundation.NSObject sender)
+		{
+
+			// Update counter and label
+			ClickedLabel.StringValue = string.Format("The button has been clicked {0} time{1}.", ++numberOfTimesClicked, (numberOfTimesClicked < 2) ? "" : "s");
 		}
 	}
 }

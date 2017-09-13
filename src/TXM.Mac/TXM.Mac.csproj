@@ -77,9 +77,25 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="WindowController.cs" />
+    <Compile Include="WindowController.designer.cs">
+      <DependentUpon>WindowController.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Add User-100.png" />
+    <BundleResource Include="Resources\Clover-100.png" />
+    <BundleResource Include="Resources\Edit User-100.png" />
+    <BundleResource Include="Resources\Remove User-100.png" />
+    <BundleResource Include="Resources\Rotate Left-100.png" />
+    <BundleResource Include="Resources\Save-100.png" />
+    <BundleResource Include="Resources\TXM_Logo.png" />
+    <BundleResource Include="Resources\Unfriend Male-100.png" />
+    <BundleResource Include="Resources\User Group-100.png" />
+    <BundleResource Include="Resources\Watch-100.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>
