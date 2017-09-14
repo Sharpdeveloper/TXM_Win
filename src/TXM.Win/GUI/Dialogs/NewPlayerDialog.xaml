@@ -4,7 +4,7 @@
         Title="Create new Player" Height="419.362" Width="323.107" ResizeMode="NoResize" KeyUp="Window_KeyUp">
     <Grid>
         <Button x:Name="ButtonCancel" Content="Cancel" HorizontalAlignment="Left" Margin="215,353,0,0" VerticalAlignment="Top" Width="75" Click="Cancel_Click"  TabIndex="12"/>
-        <Button x:Name="ButtonOK" Content="Create new Player" HorizontalAlignment="Left" Margin="63,353,0,0" VerticalAlignment="Top" Width="129" Click="NewPlayer_Click" TabIndex="11"/>
+        <Button x:Name="ButtonOK" Content="Save" HorizontalAlignment="Left" Margin="116,353,0,0" VerticalAlignment="Top" Width="76" Click="NewPlayer_Click" TabIndex="11"/>
         <Label x:Name="LabelNick" Content="Nickname*" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="105"/>
         <TextBox x:Name="TextBoxNickname" HorizontalAlignment="Left" Height="23" Margin="167,14,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBoxNickname_TextChanged" TabIndex="1"/>
         <Label x:Name="LabelName" Content="Last Name" HorizontalAlignment="Left" Margin="12,46,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.538,-0.377"/>

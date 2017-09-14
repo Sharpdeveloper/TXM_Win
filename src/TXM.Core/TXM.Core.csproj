@@ -64,11 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutosaveFile.cs" />
-    <Compile Include="Icons1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Icons.resx</DependentUpon>
-    </Compile>
     <Compile Include="Interfaces\IClipboard.cs" />
     <Compile Include="Interfaces\IFile.cs" />
     <Compile Include="Interfaces\IMessage.cs" />
@@ -102,42 +97,6 @@
     <Compile Include="Rules\LegionRules.cs" />
     <Compile Include="Rules\LegendOfThe5RingesRules.cs" />
     <Compile Include="Rules\InfinityRules.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Add User-100.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Clover-100.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Edit User-100.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Remove User-100.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Rotate Left-100.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Save-100.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Unfriend Male-100.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\User Group-100.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Watch-100.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Icons.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Icons1.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\TXM_Logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -6,5 +6,7 @@
         void Show();
         void SetTitle(string title);
         bool IsClosed();
+        void SetTimer(TournamentTimer t);
+        void Quit();
     }
 }

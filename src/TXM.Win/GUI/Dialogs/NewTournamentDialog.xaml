@@ -15,7 +15,7 @@
         <RadioButton x:Name="RadioButtonTop16" GroupName="Cut" Content="Top 16" HorizontalAlignment="Left" Margin="147,102,0,0" VerticalAlignment="Top" IsEnabled="True" Click="RadioButton_Click" Grid.Column="1"/>
         <RadioButton x:Name="RadioButtonNoCut" GroupName="Cut" Content="No Cut" HorizontalAlignment="Left" Margin="5,82,0,0" VerticalAlignment="Top" IsEnabled="True" IsChecked="True" Click="RadioButton_Click" Grid.Column="1"/>
         <TextBox x:Name="TextBoxMaxSquad" Margin="9,156,0,0" HorizontalAlignment="Left" Width="259" Height="19" VerticalAlignment="Top" TextChanged="IntegerUpDownMaxSquad_ValueChanged" Grid.Column="1"/>
-        <Button x:Name="ButtonOK" Content="Create Tournament" HorizontalAlignment="Left" Margin="70,313,0,0" VerticalAlignment="Top" Width="110" Click="NewTournament_Click" Grid.Column="1"/>
+        <Button x:Name="ButtonOK" Content="Save" HorizontalAlignment="Left" Margin="108,313,0,0" VerticalAlignment="Top" Width="72" Click="NewTournament_Click" Grid.Column="1"/>
         <Button x:Name="ButtonCancel" Content="Cancel" HorizontalAlignment="Left" Margin="194,313,0,0" VerticalAlignment="Top" Width="75" Click="Cancel_Click" Grid.Column="1"/>
         <Label x:Name="LabelTournamentName" Content="Tournamentname:" HorizontalAlignment="Left" Margin="12,122,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="TextboxName" HorizontalAlignment="Left" Height="23" Margin="9,126,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="259" TextChanged="TextboxName_TextChanged" Grid.Column="1"/>

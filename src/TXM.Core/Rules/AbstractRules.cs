@@ -9,24 +9,24 @@ namespace TXM.Core
         #region static
         private static string[] RuleNames =
         {
-            AndroidNetrunnerRules.GetRuleName(),
             GameOfThrones2ndRules.GetRuleName(),
+            AndroidNetrunnerRules.GetRuleName(),
+            LegendOfThe5RingesRules.GetRuleName(),
             RuneWarsRules.GetRuleName(),
             ArmadaRules.GetRuleName(),
             DestinyRules.GetRuleName(),
             IARules.GetRuleName(),
-            SWLCGRules.GetRuleName(),
-            XWingRules.GetRuleName(),
             LegionRules.GetRuleName(),
-            LegendOfThe5RingesRules.GetRuleName()
+            SWLCGRules.GetRuleName(),
+            XWingRules.GetRuleName()
         };
         private static string[] RuleNamesT3Able =
         {
             RuneWarsRules.GetRuleName(),
             ArmadaRules.GetRuleName(),
             IARules.GetRuleName(),
-			XWingRules.GetRuleName(),
-			LegionRules.GetRuleName()
+            LegionRules.GetRuleName(),
+            XWingRules.GetRuleName()
         };
 
         public static AbstractRules GetRule(string name)

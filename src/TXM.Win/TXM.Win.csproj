@@ -196,6 +196,36 @@
   <ItemGroup>
     <Resource Include="TXM_Logo.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Add User-100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Clover-100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Edit User-100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Remove User-100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Rotate Left-100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Save-100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\TXM_Logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Unfriend Male-100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\User Group-100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Watch-100.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -16,8 +15,6 @@ namespace TXM.GUI.Windows
     public partial class TimerWindow : Window, ITimerWindow
     {
         private TournamentTimer timer;
-        private bool whiteText = false;
-        private IO io;
 
         public TimerWindow()
         {
@@ -30,26 +27,6 @@ namespace TXM.GUI.Windows
         {
             timer = t;
             t.Changed += TimeChanged;
-        }
-
-        public void SetIO(IO _io)
-        {
-            io = _io;
-
-            whiteText = io.GetColor();
-
-            bool whiteTextTemp = whiteText;
-            
-            whiteText = whiteTextTemp;
-
-            string imgurl = io.GetImagePath();
-            if (imgurl != "" && imgurl != null)
-            {
-                io.CopyImage();
-                SetImage();
-            }
-
-            ChangeLabelColor();
         }
 
         private void TimeChanged(object sender, EventArgs e)
@@ -77,15 +54,9 @@ namespace TXM.GUI.Windows
             timer.ResetTimer();
         }
 
-        private void SetImage_Click(object sender, RoutedEventArgs e)
+        public void SetLabelColor(bool white)
         {
-            io.NewImage();
-            SetImage();
-        }
-
-        private void ChangeLabelColor()
-        {
-            if (whiteText)
+            if (white)
             {
                 LabelTime.Foreground = new SolidColorBrush(Colors.White);
             }
@@ -95,21 +66,32 @@ namespace TXM.GUI.Windows
             }
         }
 
-        private void SetImage()
+        public bool SetImage(Uri uri)
         {
             try
             {
-                BackGroundImage.Source = new BitmapImage(new Uri(io.TempImgPath));
+                BackGroundImage.Source = new BitmapImage(uri);
+                return true;
             }
             catch (Exception)
             {
-                io.ShowMessage("The Image " + io.TempImgPath + " is invalid.");
+                return false;
             }
         }
 
         private new void Show()
         {
             base.Show();
+        }
+
+        public void SetTextSize(double size)
+        {
+            LabelTime.FontSize = size * 8.0;
+        }
+
+        public void Quit()
+        {
+            this.Close();
         }
     }
 }
