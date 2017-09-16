@@ -1,14 +1,14 @@
-2017-09-13 12:50:53.330 TXM[14005:2267374] Failed to connect (NewPlayer_Click) outlet from (WindowController) to (NSToolbarItem): missing setter or instance variable
-2017-09-13 12:50:53.330 TXM[14005:2267374] Failed to connect (Save_Click) outlet from (WindowController) to (NSToolbarItem): missing setter or instance variable
-2017-09-13 12:50:53.330 TXM[14005:2267374] Could not connect action, target class WindowController does not respond to -ComboBoxRounds_SelectionChanged:
-2017-09-13 12:50:53.330 TXM[14005:2267374] Could not connect action, target class WindowController does not respond to -NewPlayer_Click:
-2017-09-13 12:50:53.330 TXM[14005:2267374] Could not connect action, target class WindowController does not respond to -ButtonNextRound_Click:
-2017-09-13 12:50:53.330 TXM[14005:2267374] Could not connect action, target class WindowController does not respond to -BUttonGetResults_Click:
-2017-09-13 12:50:53.330 TXM[14005:2267374] Could not connect action, target class WindowController does not respond to -DisqualifyPlayer_Click:
-2017-09-13 12:50:53.330 TXM[14005:2267374] Could not connect action, target class WindowController does not respond to -Save_Click:
-2017-09-13 12:50:53.330 TXM[14005:2267374] Could not connect action, target class WindowController does not respond to -ResetLastResults_Click:
-2017-09-13 12:50:53.330 TXM[14005:2267374] Could not connect action, target class WindowController does not respond to -ChangePairings_Click:
-2017-09-13 12:50:53.330 TXM[14005:2267374] Could not connect action, target class WindowController does not respond to -EditPlayer_Click:
-2017-09-13 12:50:53.330 TXM[14005:2267374] Could not connect action, target class WindowController does not respond to -ButtonCut_Click:
-2017-09-13 12:50:53.330 TXM[14005:2267374] Could not connect action, target class WindowController does not respond to -RemovePlayer_Click:
-2017-09-13 12:50:53.330 TXM[14005:2267374] Could not connect action, target class WindowController does not respond to -NewTimer_Click:
+2017-09-13 18:38:12.762 TXM[16878:2478248] Failed to connect (NewPlayer_Click) outlet from (WindowController) to (NSToolbarItem): missing setter or instance variable
+2017-09-13 18:38:12.762 TXM[16878:2478248] Failed to connect (Save_Click) outlet from (WindowController) to (NSToolbarItem): missing setter or instance variable
+2017-09-13 18:38:12.762 TXM[16878:2478248] Could not connect action, target class WindowController does not respond to -ResetLastResults_Click:
+2017-09-13 18:38:12.762 TXM[16878:2478248] Could not connect action, target class WindowController does not respond to -Save_Click:
+2017-09-13 18:38:12.762 TXM[16878:2478248] Could not connect action, target class WindowController does not respond to -NewTimer_Click:
+2017-09-13 18:38:12.762 TXM[16878:2478248] Could not connect action, target class WindowController does not respond to -ButtonCut_Click:
+2017-09-13 18:38:12.762 TXM[16878:2478248] Could not connect action, target class WindowController does not respond to -RemovePlayer_Click:
+2017-09-13 18:38:12.762 TXM[16878:2478248] Could not connect action, target class WindowController does not respond to -ComboBoxRounds_SelectionChanged:
+2017-09-13 18:38:12.762 TXM[16878:2478248] Could not connect action, target class WindowController does not respond to -BUttonGetResults_Click:
+2017-09-13 18:38:12.763 TXM[16878:2478248] Could not connect action, target class WindowController does not respond to -ChangePairings_Click:
+2017-09-13 18:38:12.763 TXM[16878:2478248] Could not connect action, target class WindowController does not respond to -NewPlayer_Click:
+2017-09-13 18:38:12.763 TXM[16878:2478248] Could not connect action, target class WindowController does not respond to -EditPlayer_Click:
+2017-09-13 18:38:12.763 TXM[16878:2478248] Could not connect action, target class WindowController does not respond to -ButtonNextRound_Click:
+2017-09-13 18:38:12.763 TXM[16878:2478248] Could not connect action, target class WindowController does not respond to -DisqualifyPlayer_Click:

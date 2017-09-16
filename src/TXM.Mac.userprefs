@@ -1,5 +1,5 @@
 ﻿<Properties StartupConfiguration="{BF337492-7F07-4B0D-A34B-5FD7D2411F27}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="TXM.Mac/WindowController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TXM.Mac/ViewController.designer.cs">
     <Files>
       <File FileName="TXM.Mac/ViewController.designer.cs" Line="27" Column="4" />
       <File FileName="TXM.Mac/WindowController.cs" Line="13" Column="4" />
