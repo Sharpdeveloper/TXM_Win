@@ -3,11 +3,18 @@
 using AppKit;
 using Foundation;
 
+using TXM.Core;
+
 namespace TXM.Mac
 {
 	public partial class ViewController : NSViewController
 	{
-        private int numberOfTimesClicked = 0;
+        private TournamentController tournamentController;
+
+		public static AppDelegate App
+		{
+			get { return (AppDelegate)NSApplication.SharedApplication.Delegate; }
+		}
 
 		public ViewController(IntPtr handle) : base(handle)
 		{
@@ -17,9 +24,11 @@ namespace TXM.Mac
 		{
 			base.ViewDidLoad();
 
-			// Do any additional setup after loading the view.
+            // Do any additional setup after loading the view.
 
-            ClickedLabel.StringValue = "Button has not been clicked yet.";
+            tournamentController = new TournamentController(new IO(new MacFile(), new MacMessage()));
+
+            App.MainViewController = this;
 		}
 
 		public override NSObject RepresentedObject
@@ -35,11 +44,41 @@ namespace TXM.Mac
 			}
 		}
 
-		partial void ClickedButton(Foundation.NSObject sender)
+		public void Open(bool autosave = false)
 		{
+			//tournamentController.Load(new AutosaveDialog(), autosave);
+            tournamentController.Load(null, autosave);
+			if (tournamentController.ActiveTournament != null)
+			{
+				/*ComboBoxRounds.Items.Clear();
+				if (tournamentController.ActiveTournament.Rounds != null)
+				{
+					for (int i = 1; i <= tournamentController.ActiveTournament.Rounds.Count; i++)
+						AddRoundButton(i);
+					if (tournamentController.ActiveTournament.Rounds != null && tournamentController.ActiveTournament.Rounds.Count > 0)
+						DataGridPairing.ItemsSource = tournamentController.ActiveTournament.Rounds[tournamentController.ActiveTournament.Rounds.Count - 1].Pairings;
+					if (tournamentController.ActiveTournament.FirstRound && (tournamentController.ActiveTournament.Rounds == null || tournamentController.ActiveTournament.Rounds.Count == 0))
+					{
+						SetGUIState(true);
+					}
+					else
+					{
+						SetGUIState(false, true);
+					}
+					ButtonGetResults.Content = tournamentController.ActiveTournament.ButtonGetResultsText;
+					ButtonGetResults.IsEnabled = true;
+					ButtonCut.IsEnabled = tournamentController.ActiveTournament.ButtonCutState == true;
+					tournamentController.ActiveTournament.Sort();
+					RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+					if (tournamentController.ActiveTournament.Pairings != null)
+						RefreshDataGridPairings(tournamentController.ActiveTournament.Pairings);
 
-			// Update counter and label
-			ClickedLabel.StringValue = string.Format("The button has been clicked {0} time{1}.", ++numberOfTimesClicked, (numberOfTimesClicked < 2) ? "" : "s");
+					InitDataGridPlayer();
+					InitDataGridPairing();
+					ButtonGetResults.ToolTip = ButtonGetResults.Content.ToString();
+				}*/
+			}
 		}
+
 	}
 }

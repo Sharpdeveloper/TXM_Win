@@ -19,7 +19,7 @@ namespace TXM
 
         public bool ShowWithOKCancel(string text)
         {
-            MessageBoxResult mbr = MessageBox.Show(text, "Warnung", MessageBoxButton.OKCancel);
+            MessageBoxResult mbr = MessageBox.Show(text, "Warning", MessageBoxButton.OKCancel);
             return mbr == MessageBoxResult.OK;
         }
     }

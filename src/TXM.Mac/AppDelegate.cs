@@ -6,6 +6,8 @@ namespace TXM.Mac
 	[Register("AppDelegate")]
 	public class AppDelegate : NSApplicationDelegate
 	{
+        public ViewController MainViewController { get; set; }
+
 		public AppDelegate()
 		{
 		}
@@ -13,6 +15,12 @@ namespace TXM.Mac
 		public override void DidFinishLaunching(NSNotification notification)
 		{
 			// Insert code here to initialize your application
+		}
+
+		[Export("openDocument:")]
+		void OpenDialog(NSObject sender)
+		{
+            MainViewController.Open();
 		}
 
 		public override void WillTerminate(NSNotification notification)

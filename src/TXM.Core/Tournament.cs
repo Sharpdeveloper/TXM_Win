@@ -1045,6 +1045,7 @@ namespace TXM.Core
                 {
                     ButtonGetResultsText = "Start Tournament";
                 }
+                version = 1;
             }
             else if (version == 1)
             {

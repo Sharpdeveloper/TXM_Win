@@ -48,6 +48,9 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.Mac" />
+    <Reference Include="TXM.Core">
+      <HintPath>..\TXM.Core\bin\Debug\TXM.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
@@ -81,6 +84,9 @@
     <Compile Include="WindowController.designer.cs">
       <DependentUpon>WindowController.cs</DependentUpon>
     </Compile>
+    <Compile Include="MacMessage.cs" />
+    <Compile Include="MacClipboard.cs" />
+    <Compile Include="MacFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />

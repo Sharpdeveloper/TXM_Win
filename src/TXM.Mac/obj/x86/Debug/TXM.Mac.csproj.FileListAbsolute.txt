@@ -11,3 +11,7 @@
 /Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/TXM.Mac.csproj.CoreCompileInputs.cache
 /Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/TXM.exe
 /Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/TXM.pdb
+/Users/martin/Projekte/TXM/src/TXM.Mac/bin/Debug/TXM.Core.dll
+/Users/martin/Projekte/TXM/src/TXM.Mac/bin/Debug/TXM.Core.pdb
+/Users/martin/Projekte/TXM/src/TXM.Mac/bin/Debug/TXM.Core.dll.mdb
+/Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/TXM.Mac.csprojResolveAssemblyReference.cache

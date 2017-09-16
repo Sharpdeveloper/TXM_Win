@@ -3,9 +3,9 @@
     public sealed class Settings
     {
         #region Constants
-        private const string fileextension = ".txmtournament";
+        private const string fileextension = "txmtournament";
         private const string fileextensionName = "TXM Tournaments";
-        private const string txmversion = "V2.1.0";
+        private const string txmversion = "V2.1.1";
         #endregion
 
         #region Properties

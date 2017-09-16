@@ -572,11 +572,11 @@ namespace TXM.Core
                 name = name.Replace('\\', ' ');
                 name = name.Replace('/', ' ');
                 name = name.Replace('_', ' ');
-                file = Path.Combine(file, "Autosave_" + DateTime.Now.ToFileTime() + "_" + name + "_" + Autosavetype + Settings.FILEEXTENSION);
+                file = Path.Combine(file, "Autosave_" + DateTime.Now.ToFileTime() + "_" + name + "_" + Autosavetype + "." + Settings.FILEEXTENSION);
             }
             else
             {
-                fileManager.AddFilter("*" + Settings.FILEEXTENSION, Settings.FILEEXTENSIONSNAME);
+                fileManager.AddFilter(Settings.FILEEXTENSION, Settings.FILEEXTENSIONSNAME);
                 if (fileManager.Save())
                 {
                     file = fileManager.FileName;
@@ -598,7 +598,7 @@ namespace TXM.Core
 			catch (Exception)
 			{
 				file = AutosavePath;
-				file += "\\Autosave_" + DateTime.Now.ToFileTime() + "_A_Tournament_" + Autosavetype + Settings.FILEEXTENSION;
+                file += Path.PathSeparator + "Autosave_" + DateTime.Now.ToFileTime() + "_A_Tournament_" + Autosavetype + "." + Settings.FILEEXTENSION;
 				using (Stream stream = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None))
 				{
 					formatter.Serialize(stream, tournament);
@@ -615,7 +615,7 @@ namespace TXM.Core
             }
             else
             {
-                fileManager.AddFilter("*" + Settings.FILEEXTENSION, Settings.FILEEXTENSIONSNAME);
+                fileManager.AddFilter(Settings.FILEEXTENSION, Settings.FILEEXTENSIONSNAME);
                 if (fileManager.Open())
                     file = fileManager.FileName;
                 else

@@ -13,6 +13,7 @@
 	/assembly:/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/mscorlib.dll \
 	/assembly:/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/System.Core.dll \
 	/assembly:/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/System.dll \
+	/assembly:/Users/martin/Projekte/TXM/src/TXM.Core/bin/Debug/TXM.Core.dll \
 	/assembly:/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/Xamarin.Mac.dll \
 	/Users/martin/Projekte/TXM/src/TXM.Mac/bin/Debug/TXM.exe \
 	/sdkroot \
