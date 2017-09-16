@@ -18,7 +18,7 @@ namespace TXM.Core
     [Serializable]
     public class Tournament : ISerializable
     {
-        private int version = 0;
+        private int version = 1;
 
         #region Tournament Information
         public List<Player> Participants { get; set; }
@@ -45,8 +45,7 @@ namespace TXM.Core
         #endregion
 
         #region GUI_State
-        public bool ButtonGetResultState { get; set; }
-        public bool ButtonNextRoundState { get; set; }
+        public string ButtonGetResultsText { get; set; }
         public bool ButtonCutState { get; set; }
         #endregion
 
@@ -1022,8 +1021,55 @@ namespace TXM.Core
                 PrintDDGER = (bool)info.GetValue("Tournament_PrintDDGER", typeof(bool));
                 PrintDDENG = (bool)info.GetValue("Tournament_PrintDDENG", typeof(bool));
                 Rule = (AbstractRules)info.GetValue("Tournament_Rule", typeof(AbstractRules));
-                ButtonGetResultState = (bool)info.GetValue("Tournament_ButtonGetResultState", typeof(bool));
-                ButtonNextRoundState = (bool)info.GetValue("Tournament_ButtonNextRoundState", typeof(bool));
+                bool ButtonGetResultState = (bool)info.GetValue("Tournament_ButtonGetResultState", typeof(bool));
+                bool ButtonNextRoundState = (bool)info.GetValue("Tournament_ButtonNextRoundState", typeof(bool));
+                ButtonCutState = (bool)info.GetValue("Tournament_ButtonCutState", typeof(bool));
+                T3ID = (int)info.GetValue("Tournament_T3ID", typeof(int));
+                GOEPPVersion = (string)info.GetValue("Tournament_GOEPPVersion", typeof(string));
+                givenStartNo = (List<int>)info.GetValue("Tournament_givenStartNo", typeof(List<int>));
+                ListOfPlayers = (List<Player>)info.GetValue("Tournament_ListOfPlayers", typeof(List<Player>));
+                PointGroup = (List<Player>[])info.GetValue("Tournament_PointGroup", typeof(List<Player>[]));
+                WonByes = (int)info.GetValue("Tournament_WonByes", typeof(int));
+                currentCountOfPlayer = (int)info.GetValue("Tournament_currentCountOfPlayer", typeof(int));
+                WinnerLastRound = (List<Player>)info.GetValue("Tournament_WinnerLastRound", typeof(List<Player>));
+                bye = (bool)info.GetValue("Tournament_bye", typeof(bool));
+                if(ButtonNextRoundState == true)
+                {
+                    ButtonGetResultsText = "Next Round";
+                }
+                else if(ButtonGetResultState == true)
+                {
+                    ButtonGetResultsText = "Get Results";
+                }
+                else
+                {
+                    ButtonGetResultsText = "Start Tournament";
+                }
+            }
+            else if (version == 1)
+            {
+                Participants = (List<Player>)info.GetValue("Tournament_Participants", typeof(List<Player>));
+                Teamplayer = (List<Player>)info.GetValue("Tournament_Teamplayer", typeof(List<Player>));
+                FirstRound = (bool)info.GetValue("Tournament_FirstRound", typeof(bool));
+                PrePaired = (List<Pairing>)info.GetValue("Tournament_PrePaired", typeof(List<Pairing>));
+                Name = (string)info.GetValue("Tournament_Name", typeof(string));
+                Nicknames = (List<string>)info.GetValue("Tournament_Nicknames", typeof(List<string>));
+                MaxPoints = (int)info.GetValue("Tournament_MaxPoints", typeof(int));
+                Rounds = (List<Round>)info.GetValue("Tournament_Rounds", typeof(List<Round>));
+                FilePath = (string)info.GetValue("Tournament_FilePath", typeof(string));
+                AutoSavePath = (string)info.GetValue("Tournament_AutoSavePath", typeof(string));
+                DisplayedRound = (int)info.GetValue("Tournament_DisplayedRound", typeof(int));
+                Cut = (TournamentCut)info.GetValue("Tournament_Cut", typeof(TournamentCut));
+                CutStarted = (bool)info.GetValue("Tournament_CutStarted", typeof(bool));
+                WonByeCalculated = (bool)info.GetValue("Tournament_WonByeCalculated", typeof(bool));
+                Pairings = (List<Pairing>)info.GetValue("Tournament_Pairings", typeof(List<Pairing>));
+                Io = (IO)info.GetValue("Tournament_Io", typeof(IO));
+                TeamProtection = (bool)info.GetValue("Tournament_TeamProtection", typeof(bool));
+                Single = (bool)info.GetValue("Tournament_Single", typeof(bool));
+                PrintDDGER = (bool)info.GetValue("Tournament_PrintDDGER", typeof(bool));
+                PrintDDENG = (bool)info.GetValue("Tournament_PrintDDENG", typeof(bool));
+                Rule = (AbstractRules)info.GetValue("Tournament_Rule", typeof(AbstractRules));
+                ButtonGetResultsText = (string)info.GetValue("Tournament_ButtonGetResultsText", typeof(string));
                 ButtonCutState = (bool)info.GetValue("Tournament_ButtonCutState", typeof(bool));
                 T3ID = (int)info.GetValue("Tournament_T3ID", typeof(int));
                 GOEPPVersion = (string)info.GetValue("Tournament_GOEPPVersion", typeof(string));
@@ -1061,8 +1107,7 @@ namespace TXM.Core
 			info.AddValue("Tournament_PrintDDGER", PrintDDGER, typeof(bool));
 			info.AddValue("Tournament_PrintDDENG", PrintDDENG, typeof(bool));
 			info.AddValue("Tournament_Rule", Rule, typeof(AbstractRules));
-			info.AddValue("Tournament_ButtonGetResultState", ButtonGetResultState, typeof(bool));
-			info.AddValue("Tournament_ButtonNextRoundState", ButtonNextRoundState, typeof(bool));
+			info.AddValue("Tournament_ButtonGetResultsText", ButtonGetResultsText, typeof(string));
 			info.AddValue("Tournament_ButtonCutState", ButtonCutState, typeof(bool));
 			info.AddValue("Tournament_T3ID", T3ID, typeof(int));
 			info.AddValue("Tournament_GOEPPVersion", GOEPPVersion, typeof(string));

@@ -4,6 +4,9 @@
     {
         void Show();
         void SetTimer(TournamentTimer t);
-        void SetIO(IO io);
+        bool SetImage(System.Uri path);
+        void SetLabelColor(bool white);
+        void SetTextSize(double size);
+        void Quit();
     }
 }

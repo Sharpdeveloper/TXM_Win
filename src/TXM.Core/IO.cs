@@ -16,10 +16,9 @@ namespace TXM.Core
         private IMessage messageManager;
         public string AutosavePath { get; private set; }
         public string TempPath { get; private set; }
-        private string iconPath;
-        public Dictionary<string, string> IconFiles { get; private set; }
         public string PrintFile { get; private set; }
-        public string TextColorFile { get; private set; }
+        private string TextColorFile { get; set; }
+        private string TextSizeFile { get; set; }
         public string SavePath { get; private set; }
         private string imgurl;
         public string TempImgPath { get; private set; }
@@ -36,15 +35,7 @@ namespace TXM.Core
             TempPath = Path.Combine(SavePath, "Temp");
             PrintFile = Path.Combine(TempPath, "print.html");
             TextColorFile = Path.Combine(SavePath, "textcolor.txt");
-            iconPath = Path.Combine(SavePath, "Icons");
-            IconFiles = new Dictionary<string, string>();
-            if (!Directory.Exists(iconPath))
-            {
-                Directory.CreateDirectory(iconPath);
-                SaveIcons(true);
-            }
-            else
-                SaveIcons(false);
+            TextSizeFile = Path.Combine(SavePath, "textsize.txt");
         }
 
         public Tournament GOEPPImport()
@@ -261,10 +252,10 @@ namespace TXM.Core
             sb.Append(head);
 
             //Added marquee to see all Pairings without manually scrolling
-            if(!bbcode)
-            {
-                sb.Append("<marquee direction=\"up\" behavior=\"alternate\">");
-            }
+            //if(!bbcode)
+            //{
+            //    sb.Append("<marquee direction=\"up\" behavior=\"alternate\">");
+            //}
 
             sb.Append(tb);
             sb.Append(rb);
@@ -395,10 +386,10 @@ namespace TXM.Core
             sb.Append(te);
 
             //end marquee tag
-            if (!bbcode)
-            {
-                sb.Append("</marquee>");
-            }
+            //if (!bbcode)
+            //{
+            //    sb.Append("</marquee>");
+            //}
 
             sb.Append(end);
             return sb.ToString();
@@ -437,11 +428,11 @@ namespace TXM.Core
 
             sb.Append(head);
 
-			//Added marquee to see all Pairings without manually scrolling
-            if (!bbcode)
-			{
-				sb.Append("<marquee direction=\"up\" behavior=\"alternate\">");
-			}
+			////Added marquee to see all Pairings without manually scrolling
+   //         if (!bbcode)
+			//{
+			//	sb.Append("<marquee direction=\"up\" behavior=\"alternate\">");
+			//}
 
             sb.Append(tb);
             sb.Append(rb);
@@ -509,10 +500,10 @@ namespace TXM.Core
             sb.Append(te);
 
 			//end marquee tag
-			if (!bbcode)
-			{
-				sb.Append("</marquee>");
-			}
+			//if (!bbcode)
+			//{
+			//	sb.Append("</marquee>");
+			//}
 
             sb.Append(end);
             return sb.ToString();
@@ -564,11 +555,10 @@ namespace TXM.Core
             return PrintFile;
         }
 
-        public void Save(Tournament tournament, bool autosave, bool? buttonGetResults, bool? buttonNextRound, bool? buttonCut, string Autosavetype = "")
+        public void Save(Tournament tournament, bool autosave, string getResultsText, bool? buttonCut, string Autosavetype = "")
         {
             string file = "";
-            tournament.ButtonGetResultState = buttonGetResults == true;
-            tournament.ButtonNextRoundState = buttonNextRound == true;
+            tournament.ButtonGetResultsText = getResultsText;
             tournament.ButtonCutState = buttonCut == true;
             if (autosave)
             {
@@ -708,6 +698,29 @@ namespace TXM.Core
             }
         }
 
+        public double GetSize()
+        {
+            if (File.Exists(TextSizeFile))
+            {
+                string line;
+                using (StreamReader sr = new StreamReader(TextSizeFile))
+                {
+                    line = sr.ReadLine();
+                }
+                return Double.Parse(line);
+            }
+            else
+                return 50.0;
+        }
+
+        public void WriteSize(double size)
+        {
+            using (StreamWriter f = new StreamWriter(TextSizeFile))
+            {
+                f.WriteLine(size);
+            }
+        }
+
         public string GetImagePath()
         {
             string img = Path.Combine(SavePath, "background.png");
@@ -764,86 +777,6 @@ namespace TXM.Core
                 imgurl = newImageSrc;
                 CopyImage();
             }
-        }
-
-        private void SaveIcons(bool save)
-        {
-            string s = Path.Combine(iconPath, "AddUser.png");
-            if (save)
-                Icons.Add_User_100.Save(s);
-            IconFiles.Add("AddUser", s);
-            s = Path.Combine(iconPath, "Randomizer.png");
-            if (save)
-                Icons.Clover_100.Save(s);
-            IconFiles.Add("Randomizer", s);
-            s = Path.Combine(iconPath, "EditUser.png");
-            if (save)
-                Icons.Edit_User_100.Save(s);
-            IconFiles.Add("EditUser", s);
-            s = Path.Combine(iconPath, "RemoveUser.png");
-            if (save)
-                Icons.Remove_User_100.Save(s);
-            IconFiles.Add("RemoveUser", s);
-            s = Path.Combine(iconPath, "Reset.png");
-            if (save)
-                Icons.Rotate_Left_100.Save(s);
-            IconFiles.Add("Reset", s);
-            s = Path.Combine(iconPath, "Save.png");
-            if (save)
-                Icons.Save_100.Save(s);
-            IconFiles.Add("Save", s);
-            s = Path.Combine(iconPath, "Disqualify.png");
-            if (save)
-                Icons.Unfriend_Male_100.Save(s);
-            IconFiles.Add("Disqualify", s);
-            s = Path.Combine(iconPath, "ChangePairings.png");
-            if (save)
-                Icons.User_Group_100.Save(s);
-            IconFiles.Add("ChangePairings", s);
-            s = Path.Combine(iconPath, "Timer.png");
-            if (save)
-                Icons.Watch_100.Save(s);
-            IconFiles.Add("Timer", s);
-            s = Path.Combine(iconPath, "TXM_Logo.png");
-            if (save)
-                Icons.TXM_Logo.Save(s);
-            IconFiles.Add("TXM_Logo", s);
-        }
-
-        public Bitmap GetIcon(string name)
-        {
-            Bitmap b = null;
-            switch(name)
-            {
-                case  "UserAdd":
-                    b = Icons.Add_User_100;
-                    break;
-                case "Randomizer":
-                    b = Icons.Clover_100;
-                    break;
-                case "UserEdit":
-                    b = Icons.Edit_User_100;
-                    break;
-                case "UserRemove":
-                    b = Icons.Remove_User_100;
-                    break;
-                case "Undo":
-                    b = Icons.Rotate_Left_100;
-                    break;
-                case "Save":
-                    b = Icons.Save_100;
-                    break;
-                case "Disqualify":
-                    b = Icons.Unfriend_Male_100;
-                    break;
-                case "ChangePairings":
-                    b = Icons.User_Group_100;
-                    break;
-                case "Timer":
-                    b = Icons.Watch_100;
-                    break;                   
-            }
-            return b;
         }
 
         public string PrintScoreSheet(Tournament tournament)

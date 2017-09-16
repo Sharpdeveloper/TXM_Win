@@ -8,7 +8,7 @@ namespace TXM.Core
     public class TournamentTimer
     {
         private Timer timer;
-        private int min, sec;
+        private int hour, min, sec;
         private int defaultTime;
         public int DefaultTime {
             get
@@ -20,8 +20,7 @@ namespace TXM.Core
                 defaultTime = value;
                 if(!Started)
                 {
-                    min = DefaultTime;
-                    sec = 0;
+                    SetTime();
                     AktZeit();
 
                     if (Changed != null)
@@ -48,10 +47,22 @@ namespace TXM.Core
 
         public void StartTimer()
         {
-            min = DefaultTime;
-            sec = 0;
+            SetTime();
             AktZeit();
             Start();
+        }
+
+        private void SetTime()
+        {
+            min = DefaultTime;
+            if (min > 60)
+            {
+                hour = min / 60;
+                min = min % 60;
+            }
+            else
+                hour = 0;
+            sec = 0;
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -59,7 +70,16 @@ namespace TXM.Core
             if (sec == 0)
             {
                 if (min == 0)
-                    Stop();
+                {
+                    if (hour == 0)
+                        Stop();
+                    else
+                    {
+                        hour--;
+                        min = 59;
+                        sec = 59;
+                    }
+                }  
                 else
                 {
                     min--;
@@ -87,7 +107,10 @@ namespace TXM.Core
 
         private void AktZeit()
         {
-            currentTime = min.ToString("D2") + ":" + sec.ToString("D2");
+            if(hour > 0)
+                currentTime = hour.ToString("D2") + ":" + min.ToString("D2") + ":" + sec.ToString("D2");
+            else
+                currentTime = min.ToString("D2") + ":" + sec.ToString("D2");
         }
 
         public void PauseTimer()
@@ -101,8 +124,7 @@ namespace TXM.Core
         public void ResetTimer()
         {
             Stop();
-            min = DefaultTime;
-            sec = 0;
+            SetTime();
             AktZeit();
             if (Changed != null)
             {

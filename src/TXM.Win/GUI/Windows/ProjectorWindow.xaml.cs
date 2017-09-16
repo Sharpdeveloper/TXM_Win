@@ -10,6 +10,7 @@ namespace TXM.GUI.Windows
     public partial class ProjectorWindow : Window, IProjectorWindow
     {
         private bool closed = false;
+        private TournamentTimer timer;
 
         public ProjectorWindow()
         {
@@ -41,6 +42,27 @@ namespace TXM.GUI.Windows
             closed = true;
 
             base.OnClosing(e);
+        }
+
+        public void SetTimer(TournamentTimer t)
+        {
+            timer = t;
+            t.Changed += TimeChanged;
+        }
+
+        private void TimeChanged(object sender, System.EventArgs e)
+        {
+            Dispatcher.Invoke(new System.Action(PrintTime));
+        }
+
+        private void PrintTime()
+        {
+            LabelTime.Content = timer.ActualTime;
+        }
+
+        public void Quit()
+        {
+            this.Close();
         }
     }
 }

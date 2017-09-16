@@ -34,12 +34,12 @@ namespace TXM.Core
 			//ID == -1 => Bye
 			if (result.Enemy.ID == -1)
 			{
-				newResult = new Result((int)1.5 * result.MaxPoints, 0, result.Enemy, result.MaxPoints, result.WinnerID);
+				newResult = new Result((int)(0.5 * result.MaxPoints), 0, result.Enemy, result.MaxPoints, result.WinnerID);
 			}
 			//ID == -2 => WonBye
 			else if (result.Enemy.ID == -2)
 			{
-				newResult = new Result((int)2 * result.MaxPoints, 0, result.Enemy, result.MaxPoints, result.WinnerID);
+				newResult = new Result((int) result.MaxPoints, 0, result.Enemy, result.MaxPoints, result.WinnerID);
 			}
 
 			int tP = newResult.Destroyed - newResult.Lost;

@@ -50,13 +50,13 @@ namespace TXM.Core
                 ActiveTournament.Io = ActiveIO;
         }
 
-        public bool StartTournament(bool GetResultsIsEnabled, bool NextRoundIsEnabled, bool CutIsEnabled)
+        public bool StartTournament(string buttonGetResultsText, bool CutIsEnabled)
         {
             if (ActiveTournament.Participants.Count != 0)
             {
                 firststart = true;
                 Started = true;
-                ActiveIO.Save(ActiveTournament, true, GetResultsIsEnabled, NextRoundIsEnabled, CutIsEnabled, "TournamentStart");
+                ActiveIO.Save(ActiveTournament, true, buttonGetResultsText, CutIsEnabled, "TournamentStart");
                 return true;
             }
             else
@@ -132,9 +132,9 @@ namespace TXM.Core
             ActiveIO.GOEPPExport(ActiveTournament);
         }
 
-        public void Save(bool GetResultsIsEnabled, bool NextRoundIsEnabled, bool CutIsEnabled, bool autosave = false)
+        public void Save(string GetResultsText, bool CutIsEnabled, bool autosave = false)
         {
-            ActiveIO.Save(ActiveTournament, autosave, GetResultsIsEnabled, NextRoundIsEnabled, CutIsEnabled, "Pairings_Round" + ActiveTournament.Rounds.Count);
+            ActiveIO.Save(ActiveTournament, autosave, GetResultsText, CutIsEnabled, "Pairings_Round" + ActiveTournament.Rounds.Count);
         }
 
         public List<Pairing> GetSeed(bool cut)
@@ -144,7 +144,7 @@ namespace TXM.Core
             return temp;
         }
 
-        public bool GetResults(List<Pairing> pairings, bool GetResultsIsEnabled, bool NextRoundIsEnabled, bool CutIsEnabled, bool update = false, bool end = false)
+        public bool GetResults(List<Pairing> pairings, string buttonGetResultsText, bool CutIsEnabled, bool update = false, bool end = false)
         {
             if (update)
             {
@@ -198,15 +198,21 @@ namespace TXM.Core
             }
             ActiveTournament.Sort();
             
-            ActiveIO.Save(ActiveTournament, true, GetResultsIsEnabled, NextRoundIsEnabled, CutIsEnabled, "Result_Round" + ActiveTournament.Rounds.Count);
+            ActiveIO.Save(ActiveTournament, true, buttonGetResultsText, CutIsEnabled, "Result_Round" + ActiveTournament.Rounds.Count);
             return true;
         }
 
-        public void OpenTimerWindow(ITimerWindow itw)
+        public void ShowTimerWindow(ITimerWindow itw)
         {
             timerWindow = itw;
-            timerWindow.SetIO(ActiveIO);
             timerWindow.SetTimer(ActiveTimer);
+            string imgurl = ActiveIO.GetImagePath();
+            if (imgurl != "" && imgurl != null)
+            {
+                timerWindow.SetImage(new Uri(imgurl));
+            }
+            timerWindow.SetLabelColor(ActiveIO.GetColor());
+            timerWindow.SetTextSize(ActiveIO.GetSize());
             timerWindow.Show();
         }
 
@@ -218,7 +224,7 @@ namespace TXM.Core
             {
                 string[] filenames = ActiveIO.GetAutosaveFiles();
                 List<AutosaveFile> files = new List<AutosaveFile>();
-                for(int i = 0; i < filenames.Length; i++)
+                for(int i = filenames.Length - 1; i >= 0 ; i--)
                 {
                     files.Add(new AutosaveFile(filenames[i]));
                 }
@@ -303,7 +309,12 @@ namespace TXM.Core
             }
         }
 
-        public void EditPairings(IPairingDialog ipd, bool GetResultsIsEnabled, bool NextRoundIsEnabled, bool CutIsEnabled)
+        public void RemovePlayer(Player p)
+        {
+            RemovePlayer(ActiveTournament.GetIndexOfPlayer(p));
+        }
+
+        public void EditPairings(IPairingDialog ipd, string buttonGetResultsText, bool CutIsEnabled)
         {
             
             ipd.SetParticipants(ActiveTournament.Participants);
@@ -313,7 +324,7 @@ namespace TXM.Core
             {
                 ActiveTournament.Pairings = ipd.GetPairings();
                 
-                ActiveIO.Save(ActiveTournament, true, GetResultsIsEnabled, NextRoundIsEnabled, CutIsEnabled, "ChangePairings");
+                ActiveIO.Save(ActiveTournament, true, buttonGetResultsText, CutIsEnabled, "ChangePairings");
             }
         }
 
@@ -393,6 +404,7 @@ namespace TXM.Core
                 }
                 projectorWindow.SetURL(file);
                 projectorWindow.SetTitle(title);
+                projectorWindow.SetTimer(ActiveTimer);
                 projectorWindow.Show();
             }
         }
@@ -438,6 +450,44 @@ namespace TXM.Core
             }
 
             return ActiveTimer.DefaultTime.ToString();
+        }
+
+        public void SetImage()
+        {
+            if(!timerWindow.SetImage(new Uri(ActiveIO.TempImgPath)))
+            {
+                ActiveIO.ShowMessage("The Image " + ActiveIO.TempImgPath + " is invalid.");
+            }
+        }
+
+        public void SetTimerLabelColor(bool white)
+        {
+            ActiveIO.WriteColor(white);
+            timerWindow.SetLabelColor(white);
+        }
+
+        public void SetTimerTextSize(double size)
+        {
+            ActiveIO.WriteSize(size);
+            timerWindow.SetTextSize(size);
+        }
+
+        public void Close()
+        {
+            if (timerWindow != null)
+                timerWindow.Quit();
+            if (projectorWindow != null)
+                projectorWindow.Quit();
+        }
+
+        public void CalculateWonByes()
+        {
+            ActiveTournament.CalculateWonBye();
+        }
+
+        public void ShowUserManual()
+        {
+            Process.Start("https://github.com/Sharpdeveloper/TXM/wiki/User-Manual");
         }
     }
 }
