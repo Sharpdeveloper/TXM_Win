@@ -40,7 +40,7 @@ namespace TXM.Core
 
         public Tournament GOEPPImport()
         {
-            fileManager.AddFilter("*.gip", "GÖPP Import File");
+            fileManager.AddFilter("gip", "GÖPP Import File");
             if (fileManager.Open())
             {
                 try
@@ -112,7 +112,7 @@ namespace TXM.Core
 
         public void GOEPPExport(Tournament tournament)
         {
-            fileManager.AddFilter("*.gep", "GÖPP Export File");
+            fileManager.AddFilter("gep", "GÖPP Export File");
             if(!tournament.Single)
             {
                 tournament.SplitTeams();
@@ -165,7 +165,7 @@ namespace TXM.Core
 
         public Tournament CSVImport()
         {
-            fileManager.AddFilter("*.csv", "Excel File (CSV)");
+            fileManager.AddFilter("csv", "Excel File (CSV)");
             if (fileManager.Open())
             {
                 try
