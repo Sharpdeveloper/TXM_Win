@@ -82,6 +82,8 @@
     <Compile Include="Result.cs" />
     <Compile Include="Round.cs" />
     <Compile Include="Rules\AbstractRules.cs" />
+    <Compile Include="Rules\W40KKPRules.cs" />
+    <Compile Include="Rules\W40KWLRules.cs" />
     <Compile Include="Rules\GameOfThrones2ndRules.cs" />
     <Compile Include="Rules\AndroidNetrunnerRules.cs" />
     <Compile Include="Rules\SWLCGRules.cs" />

@@ -12,7 +12,7 @@ namespace TXM.Core
     {
         #region Static Fields
         private static int tableNr = 0;
-        private int version = 0;
+        private int version = 1;
         #endregion
 
         #region Properties
@@ -23,6 +23,8 @@ namespace TXM.Core
         public int Player2Score { get; set; }
         public string Winner { get; set; }
         public bool ResultEdited { get; set; }
+        public int Player1Points { get; set; }
+        public int Player2Points { get; set; }
         #endregion
 
         #region Constructor
@@ -42,13 +44,15 @@ namespace TXM.Core
 
         public Pairing(Pairing p)
         {
-            this.TableNr = p.TableNr;
-            this.Player1 = p.Player1;
-            this.Player2 = p.Player2;
-            this.Player1Score = p.Player1Score;
-            this.Player2Score = p.Player2Score;
-            this.ResultEdited = p.ResultEdited;
-            this.Winner = p.Winner;
+            TableNr = p.TableNr;
+            Player1 = p.Player1;
+            Player2 = p.Player2;
+            Player1Score = p.Player1Score;
+            Player2Score = p.Player2Score;
+            ResultEdited = p.ResultEdited;
+            Winner = p.Winner;
+            Player1Points = p.Player1Points;
+            Player2Points = p.Player2Points;
         }
         #endregion
 
@@ -96,8 +100,24 @@ namespace TXM.Core
                 Player2Score = (int)info.GetValue("Pairing_Player2Score", typeof(int));
                 Winner = (string)info.GetValue("Pairing_Winner", typeof(string));
                 ResultEdited = (bool)info.GetValue("Pairing_ResultEdited", typeof(bool));
+                Player1Points = 0;
+                Player2Points = 0;
+                version = 1;
 			}
-		}
+            else if (version == 1)
+            {
+                tableNr = (int)info.GetValue("Pairing_tableNr", typeof(int));
+                TableNr = (int)info.GetValue("Pairing_TableNr", typeof(int));
+                Player1 = (Player)info.GetValue("Pairing_Player1", typeof(Player));
+                Player2 = (Player)info.GetValue("Pairing_Player2", typeof(Player));
+                Player1Score = (int)info.GetValue("Pairing_Player1Score", typeof(int));
+                Player2Score = (int)info.GetValue("Pairing_Player2Score", typeof(int));
+                Winner = (string)info.GetValue("Pairing_Winner", typeof(string));
+                ResultEdited = (bool)info.GetValue("Pairing_ResultEdited", typeof(bool));
+                Player1Points = (int)info.GetValue("Pairing_Player1Points", typeof(int));
+                Player2Points = (int)info.GetValue("Pairing_Player2Points", typeof(int));
+            }
+        }
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
@@ -110,6 +130,8 @@ namespace TXM.Core
 			info.AddValue("Pairing_Player2Score", Player2Score, typeof(int));
 			info.AddValue("Pairing_Winner", Winner, typeof(string));
 			info.AddValue("Pairing_ResultEdited", ResultEdited, typeof(bool));
-		}
+            info.AddValue("Pairing_Player1Points", Player1Points, typeof(int));
+            info.AddValue("Pairing_Player2Points", Player2Points, typeof(int));
+        }
     }
 }

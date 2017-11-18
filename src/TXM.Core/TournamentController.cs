@@ -46,8 +46,11 @@ namespace TXM.Core
                 ActiveTournament = itd.GetTournament();
             }
 
-            if(ActiveTournament != null)
+            if (ActiveTournament != null)
+            {
                 ActiveTournament.Io = ActiveIO;
+                ActiveTimer.DefaultTime = ActiveTournament.Rule.DefaultTime;
+            }
         }
 
         public bool StartTournament(string buttonGetResultsText, bool CutIsEnabled)
@@ -103,6 +106,7 @@ namespace TXM.Core
             ActiveTournament.Single = tournament.Single;
             ActiveTournament.Rule = tournament.Rule;
             ActiveTournament.Io = ActiveIO;
+            ActiveTimer.DefaultTime = ActiveTournament.Rule.DefaultTime;
         }
 
         public void Import(ITournamentDialog itd, bool csv)
@@ -124,6 +128,7 @@ namespace TXM.Core
                 {
                     ChangeTournament(itd.GetTournament());
                 }
+                ActiveTimer.DefaultTime = ActiveTournament.Rule.DefaultTime;
             }
         }
 
@@ -132,9 +137,9 @@ namespace TXM.Core
             ActiveIO.GOEPPExport(ActiveTournament);
         }
 
-        public void Save(string GetResultsText, bool CutIsEnabled, bool autosave = false)
+        public void Save(string GetResultsText, bool CutIsEnabled, bool autosave = false, string text = "Pairings_Round")
         {
-            ActiveIO.Save(ActiveTournament, autosave, GetResultsText, CutIsEnabled, "Pairings_Round" + ActiveTournament.Rounds.Count);
+            ActiveIO.Save(ActiveTournament, autosave, GetResultsText, CutIsEnabled, text + ActiveTournament.Rounds.Count);
         }
 
         public List<Pairing> GetSeed(bool cut)
@@ -197,8 +202,6 @@ namespace TXM.Core
                 //ChangeGUIState(false);
             }
             ActiveTournament.Sort();
-            
-            ActiveIO.Save(ActiveTournament, true, buttonGetResultsText, CutIsEnabled, "Result_Round" + ActiveTournament.Rounds.Count);
             return true;
         }
 
@@ -309,7 +312,7 @@ namespace TXM.Core
             }
         }
 
-        public void RemovePlayer(Player p)
+        public void RemovePlayer(Player p, bool disqualify = false)
         {
             RemovePlayer(ActiveTournament.GetIndexOfPlayer(p));
         }
