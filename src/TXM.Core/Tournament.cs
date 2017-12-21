@@ -707,13 +707,13 @@ namespace TXM.Core
                         winnerID = pairing.Player2.ID;
                     else
                         winnerID = (pairing.Player1Score > pairing.Player2Score) ? pairing.Player1.ID : pairing.Player2.ID;
-                    r = new Result(pairing.Player1Score, pairing.Player2Score, pairing.Player2, MaxPoints, winnerID);
+                    r = new Result(pairing.Player1Score, pairing.Player2Score, pairing.Player2, MaxPoints, winnerID, pairing.Player1Points);
                     winner = Rule.AddResult(pairing.Player1, r);
                     if (winner)
                         WinnerLastRound.Add(pairing.Player1);
                     if (pairing.Player2 != WonBye && pairing.Player2 != Bye)
                     {
-                        r = new Result(pairing.Player2Score, pairing.Player1Score, pairing.Player1, MaxPoints, winnerID);
+                        r = new Result(pairing.Player2Score, pairing.Player1Score, pairing.Player1, MaxPoints, winnerID, pairing.Player2Points);
                         winner = Rule.AddResult(pairing.Player2, r);
                         if (winner)
                             WinnerLastRound.Add(pairing.Player2);
@@ -733,9 +733,9 @@ namespace TXM.Core
                             winnerID = results[i].Player2.ID;
                         else
                             winnerID = (results[i].Player1Score > results[i].Player2Score) ? results[i].Player1.ID : results[i].Player2.ID;
-                        r = new Result(results[i].Player1Score, results[i].Player2Score, results[i].Player2, MaxPoints, winnerID);
+                        r = new Result(results[i].Player1Score, results[i].Player2Score, results[i].Player2, MaxPoints, winnerID, results[i].Player1Points);
                         Rule.Update(results[i].Player1, r, DisplayedRound);
-                        r = new Result(results[i].Player2Score, results[i].Player1Score, results[i].Player1, MaxPoints, winnerID);
+                        r = new Result(results[i].Player2Score, results[i].Player1Score, results[i].Player1, MaxPoints, winnerID, results[i].Player2Points);
                         Rule.Update(results[i].Player2, r, DisplayedRound);
                     }
                 }
@@ -1079,6 +1079,7 @@ namespace TXM.Core
                 WinnerLastRound = (List<Player>)info.GetValue("Tournament_WinnerLastRound", typeof(List<Player>));
                 bye = (bool)info.GetValue("Tournament_bye", typeof(bool));
             }
+            Rule = AbstractRules.GetRule(Rule.GetName());
         }
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)

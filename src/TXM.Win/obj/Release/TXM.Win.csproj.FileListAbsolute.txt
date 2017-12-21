@@ -32,3 +32,4 @@ C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\obj\Release\TXM.Properties.Reso
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\obj\Release\TXM.Win.csproj.GenerateResource.Cache
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\obj\Release\TXM.exe
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\obj\Release\TXM.pdb
+C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\obj\Release\TXM.Win.csproj.CoreCompileInputs.cache

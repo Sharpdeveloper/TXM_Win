@@ -135,7 +135,7 @@ namespace TXM.GUI
                 };
                 DataGridPlayer.Columns.Add(dgc);
             }
-            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("Draws"))
+            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsDrawPossible)
             {
                 dgc = new DataGridTextColumn()
                 {
@@ -166,7 +166,7 @@ namespace TXM.GUI
             {
                 dgc = new DataGridTextColumn()
                 {
-                    Header = "MoV",
+                    Header = tournamentController.ActiveTournament.Rule.MoVName,
                     Binding = new Binding("MarginOfVictory"),
                     IsReadOnly = true
                 };
@@ -226,6 +226,26 @@ namespace TXM.GUI
                 IsReadOnly = true
             };
             DataGridPairing.Columns.Add(dgc);
+            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsTournamentPointsInputNeeded)
+            {
+                dgc = new DataGridTextColumn()
+                {
+                    Header = "TP (P1)",
+                    Binding = new Binding("Player1Points"),
+                    IsReadOnly = false
+                };
+                DataGridPairing.Columns.Add(dgc);
+            }
+            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsTournamentPointsInputNeeded)
+            {
+                dgc = new DataGridTextColumn()
+                {
+                    Header = "TP (P2)",
+                    Binding = new Binding("Player2Points"),
+                    IsReadOnly = false
+                };
+                DataGridPairing.Columns.Add(dgc);
+            }
             dgc = new DataGridTextColumn()
             {
                 Header = "Score (P1)",
@@ -445,15 +465,17 @@ namespace TXM.GUI
 
         private void DataGridPlayer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (DataGridPlayer.SelectedItem != null && !tournamentController.Started)
+            if (DataGridPlayer.SelectedItem != null)
             {
                 RemovePlayerIsEnabled = true;
+                DisqualifyPlayerIsEnabled = tournamentController.Started;
                 EditPlayerIsEnabled = true;
             }
             else
             {
                 RemovePlayerIsEnabled = false;
                 EditPlayerIsEnabled = false;
+                DisqualifyPlayerIsEnabled = false;
             }
         }
 
@@ -539,6 +561,7 @@ namespace TXM.GUI
                     ComboBoxRounds.SelectedIndex = ComboBoxRounds.Items.Count - 1;
                     RefreshDataGridPairings(tournamentController.ActiveTournament.Pairings);
                     ButtonGetResults.ToolTip = ButtonGetResults.Content.ToString();
+                    tournamentController.Save(ButtonGetResults.Content.ToString(), false, true, "Update_Round");
                 }
                 return;
             }
@@ -548,6 +571,7 @@ namespace TXM.GUI
                 {
                     RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
                     ChangeGUIState(false);
+                    tournamentController.Save(ButtonGetResults.Content.ToString(), false, true, "Result_Round");
                 }
                 return;
             }
@@ -807,7 +831,7 @@ namespace TXM.GUI
             {
                 foreach (Player s in DataGridPlayer.SelectedItems)
                 {
-                    tournamentController.RemovePlayer(s);
+                    tournamentController.RemovePlayer(s, true);
                 }
             }
             else if (DataGridPlayer.SelectedIndex >= 0)

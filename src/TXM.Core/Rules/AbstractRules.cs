@@ -18,7 +18,9 @@ namespace TXM.Core
             IARules.GetRuleName(),
             LegionRules.GetRuleName(),
             SWLCGRules.GetRuleName(),
-            XWingRules.GetRuleName()
+            XWingRules.GetRuleName(),
+            W40KKPRules.GetRuleName(),
+            W40KWLRules.GetRuleName()
         };
         private static string[] RuleNamesT3Able =
         {
@@ -26,7 +28,9 @@ namespace TXM.Core
             ArmadaRules.GetRuleName(),
             IARules.GetRuleName(),
             LegionRules.GetRuleName(),
-            XWingRules.GetRuleName()
+            XWingRules.GetRuleName(),
+            W40KKPRules.GetRuleName(),
+            W40KWLRules.GetRuleName()
         };
 
         public static AbstractRules GetRule(string name)
@@ -51,6 +55,10 @@ namespace TXM.Core
                 return new LegionRules();
             else if (name == LegendOfThe5RingesRules.GetRuleName())
                 return new LegendOfThe5RingesRules();
+            else if (name == W40KKPRules.GetRuleName())
+                return new W40KKPRules();
+            else if (name == W40KWLRules.GetRuleName())
+                return new W40KWLRules();
             return null;
         }
 
@@ -78,6 +86,8 @@ namespace TXM.Core
 		protected int TlostPoints;
 		protected int TmarginOfVictory;
         protected string name;
+        protected string movName = "MoV";
+        protected bool tournamentPoints = false;
         #endregion
 
         #region Public Properties
@@ -89,6 +99,20 @@ namespace TXM.Core
         public int DefaultMaxPoints { get; protected set; }
         public string[] Factions { get; protected set; }
         public int DefaultTime { get; protected set; }
+        public string MoVName
+        {
+            get
+            {
+                return movName;
+            }
+        }
+        public bool IsTournamentPointsInputNeeded
+        {
+            get
+            {
+                return tournamentPoints;
+            }
+        }
         #endregion
 
         #region Public Methods
