@@ -1,19 +1,19 @@
 ﻿<Properties StartupConfiguration="{BF337492-7F07-4B0D-A34B-5FD7D2411F27}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="TXM.Core/IO.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TXM.Core/TournamentController.cs">
     <Files>
       <File FileName="TXM.Mac/ViewController.cs" Line="51" Column="1" />
       <File FileName="TXM.Mac/Main.cs" Line="11" Column="4" />
       <File FileName="TXM.Mac/AppDelegate.cs" Line="23" Column="37" />
-      <File FileName="TXM.Core/Tournament.cs" Line="1048" Column="29" />
-      <File FileName="TXM.Core/TournamentController.cs" Line="252" Column="1" />
-      <File FileName="TXM.Core/IO.cs" Line="549" Column="53" />
+      <File FileName="TXM.Core/Tournament.cs" Line="1082" Column="10" />
+      <File FileName="TXM.Core/TournamentController.cs" Line="250" Column="14" />
+      <File FileName="TXM.Core/IO.cs" Line="587" Column="40" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="TXM.Mac" expanded="True">
             <Node name="TXM.Core" expanded="True">
-              <Node name="IO.cs" selected="True" />
+              <Node name="TournamentController.cs" selected="True" />
             </Node>
             <Node name="TXM.Mac" expanded="True">
               <Node name="ViewController.cs" expanded="True" />

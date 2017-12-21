@@ -8,10 +8,6 @@ namespace TXM.Mac
 	{
         public ViewController MainViewController { get; set; }
 
-		public AppDelegate()
-		{
-		}
-
 		public override void DidFinishLaunching(NSNotification notification)
 		{
 			// Insert code here to initialize your application

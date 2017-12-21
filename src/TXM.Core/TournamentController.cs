@@ -45,9 +45,6 @@ namespace TXM.Core
             {
                 ActiveTournament = itd.GetTournament();
             }
-
-            if(ActiveTournament != null)
-                ActiveTournament.Io = ActiveIO;
         }
 
         public bool StartTournament(string buttonGetResultsText, bool CutIsEnabled)
@@ -102,7 +99,6 @@ namespace TXM.Core
             ActiveTournament.PrintDDENG = tournament.PrintDDENG;
             ActiveTournament.Single = tournament.Single;
             ActiveTournament.Rule = tournament.Rule;
-            ActiveTournament.Io = ActiveIO;
         }
 
         public void Import(ITournamentDialog itd, bool csv)
@@ -244,10 +240,6 @@ namespace TXM.Core
             if (overwrite == true)
             {
                 ActiveTournament = ActiveIO.Load(filename);
-                if(ActiveTournament != null)
-                {
-                    ActiveTournament.Io = ActiveIO;
-                }
             }
         }
 

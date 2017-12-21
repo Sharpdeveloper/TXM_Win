@@ -36,7 +36,6 @@ namespace TXM.Core
         public bool CutStarted { get; internal set; }
         public bool WonByeCalculated { get; internal set; }
         public List<Pairing> Pairings { get; set; }
-        public IO Io { get; set; }
         public bool TeamProtection { get; set; }
         public bool Single { get; set; }
         public bool PrintDDGER { get; set; }
@@ -1015,7 +1014,6 @@ namespace TXM.Core
                 CutStarted = (bool)info.GetValue("Tournament_CutStarted", typeof(bool));
                 WonByeCalculated = (bool)info.GetValue("Tournament_WonByeCalculated", typeof(bool));
                 Pairings = (List<Pairing>)info.GetValue("Tournament_Pairings", typeof(List<Pairing>));
-                Io = (IO)info.GetValue("Tournament_Io", typeof(IO));
                 TeamProtection = (bool)info.GetValue("Tournament_TeamProtection", typeof(bool));
                 Single = (bool)info.GetValue("Tournament_Single", typeof(bool));
                 PrintDDGER = (bool)info.GetValue("Tournament_PrintDDGER", typeof(bool));
@@ -1064,7 +1062,6 @@ namespace TXM.Core
                 CutStarted = (bool)info.GetValue("Tournament_CutStarted", typeof(bool));
                 WonByeCalculated = (bool)info.GetValue("Tournament_WonByeCalculated", typeof(bool));
                 Pairings = (List<Pairing>)info.GetValue("Tournament_Pairings", typeof(List<Pairing>));
-                Io = (IO)info.GetValue("Tournament_Io", typeof(IO));
                 TeamProtection = (bool)info.GetValue("Tournament_TeamProtection", typeof(bool));
                 Single = (bool)info.GetValue("Tournament_Single", typeof(bool));
                 PrintDDGER = (bool)info.GetValue("Tournament_PrintDDGER", typeof(bool));
@@ -1102,7 +1099,6 @@ namespace TXM.Core
 			info.AddValue("Tournament_CutStarted", CutStarted, typeof(bool));
 			info.AddValue("Tournament_WonByeCalculated", WonByeCalculated, typeof(bool));
 			info.AddValue("Tournament_Pairings", Pairings, typeof(List<Pairing>));
-			info.AddValue("Tournament_Io", Io, typeof(IO));
 			info.AddValue("Tournament_TeamProtection", TeamProtection, typeof(bool));
 			info.AddValue("Tournament_Single", Single, typeof(bool));
 			info.AddValue("Tournament_PrintDDGER", PrintDDGER, typeof(bool));
