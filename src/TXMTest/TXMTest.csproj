@@ -59,7 +59,7 @@
     </ProjectReference>
     <ProjectReference Include="..\TXM\TXM.csproj">
       <Project>{438AABB8-B8A5-4AAB-A927-08BAD2AFA992}</Project>
-      <Name>TXM</Name>
+      <Name>TXM.Win</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
