@@ -21,8 +21,6 @@ C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\obj\Debug\TXM.Win.csprojResolve
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\bin\Debug\TXM.exe.config
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\bin\Debug\TXM.exe
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\bin\Debug\TXM.pdb
-C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\bin\Debug\TXM.Core.dll
-C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\bin\Debug\TXM.Core.pdb
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\obj\Debug\GUI\Dialogs\AboutDialog.baml
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\obj\Debug\GUI\Dialogs\ReportBugDialog.baml
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\obj\Debug\TXM.g.resources

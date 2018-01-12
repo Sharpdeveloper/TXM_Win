@@ -692,6 +692,10 @@ namespace TXM.Core
 
         public void WriteColor(bool whiteText)
         {
+            if(!Directory.Exists(SavePath))
+            {
+                Directory.CreateDirectory(SavePath);
+            }
             using (StreamWriter f = new StreamWriter(TextColorFile))
             {
                 f.WriteLine(whiteText ? "White" : "Black");
