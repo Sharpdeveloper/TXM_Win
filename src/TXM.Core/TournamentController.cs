@@ -45,15 +45,6 @@ namespace TXM.Core
             {
                 ActiveTournament = itd.GetTournament();
             }
-<<<<<<< HEAD
-=======
-
-            if (ActiveTournament != null)
-            {
-                ActiveTournament.Io = ActiveIO;
-                ActiveTimer.DefaultTime = ActiveTournament.Rule.DefaultTime;
-            }
->>>>>>> e379650ec73a127b44f2741a1d36f14244705a12
         }
 
         public bool StartTournament(string buttonGetResultsText, bool CutIsEnabled)
@@ -108,11 +99,7 @@ namespace TXM.Core
             ActiveTournament.PrintDDENG = tournament.PrintDDENG;
             ActiveTournament.Single = tournament.Single;
             ActiveTournament.Rule = tournament.Rule;
-<<<<<<< HEAD
-=======
-            ActiveTournament.Io = ActiveIO;
             ActiveTimer.DefaultTime = ActiveTournament.Rule.DefaultTime;
->>>>>>> e379650ec73a127b44f2741a1d36f14244705a12
         }
 
         public void Import(ITournamentDialog itd, bool csv)

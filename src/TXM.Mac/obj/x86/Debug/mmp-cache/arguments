@@ -1,11 +1,11 @@
-# Version: 3.6.3.3 (d15-3: 8a391069)
-# [first argument, ignore] # /Library/Frameworks/Xamarin.Mac.framework/Versions/3.6.3.3/lib/mmp/mmp.exe
-/Library/Frameworks/Xamarin.Mac.framework/Versions/3.6.3.3/lib/mmp/mmp.exe \
+# Version: 4.0.0.215 (d15-5: 1bda16aa)
+# [first argument, ignore] # /Library/Frameworks/Xamarin.Mac.framework/Versions/4.0.0.215/lib/mmp/mmp.exe
+/Library/Frameworks/Xamarin.Mac.framework/Versions/4.0.0.215/lib/mmp/mmp.exe \
 	/verbose \
 	/debug \
 	/output:/Users/martin/Projekte/TXM/src/TXM.Mac/bin/Debug/ \
 	/name:TXM \
-	/profile:Xamarin.Mac,Version=v2.0,Profile=Mobile \
+	'/profile:Xamarin.Mac,Version=v2.0,Profile=Mobile' \
 	/arch:x86_64 \
 	--http-message-handler=HttpClientHandler \
 	/minos=10.12 \
@@ -13,7 +13,6 @@
 	/assembly:/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/mscorlib.dll \
 	/assembly:/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/System.Core.dll \
 	/assembly:/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/System.dll \
-	/assembly:/Users/martin/Projekte/TXM/src/TXM.Core/bin/Debug/TXM.Core.dll \
 	/assembly:/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/Xamarin.Mac.dll \
 	/Users/martin/Projekte/TXM/src/TXM.Mac/bin/Debug/TXM.exe \
 	/sdkroot \

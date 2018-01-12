@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{32482B8F-EA8A-4B4D-A540-8ADEC0E75F54}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>TXM.Core</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Interfaces\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Rules\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IAboutDialog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IAutoSaveDialog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IClipboard.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IOutputDialog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IPairingDialog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IPlayerDialog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IProjectorWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ITimerWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ITournamentDialog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rules\AbstractRules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rules\AndroidNetrunnerRules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rules\ArmadaRules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rules\DestinyRules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rules\GameOfThrones2ndRules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rules\IARules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rules\InfinityRules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rules\LegendOfThe5RingesRules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rules\LegionRules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rules\RuneWarsRules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rules\SWLCGRules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rules\W40KKPRules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rules\W40KWLRules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Rules\XWingRules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AutosaveFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IO.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pairing.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Player.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Result.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Round.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Setting.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tournament.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TournamentController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TournamentTimer.cs" />
+  </ItemGroup>
+</Project>

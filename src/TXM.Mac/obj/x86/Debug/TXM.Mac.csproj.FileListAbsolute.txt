@@ -1,8 +1,6 @@
 /Users/martin/Projekte/TXM/src/TXM.Mac/bin/Debug/TXM.exe
 /Users/martin/Projekte/TXM/src/TXM.Mac/bin/Debug/TXM.pdb
-/Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/actool/partial-info.plist
 /Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/actool/asset-manifest.plist
-/Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/actool/bundle/AppIcon.icns
 /Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/ibtool-manifests/Main.storyboardc
 /Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/ibtool/Main.storyboardc/Info.plist
 /Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/ibtool/Main.storyboardc/MainMenu.nib
@@ -11,7 +9,6 @@
 /Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/TXM.Mac.csproj.CoreCompileInputs.cache
 /Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/TXM.exe
 /Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/TXM.pdb
-/Users/martin/Projekte/TXM/src/TXM.Mac/bin/Debug/TXM.Core.dll
-/Users/martin/Projekte/TXM/src/TXM.Mac/bin/Debug/TXM.Core.pdb
-/Users/martin/Projekte/TXM/src/TXM.Mac/bin/Debug/TXM.Core.dll.mdb
-/Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/TXM.Mac.csprojResolveAssemblyReference.cache
+/Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/actool/partial-info.plist
+/Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/actool/bundle/AppIcon.icns
+/Users/martin/Projekte/TXM/src/TXM.Mac/obj/x86/Debug/actool/bundle/Assets.car

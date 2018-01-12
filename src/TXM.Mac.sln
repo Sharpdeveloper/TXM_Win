@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TXM.Mac", "TXM.Mac\TXM.Mac.csproj", "{BF337492-7F07-4B0D-A34B-5FD7D2411F27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TXM.Core", "TXM.Core\TXM.Core.csproj", "{51EC506B-EB72-4877-9DD5-907178D648F8}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TXM.Core", "TXM.Core\TXM.Core.shproj", "{32482B8F-EA8A-4B4D-A540-8ADEC0E75F54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +15,5 @@ Global
 		{BF337492-7F07-4B0D-A34B-5FD7D2411F27}.Debug|x86.Build.0 = Debug|x86
 		{BF337492-7F07-4B0D-A34B-5FD7D2411F27}.Release|x86.ActiveCfg = Release|x86
 		{BF337492-7F07-4B0D-A34B-5FD7D2411F27}.Release|x86.Build.0 = Release|x86
-		{51EC506B-EB72-4877-9DD5-907178D648F8}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{51EC506B-EB72-4877-9DD5-907178D648F8}.Debug|x86.Build.0 = Debug|Any CPU
-		{51EC506B-EB72-4877-9DD5-907178D648F8}.Release|x86.ActiveCfg = Release|Any CPU
-		{51EC506B-EB72-4877-9DD5-907178D648F8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

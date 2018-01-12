@@ -13,16 +13,32 @@ namespace TXM.Mac
 	partial class ViewController
 	{
 		[Outlet]
-		AppKit.NSTextFieldCell ClickedLabel { get; set; }
+		AppKit.NSTableColumn NameColumn { get; set; }
+
+		[Outlet]
+		AppKit.NSTableView PlayerTable { get; set; }
+
+		[Outlet]
+		AppKit.NSTableColumn RankColumn { get; set; }
 
 		[Action ("ClickedButton:")]
 		partial void ClickedButton (Foundation.NSObject sender);
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (ClickedLabel != null) {
-				ClickedLabel.Dispose ();
-				ClickedLabel = null;
+			if (PlayerTable != null) {
+				PlayerTable.Dispose ();
+				PlayerTable = null;
+			}
+
+			if (RankColumn != null) {
+				RankColumn.Dispose ();
+				RankColumn = null;
+			}
+
+			if (NameColumn != null) {
+				NameColumn.Dispose ();
+				NameColumn = null;
 			}
 		}
 	}
