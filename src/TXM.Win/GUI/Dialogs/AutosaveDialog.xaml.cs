@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+
 using TXM.Core;
 
 namespace TXM.GUI.Dialogs

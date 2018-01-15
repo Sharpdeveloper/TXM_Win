@@ -152,7 +152,7 @@ namespace TXM.Core
             if (pairings.Count == 1)
                 end = true;
             bool allResultsEdited = true;
-            if (ActiveTournament.Rule.IsDrawPossible)
+            if (ActiveTournament.Rule.IsDrawPossible || ActiveTournament.bonus)
             {
                 foreach (Pairing p in pairings)
                 {
@@ -165,7 +165,7 @@ namespace TXM.Core
             }
             if (allResultsEdited)
             {
-                if (CheckResults(pairings))
+                if (CheckResults(pairings) || ActiveTournament.bonus)
                 {
                     ActiveTournament.GetResults(pairings);
                 }
@@ -354,9 +354,56 @@ namespace TXM.Core
             Process.Start("file://" + file);
         }
 
-        public void StartTimer()
+        public void StartTimer(string startTime)
         {
-            ActiveTimer.StartTimer();
+            bool timeOK = startTime == "";
+            if (timeOK)
+            {
+                ActiveTimer.StartTimer();
+            }
+            else
+            {
+                int pos = startTime.IndexOf(':');
+                int check = startTime.LastIndexOf(':');
+                int starthour = 0, startmin = 0;
+                timeOK = true;
+                if (pos != check)
+                {
+                    timeOK = false;
+                }
+                if(pos >= 3 || pos == 0)
+                {
+                    timeOK = false;
+                }
+                if((pos == 1 && startTime.Length >= 5) || startTime.Length >= 6)
+                {
+                    timeOK = false;
+                }
+                try
+                {
+                    starthour = Int32.Parse(startTime.Substring(0, pos));
+                }
+                catch(Exception)
+                {
+                    timeOK = false;
+                }
+                try
+                {
+                    startmin = Int32.Parse(startTime.Substring(pos+1));
+                }
+                catch (Exception)
+                {
+                    timeOK = false;
+                }
+                if (timeOK)
+                {
+                    ActiveTimer.StartTimer(starthour, startmin);
+                }
+                else
+                {
+                    ActiveIO.ShowMessage("The Time is only allowed in the format HH:MM.");
+                }
+            }
         }
 
         public void PauseTimer()
@@ -371,7 +418,7 @@ namespace TXM.Core
 
         public void ShowAbout(IAboutDialog iad)
         {
-            iad.SetText("© 2014 - 2017 Sharpdeveloper aka TKundNobody\nTXM Version: " + TXM.Core.Settings.TXMVERSION + "\nSpecial Thanks to following Friends and Tester:\nBarlmoro - Tester, User and the Reason for at least half of the features.\ntgbrain - Teammate and tester\nKyle_Nemesis - Tester\nPhoton - User who finds every weird error\nN4-DO - Creater of the TXM-Logo\nMercya - Tester\n© Icons: Icons8 (www.icons8.com)");
+            iad.SetText("© 2014 - 2018 Sharpdeveloper aka TKundNobody\nTXM Version: " + TXM.Core.Settings.TXMVERSION + "\nSpecial Thanks to following Friends and Tester:\nBarlmoro - Tester, User and the Reason for at least half of the features.\ntgbrain - Teammate and tester\nKyle_Nemesis - Tester\nPhoton - User who finds every weird error\nN4-DO - Creater of the TXM-Logo\nMercya - Tester\n© Icons: Icons8 (www.icons8.com)");
             iad.ShowDialog();
         }
 
@@ -446,9 +493,10 @@ namespace TXM.Core
 
         public void SetImage()
         {
-            if(!timerWindow.SetImage(new Uri(ActiveIO.TempImgPath)))
+            ActiveIO.NewImage();
+            if (!timerWindow.SetImage(new Uri(ActiveIO.TempImgPath)))
             {
-                ActiveIO.ShowMessage("The Image " + ActiveIO.TempImgPath + " is invalid.");
+                ActiveIO.ShowMessage("The Image is invalid.");
             }
         }
 
@@ -480,6 +528,11 @@ namespace TXM.Core
         public void ShowUserManual()
         {
             Process.Start("https://github.com/Sharpdeveloper/TXM/wiki/User-Manual");
+        }
+
+        public List<Pairing> AwardBonusPoints()
+        {
+            return ActiveTournament.GetBonusSeed();
         }
     }
 }

@@ -163,6 +163,12 @@ namespace TXM.Core
 			return winner;
 		}
 
+        public void AddBonus(Player player, Result result)
+        {
+            player.Enemies.Add(result.Enemy);
+            player.TournamentPoints += result.TournamentPoints;
+        }
+
         public void Update(Player player, Result result, int round)
         {
             ChangeResult(player, player.Results[round - 1], false);

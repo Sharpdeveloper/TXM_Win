@@ -18,7 +18,7 @@ namespace TXM.Core
     [Serializable]
     public class Tournament : ISerializable
     {
-        private int version = 1;
+        private int version = 2;
 
         #region Tournament Information
         public List<Player> Participants { get; set; }
@@ -41,6 +41,7 @@ namespace TXM.Core
         public bool PrintDDGER { get; set; }
         public bool PrintDDENG { get; set; }
         public AbstractRules Rule { get; set; }
+        public bool bonus;
         #endregion
 
         #region GUI_State
@@ -48,7 +49,7 @@ namespace TXM.Core
         public bool ButtonCutState { get; set; }
         #endregion
 
-        #region T3 INformation
+        #region T3 Information
         public int T3ID { get; set; }
         public string GOEPPVersion { get; internal set; }
         #endregion
@@ -57,6 +58,7 @@ namespace TXM.Core
         internal static List<int> givenStartNo = new List<int>();
         private Player WonBye = Player.GetWonBye();
         private Player Bye = Player.GetBye();
+        private Player Bonus = Player.GetBonus();
         internal List<Player> ListOfPlayers;
         private List<Player>[] PointGroup;
         internal int WonByes;
@@ -84,6 +86,7 @@ namespace TXM.Core
             Rounds = new List<Round>();
             Rule = rules;
             Single = true;
+            bonus = false;
         }
         public Tournament(int t3ID, string name, AbstractRules rules, string GOEPPversion = "")
             : this(name, t3ID, GOEPPversion, rules)
@@ -697,6 +700,15 @@ namespace TXM.Core
             int winnerID = 0;
             bool winner;
             WinnerLastRound = new List<Player>();
+            if(bonus)
+            {
+                foreach (Pairing pairing in results)
+                {
+                    r = new Result(0, 0, Bonus, MaxPoints, 1, pairing.Player1Score);
+                    Rule.AddBonus(pairing.Player1, r);
+                }
+                return;
+            }
             if (!update)
             {
                 foreach (Pairing pairing in results)
@@ -992,11 +1004,29 @@ namespace TXM.Core
             return 0;
         }
 
+        public List<Pairing> GetBonusSeed()
+        {
+            Pairings = new List<Pairing>();
+
+            foreach(var p in Participants)
+            {
+                Pairings.Add(new Pairing() { Player1 = p, Player2 = Bonus });
+            }
+
+            if (Rounds == null)
+                Rounds = new List<Round>();
+            Rounds.Add(new Round(Pairings, Participants));
+            DisplayedRound = Rounds.Count;
+            bonus = true;
+            return Pairings;
+        }
+
         public Tournament(SerializationInfo info, StreamingContext context)
         {
             version = (int)info.GetValue("Tournament_Version", typeof(int));
             WonBye = Player.GetWonBye();
             Bye = Player.GetBye();
+            Bonus = Player.GetBonus();
             if (version == 0)
             {
                 Participants = (List<Player>)info.GetValue("Tournament_Participants", typeof(List<Player>));
@@ -1043,7 +1073,8 @@ namespace TXM.Core
                 {
                     ButtonGetResultsText = "Start Tournament";
                 }
-                version = 1;
+                bonus = false;
+                version = 2;
             }
             else if (version == 1)
             {
@@ -1078,6 +1109,43 @@ namespace TXM.Core
                 currentCountOfPlayer = (int)info.GetValue("Tournament_currentCountOfPlayer", typeof(int));
                 WinnerLastRound = (List<Player>)info.GetValue("Tournament_WinnerLastRound", typeof(List<Player>));
                 bye = (bool)info.GetValue("Tournament_bye", typeof(bool));
+                bonus = false;
+                version = 2;
+            }
+            else if (version == 2)
+            {
+                Participants = (List<Player>)info.GetValue("Tournament_Participants", typeof(List<Player>));
+                Teamplayer = (List<Player>)info.GetValue("Tournament_Teamplayer", typeof(List<Player>));
+                FirstRound = (bool)info.GetValue("Tournament_FirstRound", typeof(bool));
+                PrePaired = (List<Pairing>)info.GetValue("Tournament_PrePaired", typeof(List<Pairing>));
+                Name = (string)info.GetValue("Tournament_Name", typeof(string));
+                Nicknames = (List<string>)info.GetValue("Tournament_Nicknames", typeof(List<string>));
+                MaxPoints = (int)info.GetValue("Tournament_MaxPoints", typeof(int));
+                Rounds = (List<Round>)info.GetValue("Tournament_Rounds", typeof(List<Round>));
+                FilePath = (string)info.GetValue("Tournament_FilePath", typeof(string));
+                AutoSavePath = (string)info.GetValue("Tournament_AutoSavePath", typeof(string));
+                DisplayedRound = (int)info.GetValue("Tournament_DisplayedRound", typeof(int));
+                Cut = (TournamentCut)info.GetValue("Tournament_Cut", typeof(TournamentCut));
+                CutStarted = (bool)info.GetValue("Tournament_CutStarted", typeof(bool));
+                WonByeCalculated = (bool)info.GetValue("Tournament_WonByeCalculated", typeof(bool));
+                Pairings = (List<Pairing>)info.GetValue("Tournament_Pairings", typeof(List<Pairing>));
+                TeamProtection = (bool)info.GetValue("Tournament_TeamProtection", typeof(bool));
+                Single = (bool)info.GetValue("Tournament_Single", typeof(bool));
+                PrintDDGER = (bool)info.GetValue("Tournament_PrintDDGER", typeof(bool));
+                PrintDDENG = (bool)info.GetValue("Tournament_PrintDDENG", typeof(bool));
+                Rule = (AbstractRules)info.GetValue("Tournament_Rule", typeof(AbstractRules));
+                ButtonGetResultsText = (string)info.GetValue("Tournament_ButtonGetResultsText", typeof(string));
+                ButtonCutState = (bool)info.GetValue("Tournament_ButtonCutState", typeof(bool));
+                T3ID = (int)info.GetValue("Tournament_T3ID", typeof(int));
+                GOEPPVersion = (string)info.GetValue("Tournament_GOEPPVersion", typeof(string));
+                givenStartNo = (List<int>)info.GetValue("Tournament_givenStartNo", typeof(List<int>));
+                ListOfPlayers = (List<Player>)info.GetValue("Tournament_ListOfPlayers", typeof(List<Player>));
+                PointGroup = (List<Player>[])info.GetValue("Tournament_PointGroup", typeof(List<Player>[]));
+                WonByes = (int)info.GetValue("Tournament_WonByes", typeof(int));
+                currentCountOfPlayer = (int)info.GetValue("Tournament_currentCountOfPlayer", typeof(int));
+                WinnerLastRound = (List<Player>)info.GetValue("Tournament_WinnerLastRound", typeof(List<Player>));
+                bye = (bool)info.GetValue("Tournament_bye", typeof(bool));
+                bonus = (bool)info.GetValue("Tournament_bonus", typeof(bool));
             }
             Rule = AbstractRules.GetRule(Rule.GetName());
         }
@@ -1116,6 +1184,7 @@ namespace TXM.Core
 			info.AddValue("Tournament_currentCountOfPlayer", currentCountOfPlayer, typeof(int));
 			info.AddValue("Tournament_WinnerLastRound", WinnerLastRound, typeof(List<Player>));
 			info.AddValue("Tournament_bye", bye, typeof(bool));
-		}
+            info.AddValue("Tournament_bonus", bonus, typeof(bool));
+        }
     }
 }

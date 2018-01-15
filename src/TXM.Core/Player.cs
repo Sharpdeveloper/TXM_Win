@@ -143,6 +143,15 @@ namespace TXM.Core
             return p;
         }
 
+        public static Player GetBonus()
+        {
+            Player p = new Player("Bonus")
+            {
+                ID = -3
+            };
+            return p;
+        }
+
         public bool HasPlayedVS(Player enemy)
         {
             if (Enemies == null)

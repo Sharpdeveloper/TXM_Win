@@ -31,3 +31,5 @@ C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\obj\Debug\TXM.pdb
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\obj\Debug\GUI\Windows\ProjectorWindow.baml
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\obj\Debug\GUI\Windows\ProjectorWindow.g.cs
 C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\obj\Debug\TXM.Win.csproj.CoreCompileInputs.cache
+C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\bin\Debug\TXM.Core.dll
+C:\Users\martin\Documents\GitHub\TXM\src\TXM.Win\bin\Debug\TXM.Core.pdb

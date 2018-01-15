@@ -19,6 +19,7 @@ namespace TXM.Core
         public string PrintFile { get; private set; }
         private string TextColorFile { get; set; }
         private string TextSizeFile { get; set; }
+        private string BGImageFile { get; set; }
         public string SavePath { get; private set; }
         private string imgurl;
         public string TempImgPath { get; private set; }
@@ -36,6 +37,8 @@ namespace TXM.Core
             PrintFile = Path.Combine(TempPath, "print.html");
             TextColorFile = Path.Combine(SavePath, "textcolor.txt");
             TextSizeFile = Path.Combine(SavePath, "textsize.txt");
+            BGImageFile = Path.Combine(SavePath, "bgImage.txt");
+            ReadBGImage();
         }
 
         public Tournament GOEPPImport()
@@ -702,6 +705,33 @@ namespace TXM.Core
             }
         }
 
+        public string ReadBGImage()
+        {
+            if (File.Exists(BGImageFile))
+            {
+                string line;
+                using (StreamReader sr = new StreamReader(BGImageFile))
+                {
+                    line = sr.ReadLine();
+                }
+                return line;
+            }
+            else
+                return "";
+        }
+
+        public void WriteBGImage(string path)
+        {
+            if (!Directory.Exists(SavePath))
+            {
+                Directory.CreateDirectory(SavePath);
+            }
+            using (StreamWriter f = new StreamWriter(BGImageFile))
+            {
+                f.WriteLine(path);
+            }
+        }
+
         public double GetSize()
         {
             if (File.Exists(TextSizeFile))
@@ -734,40 +764,40 @@ namespace TXM.Core
                 imgurl = img;
                 imgending = ".png";
             }
-            img = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TXM", "background.jpg");
+            img = Path.Combine(SavePath, "background.jpg");
             if (File.Exists(img))
             {
                 imgurl = img;
                 imgending = ".jpg";
             }
-            img = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TXM", "background.jpeg");
+            img = Path.Combine(SavePath, "background.jpeg");
             if (File.Exists(img))
             {
                 imgurl = img;
                 imgending = ".jpeg";
             }
-            img = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TXM", "background.tif");
+            img = Path.Combine(SavePath, "background.tif");
             if (File.Exists(img))
             {
                 imgurl = img;
                 imgending = ".tif";
             }
-            img = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TXM", "background.tiff");
+            img = Path.Combine(SavePath, "background.tiff");
             if (File.Exists(img))
             {
                 imgurl = img;
                 imgending = ".tiff";
             }
+            TempImgPath = ReadBGImage();
+            if(TempImgPath != "" && (imgurl != TempImgPath))
+            {
+                File.Delete(imgurl);
+                imgending = TempImgPath.Remove(0, TempImgPath.LastIndexOf('.'));
+                imgurl = Path.Combine(SavePath, "background" + imgending);
+                File.Copy(TempImgPath, imgurl, true);
+                WriteBGImage(imgurl);
+            }
             return imgurl;
-        }
-
-        public void CopyImage()
-        {
-            if (!Directory.Exists(TempPath))
-                Directory.CreateDirectory(TempPath);
-            TempImgPath = Path.Combine(TempPath, "background" + imgnr + imgending);
-            imgnr++;
-            File.Copy(imgurl, TempImgPath, true);
         }
 
         public void NewImage()
@@ -775,11 +805,14 @@ namespace TXM.Core
             fileManager.AddFilter("*.jpg;*.jpeg;*.png;*.tif;*.tiff", "All Images");
             if (fileManager.Open())
             {
-                string imageSrc = fileManager.FileName;
-                string newImageSrc = Path.Combine(SavePath, "background" + imageSrc.Remove(0, imageSrc.LastIndexOf(".")));
-                File.Copy(imageSrc, newImageSrc, true);
-                imgurl = newImageSrc;
-                CopyImage();
+                imgurl = fileManager.FileName;
+                imgending = imgurl.Remove(0, imgurl.LastIndexOf("."));
+                if (!Directory.Exists(TempPath))
+                    Directory.CreateDirectory(TempPath);
+                TempImgPath = Path.Combine(TempPath, "background" + imgnr + imgending);
+                imgnr++;
+                File.Copy(imgurl, TempImgPath, true);
+                WriteBGImage(TempImgPath);
             }
         }
 
