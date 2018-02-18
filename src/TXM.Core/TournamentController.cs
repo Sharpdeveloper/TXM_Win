@@ -254,7 +254,7 @@ namespace TXM.Core
                 //    return false;
                 if (!ActiveTournament.Rule.IsDrawPossible)
                 {
-                    if (p.Player1Score == p.Player2Score && p.Winner == "Automatic" && !p.Player1.Bye && !p.Player2.Bye)
+                    if (p.Player1Score == p.Player2Score && p.Winner == "Automatic" && p.Player2 != ActiveTournament.Bye && p.Player2 != ActiveTournament.WonBye)
                         return false;
                 }
             }

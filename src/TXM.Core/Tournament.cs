@@ -56,8 +56,8 @@ namespace TXM.Core
 
         #region internal Fields
         internal static List<int> givenStartNo = new List<int>();
-        private Player WonBye = Player.GetWonBye();
-        private Player Bye = Player.GetBye();
+        public Player WonBye = Player.GetWonBye();
+        public Player Bye = Player.GetBye();
         private Player Bonus = Player.GetBonus();
         internal List<Player> ListOfPlayers;
         private List<Player>[] PointGroup;
