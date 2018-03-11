@@ -30,6 +30,10 @@ namespace TXM.Core
         protected override bool CalculateResult(Result result, Func<int, int, int> f)
 		{
 			Result newResult = result;
+            if(newResult.MaxPoints == 0)
+            {
+                newResult.MaxPoints = DefaultMaxPoints;
+            }
 
 			//ID == -1 => Bye
 			if (result.Enemy.ID == -1)
@@ -87,6 +91,15 @@ namespace TXM.Core
 			{
 				tP = 10;
 			}
+
+            if (TmarginOfVictory > 400)
+            {
+                TmarginOfVictory = 400;
+            }
+            else if (TmarginOfVictory < 0)
+            {
+                TmarginOfVictory = 0;
+            }
 
 			TmarginOfVictory = f.Invoke(0, (newResult.Destroyed - newResult.Lost));
 			TdestroyedPoints = f.Invoke(0, newResult.Destroyed);

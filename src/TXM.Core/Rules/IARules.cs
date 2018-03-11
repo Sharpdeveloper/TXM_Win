@@ -31,6 +31,11 @@ namespace TXM.Core
 		{
 			Result newResult = result;
 
+            if (newResult.MaxPoints == 0)
+            {
+                newResult.MaxPoints = DefaultMaxPoints;
+            }
+
             //ID == -1 => Bye
             if (result.Enemy.ID == -1 || result.Enemy.ID == -2)
             {
