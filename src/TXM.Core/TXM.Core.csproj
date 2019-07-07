@@ -69,8 +69,10 @@
     <Compile Include="Rules\LegionRules.cs" />
     <Compile Include="Rules\RuneWarsRules.cs" />
     <Compile Include="Rules\SWLCGRules.cs" />
+    <Compile Include="Rules\The9thAgeRules.cs" />
     <Compile Include="Rules\W40KKPRules.cs" />
     <Compile Include="Rules\W40KWLRules.cs" />
+    <Compile Include="Rules\XWing2Rules.cs" />
     <Compile Include="Rules\XWingRules.cs" />
     <Compile Include="Setting.cs" />
     <Compile Include="Tournament.cs" />
