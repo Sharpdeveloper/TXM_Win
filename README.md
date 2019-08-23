@@ -53,6 +53,8 @@ IV.  User Manual
 * Star Wars™: Legion (experimental)
 * Star Wars™: The Card Game
 * Star Wars™: X-Wing™ Miniatures Game
+* Star Wars™: X-Wing™ Miniatures Game Second Edition
+* The 7th Age
 
 ## IV. User Manual
 
