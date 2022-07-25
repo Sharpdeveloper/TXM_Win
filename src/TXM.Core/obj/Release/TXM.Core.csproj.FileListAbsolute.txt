@@ -9,3 +9,9 @@ C:\Users\marti\Documents\GitHub\TXM\src\TXM.Core\obj\Release\TXM.Core.csprojAsse
 C:\Users\marti\Documents\GitHub\TXM\src\TXM.Core\obj\Release\TXM.Core.csproj.CoreCompileInputs.cache
 C:\Users\marti\Documents\GitHub\TXM\src\TXM.Core\obj\Release\TXM.Core.dll
 C:\Users\marti\Documents\GitHub\TXM\src\TXM.Core\obj\Release\TXM.Core.pdb
+E:\Projekte\TXM\src\TXM.Core\bin\Release\TXM.Core.dll
+E:\Projekte\TXM\src\TXM.Core\bin\Release\TXM.Core.pdb
+E:\Projekte\TXM\src\TXM.Core\obj\Release\TXM.Core.csproj.AssemblyReference.cache
+E:\Projekte\TXM\src\TXM.Core\obj\Release\TXM.Core.csproj.CoreCompileInputs.cache
+E:\Projekte\TXM\src\TXM.Core\obj\Release\TXM.Core.dll
+E:\Projekte\TXM\src\TXM.Core\obj\Release\TXM.Core.pdb

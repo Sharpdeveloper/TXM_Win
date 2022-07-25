@@ -128,7 +128,7 @@ namespace TXM.GUI
                 IsReadOnly = true
             };
             DataGridPlayer.Columns.Add(dgc);
-            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("ModWins"))
+            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("ModWins"))
             {
                 dgc = new DataGridTextColumn()
                 {
@@ -148,7 +148,7 @@ namespace TXM.GUI
                 };
                 DataGridPlayer.Columns.Add(dgc);
             }
-            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("ModLoss"))
+            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("ModLoss"))
             {
                 dgc = new DataGridTextColumn()
                 {
@@ -165,7 +165,7 @@ namespace TXM.GUI
                 IsReadOnly = true
             };
             DataGridPlayer.Columns.Add(dgc);
-            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("MoV"))
+            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("MoV"))
             {
                 dgc = new DataGridTextColumn()
                 {
@@ -182,7 +182,7 @@ namespace TXM.GUI
                 IsReadOnly = true
             };
             DataGridPlayer.Columns.Add(dgc);
-            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("eSoS"))
+            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("eSoS"))
             {
                 dgc = new DataGridTextColumn()
                 {

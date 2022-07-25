@@ -16,10 +16,12 @@ namespace TXM.Core
             ArmadaRules.GetRuleName(),
             DestinyRules.GetRuleName(),
             IARules.GetRuleName(),
+            InfinityRules.GetRuleName(),
             LegionRules.GetRuleName(),
             SWLCGRules.GetRuleName(),
             XWingRules.GetRuleName(),
             XWing2Rules.GetRuleName(),
+            XWing25Rules.GetRuleName(),
             The9thAgeRules.GetRuleName(),
             W40KKPRules.GetRuleName(),
             W40KWLRules.GetRuleName()
@@ -29,9 +31,11 @@ namespace TXM.Core
             RuneWarsRules.GetRuleName(),
             ArmadaRules.GetRuleName(),
             IARules.GetRuleName(),
+            InfinityRules.GetRuleName(),
             LegionRules.GetRuleName(),
             XWingRules.GetRuleName(),
             XWing2Rules.GetRuleName(),
+            XWing25Rules.GetRuleName(),
             The9thAgeRules.GetRuleName(),
             W40KKPRules.GetRuleName(),
             W40KWLRules.GetRuleName()
@@ -45,6 +49,8 @@ namespace TXM.Core
                 return new DestinyRules();
             else if (name == IARules.GetRuleName())
                 return new IARules();
+            else if (name == InfinityRules.GetRuleName())
+                return new InfinityRules();
             else if (name == ArmadaRules.GetRuleName())
                 return new ArmadaRules();
             else if (name == RuneWarsRules.GetRuleName())
@@ -65,6 +71,8 @@ namespace TXM.Core
                 return new W40KWLRules();
             else if (name == XWing2Rules.GetRuleName())
                 return new XWing2Rules();
+            else if (name == XWing25Rules.GetRuleName())
+                return new XWing25Rules();
             else if (name == The9thAgeRules.GetRuleName())
                 return new The9thAgeRules();
             return null;

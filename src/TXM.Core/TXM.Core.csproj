@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TXM.Core</RootNamespace>
     <AssemblyName>TXM.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -72,6 +73,7 @@
     <Compile Include="Rules\The9thAgeRules.cs" />
     <Compile Include="Rules\W40KKPRules.cs" />
     <Compile Include="Rules\W40KWLRules.cs" />
+    <Compile Include="Rules\XWing25Rules.cs" />
     <Compile Include="Rules\XWing2Rules.cs" />
     <Compile Include="Rules\XWingRules.cs" />
     <Compile Include="Setting.cs" />
