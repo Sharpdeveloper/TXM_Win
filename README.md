@@ -45,16 +45,19 @@ IV.  User Manual
 
 * A Game of Thrones™: The Card Game 2nd Edition
 * Android Netrunner: The Card Game
+* Infinity
 * Legend of the Five Rings™: The Card Game (experimental)
 * Runewars Miniatures Game
 * Star Wars™: Armada
 * Star Wars™: Destiny
 * Star Wars™: Imperial Assault
-* Star Wars™: Legion (experimental)
+* Star Wars™: Legion
 * Star Wars™: The Card Game
 * Star Wars™: X-Wing™ Miniatures Game
 * Star Wars™: X-Wing™ Miniatures Game Second Edition
+* Star Wars™: X-Wing™ Miniatures Game 2.5 Edition
 * The 7th Age
+* Warhammer 40.000
 
 ## IV. User Manual
 
