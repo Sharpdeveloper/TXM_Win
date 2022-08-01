@@ -1,0 +1,31 @@
+﻿<Properties StartupConfiguration="{D64ECDCD-59F1-4135-B5C6-C7DC2353F32E}|Default">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workbench ActiveDocument="TXM.Core/Class1.cs">
+    <Files>
+      <File FileName="TXM/MainPage.xaml.cs" Line="1" Column="1" />
+      <File FileName="TXM/MainPage.xaml" Line="21" Column="30" />
+      <File FileName="TXM.Core/Class1.cs" Line="7" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="TXM" expanded="True">
+            <Node name="TXM" expanded="True" />
+            <Node name="TXM.Core" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.TXM.Core FirstBuild="True" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <Xamarin.Addins.Core.Project ActiveDebugTarget="MyAppleMacCatalystID" />
+  <MonoDevelop.Ide.ItemProperties.TXM PreferredExecutionTarget="MyAppleMacCatalystID" />
+</Properties>

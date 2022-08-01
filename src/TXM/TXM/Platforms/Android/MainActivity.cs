@@ -8,3 +8,4 @@ namespace TXM;
 public class MainActivity : MauiAppCompatActivity
 {
 }
+
