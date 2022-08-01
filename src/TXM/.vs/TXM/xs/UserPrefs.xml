@@ -1,0 +1,5 @@
+﻿<Properties StartupConfiguration="{42F48694-F133-4553-9376-CB26D006C42F}|Default">
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.TXM.Core FirstBuild="True" />
+  <MonoDevelop.Ide.ItemProperties.TXM PreferredExecutionTarget="MyAppleMacCatalystID" />
+</Properties>
