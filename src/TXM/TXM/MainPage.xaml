@@ -20,6 +20,11 @@
                 SemanticProperties.HeadingLevel="Level3"
                 FontSize="32"
                 HorizontalOptions="Center" />
+            <Label
+                x:Name="labelSystems"
+                SemanticProperties.HeadingLevel="Level3"
+                FontSize="32"
+                HorizontalOptions="Center" />
 
             <Label
                 Text="Hello, World!"

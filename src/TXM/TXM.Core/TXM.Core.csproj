@@ -17,4 +17,12 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <None Remove="Rules\" />
+	  <None Remove="Interfaces\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Rules\" />
+	  <Folder Include="Interfaces\" />
+	</ItemGroup>
 </Project>

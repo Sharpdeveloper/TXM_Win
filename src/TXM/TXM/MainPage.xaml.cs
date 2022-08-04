@@ -11,6 +11,8 @@ public partial class MainPage : ContentPage
 		InitializeComponent();
 
 		labelVersion.Text = Settings.TXMVERSION;
+		foreach (string rules in AbstractRules.GetAllRuleNames())
+			labelSystems.Text = labelSystems.Text + rules + "\n";
 	}
 
 	private void OnCounterClicked(object sender, EventArgs e)
