@@ -5,8 +5,8 @@ using System.Linq;
 namespace TXM.Core
 {
     [Serializable]
-    public class IARules : AbstractRules
-    {
+	public class IARules : AbstractRules
+	{
         private new static string name = "Star Wars\u2122: Imperial Assault";
 
         public IARules()
@@ -23,13 +23,13 @@ namespace TXM.Core
         }
 
         public static string GetRuleName()
-        {
+		{
             return name;
-        }
+		}
 
         protected override bool CalculateResult(Result result, Func<int, int, int> f)
-        {
-            Result newResult = result;
+		{
+			Result newResult = result;
 
             if (newResult.MaxPoints == 0)
             {
@@ -43,32 +43,32 @@ namespace TXM.Core
             }
 
             int tP = newResult.Destroyed - newResult.Lost;
-            if (tP > 0)
-            {
-                tP = 1;
-            }
-            else if (tP == 0 && newResult.WinnerID != newResult.Enemy.ID)
-            {
-                tP = 1;
-            }
-            else
-            {
-                tP = 0;
-            }
+			if (tP > 0)
+			{
+				tP = 1;
+			}
+			else if (tP == 0 && newResult.WinnerID != newResult.Enemy.ID)
+			{
+				tP = 1;
+			}
+			else
+			{
+				tP = 0;
+			}
 
-            TtournamentPoints = f.Invoke(0, tP);
-            switch (tP)
-            {
-                case 1:
-                    Twins = f.Invoke(0, 1);
-                    break;
-                case 0:
-                    Tlosses = f.Invoke(0, 1);
-                    break;
-            }
+			TtournamentPoints = f.Invoke(0, tP);
+			switch (tP)
+			{
+				case 1:
+					Twins = f.Invoke(0, 1);
+					break;
+				case 0:
+					Tlosses = f.Invoke(0, 1);
+					break;
+			}
 
-            return tP == 1;
-        }
+			return tP == 1;
+		}
 
         public override List<Player> SortTable(List<Player> unsorted)
         {

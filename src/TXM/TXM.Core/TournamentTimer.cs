@@ -7,13 +7,12 @@ namespace TXM.Core
 
     public class TournamentTimer
     {
-        private System.Timers.Timer timer;
+        private Timer timer;
         private int hour, min, sec;
         private int defaultTime;
         private int startHour, startMin;
         private bool startTimeReached = true;
-        public int DefaultTime
-        {
+        public int DefaultTime {
             get
             {
                 return defaultTime;
@@ -21,7 +20,7 @@ namespace TXM.Core
             set
             {
                 defaultTime = value;
-                if (!Started)
+                if(!Started)
                 {
                     SetTime();
                     AktZeit();
@@ -43,7 +42,7 @@ namespace TXM.Core
             DefaultTime = 60;
             Started = false;
 
-            timer = new System.Timers.Timer();
+            timer = new Timer();
             timer.Interval = 1000;
             timer.Elapsed += new ElapsedEventHandler(Timer_Tick);
         }
@@ -72,9 +71,9 @@ namespace TXM.Core
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if (!startTimeReached)
+            if(!startTimeReached)
             {
-                if (DateTime.Now.Hour >= startHour && DateTime.Now.Minute >= startMin)
+                if(DateTime.Now.Hour >= startHour && DateTime.Now.Minute >= startMin)
                 {
                     startTimeReached = true;
                 }
@@ -95,7 +94,7 @@ namespace TXM.Core
                         min = 59;
                         sec = 59;
                     }
-                }
+                }  
                 else
                 {
                     min--;
@@ -118,7 +117,7 @@ namespace TXM.Core
 
         private void AktZeit()
         {
-            if (hour > 0)
+            if(hour > 0)
                 currentTime = hour.ToString("D2") + ":" + min.ToString("D2") + ":" + sec.ToString("D2");
             else
                 currentTime = min.ToString("D2") + ":" + sec.ToString("D2");
