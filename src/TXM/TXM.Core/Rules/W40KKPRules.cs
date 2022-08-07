@@ -5,8 +5,8 @@ using System.Linq;
 namespace TXM.Core
 {
     [Serializable]
-    public class W40KKPRules : AbstractRules
-    {
+	public class W40KKPRules : AbstractRules
+	{
         private new static string name = "Warhammer\u2122 40.000 (Sorted by Killpoints)";
 
         public W40KKPRules()
@@ -34,13 +34,13 @@ namespace TXM.Core
         }
 
         public static string GetRuleName()
-        {
+		{
             return name;
-        }
+		}
 
         protected override bool CalculateResult(Result result, Func<int, int, int> f)
-        {
-            Result newResult = result;
+		{
+			Result newResult = result;
 
             if (newResult.MaxPoints == 0)
             {
@@ -49,16 +49,16 @@ namespace TXM.Core
 
             //ID == -1 => Bye
             if (result.Enemy.ID <= -1)
-            {
-                newResult = new Result((int)0.5 * result.MaxPoints, 0, result.Enemy, result.MaxPoints, result.WinnerID, 15);
-            }
+			{
+				newResult = new Result((int)0.5 * result.MaxPoints, 0, result.Enemy, result.MaxPoints, result.WinnerID, 15);
+			}
 
             int tP = newResult.TournamentPoints;
 
-            TmarginOfVictory = f.Invoke(0, (newResult.Destroyed - newResult.Lost));
-            TdestroyedPoints = f.Invoke(0, newResult.Destroyed);
-            TlostPoints = f.Invoke(0, newResult.Lost);
-            TtournamentPoints = f.Invoke(0, tP);
+			TmarginOfVictory = f.Invoke(0, (newResult.Destroyed - newResult.Lost));
+			TdestroyedPoints = f.Invoke(0, newResult.Destroyed);
+			TlostPoints = f.Invoke(0, newResult.Lost);
+			TtournamentPoints = f.Invoke(0, tP);
             if (tP > 10)
                 Twins = f.Invoke(0, 1);
             else if (tP == 10)
@@ -66,8 +66,8 @@ namespace TXM.Core
             else
                 Tlosses = f.Invoke(0, 1);
 
-            return tP > 10;
-        }
+			return tP >10;
+		}
 
         public override List<Player> SortTable(List<Player> unsorted)
         {

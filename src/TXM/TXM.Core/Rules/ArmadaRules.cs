@@ -5,8 +5,8 @@ using System.Linq;
 namespace TXM.Core
 {
     [Serializable]
-    public class ArmadaRules : AbstractRules
-    {
+	public class ArmadaRules : AbstractRules
+	{
         private new static string name = "Star Wars\u2122: Armada";
 
         public ArmadaRules()
@@ -23,42 +23,42 @@ namespace TXM.Core
         }
 
         public static string GetRuleName()
-        {
+		{
             return name;
-        }
+		}
 
         protected override bool CalculateResult(Result result, Func<int, int, int> f)
-        {
-            Result newResult = result;
-            if (newResult.MaxPoints == 0)
+		{
+			Result newResult = result;
+            if(newResult.MaxPoints == 0)
             {
                 newResult.MaxPoints = DefaultMaxPoints;
             }
 
-            //ID == -1 => Bye
-            if (result.Enemy.ID == -1)
-            {
-                newResult = new Result((int)0.35 * result.MaxPoints, 0, result.Enemy, result.MaxPoints, result.WinnerID);
-            }
-            //ID == -2 => WonBye
-            else if (result.Enemy.ID == -2)
-            {
-                newResult = new Result((int)0.35 * result.MaxPoints, 0, result.Enemy, result.MaxPoints, result.WinnerID);
-            }
+			//ID == -1 => Bye
+			if (result.Enemy.ID == -1)
+			{
+				newResult = new Result((int)0.35 * result.MaxPoints, 0, result.Enemy, result.MaxPoints, result.WinnerID);
+			}
+			//ID == -2 => WonBye
+			else if (result.Enemy.ID == -2)
+			{
+				newResult = new Result((int)0.35 * result.MaxPoints, 0, result.Enemy, result.MaxPoints, result.WinnerID);
+			}
 
-            int tP = newResult.Destroyed - newResult.Lost;
+			int tP = newResult.Destroyed - newResult.Lost;
             if (tP == 0 && newResult.WinnerID != newResult.Enemy.ID)
             {
                 tP = 6;
             }
             else if (tP <= -300)
-            {
-                tP = 1;
-            }
-            else if (tP <= -220)
-            {
-                tP = 2;
-            }
+			{
+				tP = 1;
+			}
+			else if (tP <= -220)
+			{
+				tP = 2;
+			}
             else if (tP <= -140)
             {
                 tP = 3;
@@ -88,9 +88,9 @@ namespace TXM.Core
                 tP = 9;
             }
             else
-            {
-                tP = 10;
-            }
+			{
+				tP = 10;
+			}
 
             if (TmarginOfVictory > 400)
             {
@@ -101,17 +101,17 @@ namespace TXM.Core
                 TmarginOfVictory = 0;
             }
 
-            TmarginOfVictory = f.Invoke(0, (newResult.Destroyed - newResult.Lost));
-            TdestroyedPoints = f.Invoke(0, newResult.Destroyed);
-            TlostPoints = f.Invoke(0, newResult.Lost);
-            TtournamentPoints = f.Invoke(0, tP);
-            if (tP >= 6)
-                Twins = f.Invoke(0, 1);
-            else
-                Tlosses = f.Invoke(0, 1);
+			TmarginOfVictory = f.Invoke(0, (newResult.Destroyed - newResult.Lost));
+			TdestroyedPoints = f.Invoke(0, newResult.Destroyed);
+			TlostPoints = f.Invoke(0, newResult.Lost);
+			TtournamentPoints = f.Invoke(0, tP);
+			if(tP >= 6)
+				Twins = f.Invoke(0, 1);
+			else
+				Tlosses = f.Invoke(0, 1);
 
-            return tP >= 6;
-        }
+			return tP >=6;
+		}
 
         public override List<Player> SortTable(List<Player> unsorted)
         {

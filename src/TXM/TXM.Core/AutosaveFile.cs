@@ -16,7 +16,7 @@ namespace TXM.Core
         public AutosaveFile(string filename)
         {
             Filename = filename;
-            filename = filename.Substring(filename.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+            filename = filename.Substring(filename.LastIndexOf(Path.DirectorySeparatorChar)+1);
             string[] parts = filename.Split('_');
             DateTime dt = new DateTime(long.Parse(parts[1]));
             dt = dt.AddYears(1600);
@@ -35,7 +35,7 @@ namespace TXM.Core
             {
                 Round = parts[4].Split('.')[0];
             }
-            catch (Exception)
+            catch(Exception)
             {
                 Round = "";
             }

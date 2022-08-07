@@ -5,8 +5,8 @@ using System.Linq;
 namespace TXM.Core
 {
     [Serializable]
-    public class AndroidNetrunnerRules : AbstractRules
-    {
+	public class AndroidNetrunnerRules : AbstractRules
+	{
         protected new static string name = "Android: Netrunner - The Card Game";
 
         public AndroidNetrunnerRules()
@@ -31,22 +31,22 @@ namespace TXM.Core
         }
 
         protected override bool CalculateResult(Result result, Func<int, int, int> f)
-        {
-            Result newResult = result;
+		{
+			Result newResult = result;
 
-            //ID == -1 => Bye
-            if (result.Enemy.ID == -1 || result.Enemy.ID == -2)
-            {
-                newResult = new Result(1, 0, result.Enemy, 1, result.WinnerID);
-            }
+			//ID == -1 => Bye
+			if (result.Enemy.ID == -1 || result.Enemy.ID == -2)
+			{
+				newResult = new Result(1, 0, result.Enemy, 1, result.WinnerID);
+			}
 
             int tP = newResult.Destroyed;
-            TtournamentPoints = f.Invoke(0, tP);
-            switch (tP)
-            {
-                case 3:
-                    Twins = f.Invoke(0, 1);
-                    break;
+			TtournamentPoints = f.Invoke(0, tP);
+			switch (tP)
+			{
+				case 3:
+					Twins = f.Invoke(0, 1);
+					break;
                 case 2:
                     TmodifiedWins = f.Invoke(0, 1);
                     break;
@@ -54,12 +54,12 @@ namespace TXM.Core
                     Tdraws = f.Invoke(0, 1);
                     break;
                 case 0:
-                    Tlosses = f.Invoke(0, 1);
-                    break;
-            }
+					Tlosses = f.Invoke(0, 1);
+					break;
+			}
 
-            return tP > 1;
-        }
+			return tP > 1;
+		}
 
         public override List<Player> SortTable(List<Player> unsorted)
         {

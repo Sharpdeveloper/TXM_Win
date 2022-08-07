@@ -94,12 +94,12 @@ namespace TXM.Core
             TableNr = ++tableNr;
         }
 
-        public Pairing(SerializationInfo info, StreamingContext context)
-        {
-            version = (int)info.GetValue("Pairing_Version", typeof(int));
-            if (version == 0)
-            {
-                tableNr = (int)info.GetValue("Pairing_tableNr", typeof(int));
+		public Pairing(SerializationInfo info, StreamingContext context)
+		{
+			version = (int)info.GetValue("Pairing_Version", typeof(int));
+			if (version == 0)
+			{
+				tableNr = (int)info.GetValue("Pairing_tableNr", typeof(int));
                 TableNr = (int)info.GetValue("Pairing_TableNr", typeof(int));
                 Player1 = (Player)info.GetValue("Pairing_Player1", typeof(Player));
                 Player2 = (Player)info.GetValue("Pairing_Player2", typeof(Player));
@@ -111,7 +111,7 @@ namespace TXM.Core
                 Player2Points = 0;
                 Locked = false;
                 version = 2;
-            }
+			}
             else if (version == 1)
             {
                 tableNr = (int)info.GetValue("Pairing_tableNr", typeof(int));
@@ -143,17 +143,17 @@ namespace TXM.Core
             }
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("Pairing_Version", version, typeof(int));
-            info.AddValue("Pairing_tableNr", tableNr, typeof(int));
-            info.AddValue("Pairing_TableNr", TableNr, typeof(int));
-            info.AddValue("Pairing_Player1", Player1, typeof(Player));
-            info.AddValue("Pairing_Player2", Player2, typeof(Player));
-            info.AddValue("Pairing_Player1Score", Player1Score, typeof(int));
-            info.AddValue("Pairing_Player2Score", Player2Score, typeof(int));
-            info.AddValue("Pairing_Winner", Winner, typeof(string));
-            info.AddValue("Pairing_ResultEdited", ResultEdited, typeof(bool));
+		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			info.AddValue("Pairing_Version", version, typeof(int));
+			info.AddValue("Pairing_tableNr", tableNr, typeof(int));
+			info.AddValue("Pairing_TableNr", TableNr, typeof(int));
+			info.AddValue("Pairing_Player1", Player1, typeof(Player));
+			info.AddValue("Pairing_Player2", Player2, typeof(Player));
+			info.AddValue("Pairing_Player1Score", Player1Score, typeof(int));
+			info.AddValue("Pairing_Player2Score", Player2Score, typeof(int));
+			info.AddValue("Pairing_Winner", Winner, typeof(string));
+			info.AddValue("Pairing_ResultEdited", ResultEdited, typeof(bool));
             info.AddValue("Pairing_Player1Points", Player1Points, typeof(int));
             info.AddValue("Pairing_Player2Points", Player2Points, typeof(int));
             info.AddValue("Pairing_Locked", ResultEdited, typeof(bool));
