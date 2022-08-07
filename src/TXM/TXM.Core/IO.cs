@@ -5,7 +5,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Drawing;
+//using System.Drawing;
 
 namespace TXM.Core
 {
