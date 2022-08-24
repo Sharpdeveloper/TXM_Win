@@ -12,7 +12,7 @@ namespace TXM.Core
 
         #region Player Informations
         public string Name { get; set; }
-        public string Forename { get; set; }
+        public string Firstname { get; set; }
         public string Nickname { get; set; }
         public int TableNo { get; set; }
         public string DisplayName
@@ -20,9 +20,9 @@ namespace TXM.Core
             get
             {
                 if (Nickname != null && Nickname != "")
-                    return Forename + " \"" + Nickname + "\"";
+                    return Firstname + " \"" + Nickname + "\"";
                 else
-                    return Forename + " " + Name.ToCharArray()[0] + "."; 
+                    return Firstname + " " + Name.ToCharArray()[0] + "."; 
             }
         }
         public string Team { get; set; }
@@ -31,6 +31,13 @@ namespace TXM.Core
         public bool Disqualified { get; set; }              
         public bool Dropped { get; set; }
         public bool Present { get; set; }
+        public string DisplayPresent { get
+            {
+                if (Present)
+                    return "Y";
+                else
+                    return "N";
+            }}
         public int Order
         {
             get
@@ -69,11 +76,31 @@ namespace TXM.Core
         public int Rank { get; set; }
         public int ArmyRank { get; set; }
         public bool Paid { get; set; }
+        public string DisplayPaid
+        {
+            get
+            {
+                if (Paid)
+                    return "Y";
+                else
+                    return "N";
+            }
+        }
         public bool ListGiven { get; set; }
+        public string DisplayListGiven
+        {
+            get
+            {
+                if (ListGiven)
+                    return "Y";
+                else
+                    return "N";
+            }
+        }
         #endregion
 
         #region Constructors
-        public Player(Player p):this(p.Name, p.Forename, p.Nickname, p.Team,p.City,p.Wins,p.ModifiedWins,p.Losses,p.Draws,p.TournamentPoints,p.DestroyedPoints,p.LostPoints,p.StrengthOfSchedule,p.MarginOfVictory,p.Faction,p.Bye,p.Paired,p.WonBye,p.T3ID,p.Rank,p.ArmyRank,p.Paid,p.ListGiven,p.ID)
+        public Player(Player p):this(p.Name, p.Firstname, p.Nickname, p.Team,p.City,p.Wins,p.ModifiedWins,p.Losses,p.Draws,p.TournamentPoints,p.DestroyedPoints,p.LostPoints,p.StrengthOfSchedule,p.MarginOfVictory,p.Faction,p.Bye,p.Paired,p.WonBye,p.T3ID,p.Rank,p.ArmyRank,p.Paid,p.ListGiven,p.ID)
         {
 
         }
@@ -81,7 +108,7 @@ namespace TXM.Core
         public Player(string name, string forename, string nickname, string team, string city, int wins, int modifiedWins, int looses, int draws, int points, int pointsDestroyed, int pointsLost, double pointsOfEnemies, int marginOfVictory, string playersFaction, bool freeticket, bool paired, bool wonFreeticket, int t3ID, int rank, int armyRank, bool payed, bool squadListGiven, int nr = -1)
         {
             Name = name;
-            Forename = forename;
+            Firstname = forename;
             Nickname = nickname;
             Team = team;
             City = city;
@@ -322,7 +349,7 @@ namespace TXM.Core
 			{
 				currentID = (int)info.GetValue("Player_currentID", typeof(int));
                 Name = (string)info.GetValue("Player_Name", typeof(string));
-                Forename = (string)info.GetValue("Player_Forename", typeof(string));
+                Firstname = (string)info.GetValue("Player_Forename", typeof(string));
                 Nickname = (string)info.GetValue("Player_Nickname", typeof(string));
                 TableNo = (int)info.GetValue("Player_TableNo", typeof(int));
                 Team = (string)info.GetValue("Player_Team", typeof(string));
@@ -362,7 +389,7 @@ namespace TXM.Core
 			info.AddValue("Player_Version", version, typeof(int));
 			info.AddValue("Player_currentID", currentID, typeof(int));
 			info.AddValue("Player_Name", Name, typeof(string));
-			info.AddValue("Player_Forename", Forename, typeof(string));
+			info.AddValue("Player_Forename", Firstname, typeof(string));
 			info.AddValue("Player_Nickname", Nickname, typeof(string));
 			info.AddValue("Player_TableNo", TableNo, typeof(int));
 			info.AddValue("Player_Team", Team, typeof(string));

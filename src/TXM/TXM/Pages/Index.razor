@@ -1,0 +1,15 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+The Version of TXM is @TXM.Core.Settings.TXMVERSION.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+@code {
+    private string version = TXM.Core.Settings.TXMVERSION;
+}

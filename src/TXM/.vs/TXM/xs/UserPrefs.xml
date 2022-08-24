@@ -1,18 +1,12 @@
-﻿<Properties StartupConfiguration="{42F48694-F133-4553-9376-CB26D006C42F}|Default">
+﻿<Properties StartupConfiguration="{2C8426CB-4EA4-49A8-AECE-0B196B5BE5EE}|Default">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.Workbench ActiveDocument="TXM.Core/Rules/AbstractRules.cs">
-    <Files>
-      <File FileName="TXM.Core/IO.cs" Line="11" Column="2" />
-      <File FileName="TXM.Core/Setting.cs" Line="8" Column="52" />
-      <File FileName="TXM.Core/Rules/AbstractRules.cs" Line="7" Column="35" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="TXM" expanded="True">
             <Node name="TXM" expanded="True" />
-            <Node name="TXM.Core" expanded="True" />
           </Node>
         </State>
       </Pad>
@@ -26,5 +20,5 @@
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <Xamarin.Addins.Core.Project ActiveDebugTarget="MyAppleMacCatalystID" />
-  <MonoDevelop.Ide.ItemProperties.TXM PreferredExecutionTarget="MyAppleMacCatalystID" />
+  <MonoDevelop.Ide.ItemProperties.TXM PreferredExecutionTarget="/Applications/Safari.app" />
 </Properties>

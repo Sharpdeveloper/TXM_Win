@@ -1,0 +1,42 @@
+﻿@using TXM.Core;
+
+<button class="btn btn-primary" @onclick="StartTimer"><span class="oi oi-media-play" aria-hidden="true"></span></button>
+<button class="btn btn-primary" @onclick="PauseTimer"><span class="oi oi-media-pause" aria-hidden="true"></span></button>
+
+@if (tournamentController.ActiveTimer is not null)
+{
+    <p>@tournamentController.ActiveTimer.ActualTime</p>
+}
+else
+{
+    <p>no timer configured</p>
+}
+
+@code {
+    [CascadingParameter]
+    protected TournamentController tournamentController { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    { 
+    tournamentController.ActiveTimer.Changed += TimeChanged;
+    }
+
+    private void StartTimer()
+    {
+        tournamentController.StartTimer("");
+    }
+
+    private void PauseTimer()
+    {
+        tournamentController.PauseTimer();
+    }
+
+    private void TimeChanged(object sender, EventArgs e)
+    {
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}
+

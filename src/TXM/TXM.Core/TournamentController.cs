@@ -23,29 +23,20 @@ namespace TXM.Core
             Started = false;
         }
 
-        public void NewPlayer(IPlayerDialog ipd)
+        public void NewPlayer(Player newPlayer)
         {
-            ipd.ShowDialog();
-            if (ipd.GetDialogResult())
-            {
-                ActiveTournament.AddPlayer(ipd.GetPlayer());
-            }
+             ActiveTournament.AddPlayer(newPlayer);
         }
 
-        public void NewTournament(ITournamentDialog itd)
+        public void NewTournament(Tournament newTournament)
         {
             if (ActiveTournament != null)
             {
                 if (!ActiveIO.ShowMessageWithOKCancel("The current tournament will be overwritten."))
                     return;
             }
-            itd.SetIO(ActiveIO);
-            itd.ShowDialog();
-            if (itd.GetDialogResult())
-            {
-                ActiveTournament = itd.GetTournament();
+            ActiveTournament = newTournament;
                 ActiveTimer.DefaultTime = ActiveTournament.Rule.DefaultTime;
-            }
         }
 
         public bool StartTournament(string buttonGetResultsText, bool CutIsEnabled)
@@ -82,7 +73,7 @@ namespace TXM.Core
             Player p = ActiveTournament.Participants[index];
             p.Team = player.Team;
             p.Name = player.Name;
-            p.Forename = player.Forename;
+            p.Firstname = player.Firstname;
             p.WonBye = player.WonBye;
             p.ListGiven = player.ListGiven;
             p.Paid = player.Paid;
@@ -417,10 +408,22 @@ namespace TXM.Core
             ActiveTimer.ResetTimer();
         }
 
-        public void ShowAbout(IAboutDialog iad)
+        public List<String> GetAboutText()
         {
-            iad.SetText("© " + TXM.Core.Settings.COPYRIGHTYEAR + " Sharpdeveloper aka TKundNobody\nTXM Version: " + TXM.Core.Settings.TXMVERSION + "\nSpecial Thanks to following Friends and Tester:\nBarlmoro - Tester, User and the Reason for at least half of the features.\ntgbrain - Teammate and tester\nKyle_Nemesis - Tester\nPhoton - User who finds every weird error\nN4-DO - Creater of the TXM-Logo\nMercya - Tester\n© Icons: Icons8 (www.icons8.com)");
-            iad.ShowDialog();
+            var aboutText = new List<string>();
+            aboutText.Add("© " + TXM.Core.Settings.COPYRIGHTYEAR + " Sharpdeveloper aka TKundNobody");
+            aboutText.Add("TXM Version: " + TXM.Core.Settings.TXMVERSION);
+            aboutText.Add("");
+            aboutText.Add("Special Thanks to following Friends and Tester:");
+            aboutText.Add("Barlmoro - Tester, User and the Reason for at least half of the features");
+            aboutText.Add("tgbrain - Teammate and tester");
+            aboutText.Add("Kyle_Nemesis - Tester");
+            aboutText.Add("Photon - User who finds every weird error");
+            aboutText.Add("N4-DO - Creater of the TXM-Logo");
+            aboutText.Add("Mercya - Tester");
+            aboutText.Add("");
+            aboutText.Add("© Open Iconic — www.useiconic.com/open");
+            return aboutText;
         }
 
         public void ShowProjector(IProjectorWindow ipw, bool table)
