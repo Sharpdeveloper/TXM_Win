@@ -14,6 +14,7 @@ namespace TXM.Core
         public TournamentTimer ActiveTimer { get; private set; }
         public IO ActiveIO { get; private set; }
         public bool Started { get; private set; }
+        public string RoundButtonText { get; private set; }
         private IProjectorWindow projectorWindow;
 
         public TournamentController(IO _io)
@@ -36,7 +37,8 @@ namespace TXM.Core
                     return;
             }
             ActiveTournament = newTournament;
-                ActiveTimer.DefaultTime = ActiveTournament.Rule.DefaultTime;
+            ActiveTimer.DefaultTime = ActiveTournament.Rule.DefaultTime;
+            RoundButtonText = "Start Tournament";
         }
 
         public bool StartTournament(string buttonGetResultsText, bool CutIsEnabled)
@@ -46,6 +48,7 @@ namespace TXM.Core
                 firststart = true;
                 Started = true;
                 //TODO: ActiveIO.Save(ActiveTournament, true, buttonGetResultsText, CutIsEnabled, "TournamentStart");
+                RoundButtonText = "Get Results";
                 return true;
             }
             else
@@ -114,6 +117,7 @@ namespace TXM.Core
                     ChangeTournament(itd.GetTournament());
                 }
                 ActiveTimer.DefaultTime = ActiveTournament.Rule.DefaultTime;
+                RoundButtonText = "Start Tournament";
             }
         }
 
@@ -131,10 +135,12 @@ namespace TXM.Core
         {
             ActiveTournament.NewRound(firststart, cut);
             firststart = false;
+            RoundButtonText = "Get Results";
         }
 
-        public bool GetResults(List<Pairing> pairings, string buttonGetResultsText, bool CutIsEnabled, bool update = false, bool end = false)
+        public bool GetResults(int round, bool CutIsEnabled, bool update = false, bool end = false)
         {
+            List<Pairing> pairings = ActiveTournament.Rounds[round - 1].Pairings;
             if (update)
             {
                 ActiveTournament.GetResults(pairings, true);
@@ -186,6 +192,7 @@ namespace TXM.Core
                 //ChangeGUIState(false);
             }
             ActiveTournament.Sort();
+            RoundButtonText = "Next Round";
             return true;
         }
 

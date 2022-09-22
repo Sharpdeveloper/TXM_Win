@@ -1,99 +1,99 @@
-﻿@using TXM.Core;
-
-<table>
-    <thead>
-        <tr>
-            <th scope="col">L</th> <!--Locked-->
-            @if (!Bonus)
-            {
-                <th scope="col">T#</th>
-                <!--Table Number-->
-            }
-            <th scope="col">Player 1</th>
-            @if (!Bonus)
-            {
-                <th scope="col">Player 2</th>
-            }
-            @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsTournamentPointsInputNeeded && !Bonus)
-            {
-                <th scope="col">TP (P1)</th>
-                <!--Player 1 Points-->
-            }
-            @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsTournamentPointsInputNeeded && !Bonus)
-            {
-                <th scope="col">TP (P2)</th>
-                <!--Player 2 Points-->
-            }
-            <th scope="col">Score (P1)</th>
-            @if (!Bonus)
-            {
-                <th scope="col">Score (P2)</th>
-            }
-            @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsWinnerDropDownNeeded && !Bonus)
-            {
-                <th scope="col">Winner</th>
-            }
-            @if (Bonus || (!Update && (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsDrawPossible)))
-            {
-                <th scope="col">OK?</th>
-            }
-            @if (Update)
-            {
-                <th scope="col">Changed?</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var p in tournamentController.ActiveTournament.Rounds[Round - 1].Pairings)
-        {
+﻿<EditForm Model=@tournamentController.ActiveTournament.Rounds[Round - 1].Pairings>
+    <table>
+        <thead>
             <tr>
-                <td scope="col"><input type="checkbox" @bind="@p.Locked" /></td>
+                <th scope="col">L</th> <!--Locked-->
                 @if (!Bonus)
                 {
-                    <td scope="col">@p.TableNr</td>
+                    <th scope="col">T#</th>
+                    <!--Table Number-->
                 }
-                <td scope="col">@p.Player1Name</td>
+                <th scope="col">Player 1</th>
                 @if (!Bonus)
                 {
-                    <td scope="col">@p.Player2Name</td>
+                    <th scope="col">Player 2</th>
                 }
                 @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsTournamentPointsInputNeeded && !Bonus)
                 {
-                    <td scope="col"><input type="number" @bind="@p.Player1Points" /></td>
+                    <th scope="col">TP (P1)</th>
+                    <!--Player 1 Points-->
                 }
                 @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsTournamentPointsInputNeeded && !Bonus)
                 {
-                    <td scope="col"><input type="number" @bind="@p.Player2Points" /></td>
+                    <th scope="col">TP (P2)</th>
+                    <!--Player 2 Points-->
                 }
-                <td scope="col"><input type="number" @bind="@p.Player1Score" /></td>
+                <th scope="col">Score (P1)</th>
                 @if (!Bonus)
                 {
-                    <td scope="col"><input type="number" @bind="@p.Player2Score" /></td>
+                    <th scope="col">Score (P2)</th>
                 }
                 @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsWinnerDropDownNeeded && !Bonus)
                 {
-                    <td scope="col">
-                        <select>
-                            <!--@bind-value="@p.Winner"-->
-                            @foreach (var t in winners)
-                            {
-                                <option value="@t">@t</option>
-                            }
-                        </select>
-                    </td>
+                    <th scope="col">Winner</th>
                 }
                 @if (Bonus || (!Update && (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsDrawPossible)))
                 {
-                    <td scope="col"><input type="checkbox" @bind="@p.ResultEdited" /></td>
+                    <th scope="col">OK?</th>
                 }
                 @if (Update)
                 {
-                    <td scope="col"><input type="checkbox" @bind="@p.ResultEdited" /></td>
+                    <th scope="col">Changed?</th>
                 }
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var p in tournamentController.ActiveTournament.Rounds[Round - 1].Pairings)
+            {
+                <tr>
+                    <td scope="col"><InputCheckbox @bind-Value=@p.Locked /></td>
+                    @if (!Bonus)
+                    {
+                        <td scope="col">@p.TableNr</td>
+                    }
+                    <td scope="col">@p.Player1Name</td>
+                    @if (!Bonus)
+                    {
+                        <td scope="col">@p.Player2Name</td>
+                    }
+                    @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsTournamentPointsInputNeeded && !Bonus)
+                    {
+                        <td scope="col"><InputNumber @bind-Value=@p.Player1Points ParsingErrorMessage="Must be an integer value" /></td>
+                    }
+                    @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsTournamentPointsInputNeeded && !Bonus)
+                    {
+                        <td scope="col"><InputNumber @bind-Value=@p.Player2Points ParsingErrorMessage="Must be an integer value" /></td>
+                    }
+                    <td scope="col"><InputNumber @bind-Value=@p.Player1Score ParsingErrorMessage="Must be an integer value" /></td>
+                    @if (!Bonus)
+                    {
+                        <td scope="col"><input type="number" @bind="@p.Player2Score" /></td>
+                    }
+                    @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsWinnerDropDownNeeded && !Bonus)
+                    {
+                        <td scope="col">
+                            <InputSelect @bind-Value=@p.Winner>
+                                <!--@bind-value="@p.Winner"-->
+                                @foreach (var t in winners)
+                                {
+                                    <option value="@t">@t</option>
+                                }
+                            </InputSelect>
+                        </td>
+                    }
+                    @if (Bonus || (!Update && (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsDrawPossible)))
+                    {
+                        <td scope="col"><InputCheckbox @bind-Value=@p.ResultEdited /></td>
+                    }
+                    @if (Update)
+                    {
+                        <td scope="col"><InputCheckbox @bind-Value=@p.ResultEdited /></td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</EditForm>
 
 @code {
     [CascadingParameter]
