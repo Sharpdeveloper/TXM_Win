@@ -1,93 +1,59 @@
 ﻿@page "/rounds"
 @using TXM.Core;
 
-<h3>Rounds</h3>
+<PageTitle>TXM - Rounds</PageTitle>
 
-<table>
-    <thead>
-        <tr>
-            <th scope="col">#</th> <!--Rank-->
-            <th scope="col">Firstname</th>
-            <th scope="col">Nickname</th>
-            <th scope="col">$</th> <!--Paid-->
-            <th scope="col">L</th> <!--ListGiven-->
-            <th scope="col">!</th> <!--IsPresent-->
-            <th scope="col">Team</th>
-            <th scope="col">Faction</th>
-            <th scope="col">TP</th> <!--TournamentPoints-->
-            <th scope="col">W</th> <!--Wins-->
-            @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("ModWins"))
-            {
-                <th scope="col">MW</th><!--Modified Wins-->
-            }
-            @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsDrawPossible)
-            {
-                <th scope="col">D</th><!--Draws-->
-            }
-            @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("ModLoss"))
-            {
-                <th scope="col">ML</th><!--Modified Losses-->
-            }
-            <th scope="col">L</th><!--Losses-->
-            @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("MoV"))
-            {
-                <th scope="col">@tournamentController.ActiveTournament.Rule.MoVName</th>
-                <!--MarginOfVictory-->
-            }
-            <th scope="col">SoS</th> <!--StrenghtOfSchedule-->
-            @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("eSoS"))
-            {
-                <th scope="col">eSoS</th>
- <!--extendedStrengthOfSchedule-->
-            }
-        </tr>
-        @foreach (Player p in tournamentController.ActiveTournament.Participants)
+<button class="btn btn-primary" @onclick="NextRound">
+    Next Round
+</button>
+
+<br />
+
+<TabControl>
+    @resetRoundNo()
+        
+    @foreach (var rounds in tournamentController.ActiveTournament.Rounds)
         {
-            <tr>
-                <td>@p.Rank</td>
-                <td>@p.Firstname</td>
-                <td>@p.Nickname</td>
-                <td>@p.DisplayPaid</td>
-                <td>@p.DisplayListGiven</td>
-                <td>@p.DisplayPresent</td>
-                <td>@p.Team</td>
-                <td>@p.Faction</td>
-                <td>@p.TournamentPoints</td>
-                <td>@p.Wins</td>
-                @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("ModWins"))
-                {
-                    <td>@p.ModifiedWins</td>
+              <TabPage Text="@SetTabText()">
+
+                  <Pairings Round="roundNo"/>
+
+              </TabPage>
                 }
-                @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsDrawPossible)
-                {
-                    <td>@p.Draws</td>
-                }
-                @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("ModLoss"))
-                {
-                    <td>@p.ModifiedLosses</td>
-                }
-                <td>@p.Losses</td>
-                @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("MoV"))
-                {
-                    <td>@p.MarginOfVictory</td>
-                }
-                <td>@p.StrengthOfSchedule</td>
-                @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("eSoS"))
-                {
-                    <td>@p.ExtendedStrengthOfSchedule</td>
-                }
-            </tr>
-        }
-    </thead>
-</table>
+</TabControl>
 
 @code {
     [CascadingParameter]
     protected TournamentController tournamentController { get; set; }
 
+    private int roundNo = 0;
+    private bool cut = false;
+
     protected override async Task OnInitializedAsync()
     {
 
+    }
+
+    private string resetRoundNo()
+    {
+        roundNo = 0;
+        return "";
+    }
+
+    internal string SetTabText()
+    {
+        roundNo++;
+        return "Round " + roundNo;
+    }
+
+    private void NextRound()
+    {
+        if(tournamentController.ActiveTournament.Rounds.Count == 0)
+        {
+            tournamentController.StartTournament("Test", false);
+        }
+        tournamentController.NewRound(cut);
+        StateHasChanged();
     }
 }
 

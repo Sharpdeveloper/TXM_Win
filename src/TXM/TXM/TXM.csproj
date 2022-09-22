@@ -21,4 +21,13 @@
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\sample-data\" />
+    <Content Remove="wwwroot\favicon.ico" />
+    <Content Remove="wwwroot\icon-192.png" />
+    <Content Remove="wwwroot\icon-512.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\sample-data\" />
+  </ItemGroup>
 </Project>

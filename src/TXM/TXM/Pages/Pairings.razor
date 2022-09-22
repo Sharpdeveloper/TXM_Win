@@ -1,0 +1,123 @@
+﻿@using TXM.Core;
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col">L</th> <!--Locked-->
+            @if (!Bonus)
+            {
+                <th scope="col">T#</th>
+                <!--Table Number-->
+            }
+            <th scope="col">Player 1</th>
+            @if (!Bonus)
+            {
+                <th scope="col">Player 2</th>
+            }
+            @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsTournamentPointsInputNeeded && !Bonus)
+            {
+                <th scope="col">TP (P1)</th>
+                <!--Player 1 Points-->
+            }
+            @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsTournamentPointsInputNeeded && !Bonus)
+            {
+                <th scope="col">TP (P2)</th>
+                <!--Player 2 Points-->
+            }
+            <th scope="col">Score (P1)</th>
+            @if (!Bonus)
+            {
+                <th scope="col">Score (P2)</th>
+            }
+            @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsWinnerDropDownNeeded && !Bonus)
+            {
+                <th scope="col">Winner</th>
+            }
+            @if (Bonus || (!Update && (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsDrawPossible)))
+            {
+                <th scope="col">OK?</th>
+            }
+            @if (Update)
+            {
+                <th scope="col">Changed?</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in tournamentController.ActiveTournament.Rounds[Round - 1].Pairings)
+        {
+            <tr>
+                <td scope="col"><input type="checkbox" @bind="@p.Locked" /></td>
+                @if (!Bonus)
+                {
+                    <td scope="col">@p.TableNr</td>
+                }
+                <td scope="col">@p.Player1Name</td>
+                @if (!Bonus)
+                {
+                    <td scope="col">@p.Player2Name</td>
+                }
+                @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsTournamentPointsInputNeeded && !Bonus)
+                {
+                    <td scope="col"><input type="number" @bind="@p.Player1Points" /></td>
+                }
+                @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsTournamentPointsInputNeeded && !Bonus)
+                {
+                    <td scope="col"><input type="number" @bind="@p.Player2Points" /></td>
+                }
+                <td scope="col"><input type="number" @bind="@p.Player1Score" /></td>
+                @if (!Bonus)
+                {
+                    <td scope="col"><input type="number" @bind="@p.Player2Score" /></td>
+                }
+                @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsWinnerDropDownNeeded && !Bonus)
+                {
+                    <td scope="col">
+                        <select>
+                            <!--@bind-value="@p.Winner"-->
+                            @foreach (var t in winners)
+                            {
+                                <option value="@t">@t</option>
+                            }
+                        </select>
+                    </td>
+                }
+                @if (Bonus || (!Update && (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsDrawPossible)))
+                {
+                    <td scope="col"><input type="checkbox" @bind="@p.ResultEdited" /></td>
+                }
+                @if (Update)
+                {
+                    <td scope="col"><input type="checkbox" @bind="@p.ResultEdited" /></td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [CascadingParameter]
+    protected TournamentController tournamentController { get; set; }
+
+    [Parameter]
+    public int Round { get; set; }
+
+    [Parameter]
+    public bool Bonus { get; set; }
+
+    [Parameter]
+    public bool Update { get; set; }
+
+    private List<String> winners = new List<string>
+{
+        "Automatic",
+        "Player 1",
+        "Player 2"
+    };
+
+    protected override void OnInitialized()
+    {
+        Bonus = false;
+        Update = false;
+    }
+}

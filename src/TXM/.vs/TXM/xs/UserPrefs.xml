@@ -1,12 +1,34 @@
 ﻿<Properties StartupConfiguration="{2C8426CB-4EA4-49A8-AECE-0B196B5BE5EE}|Default">
+  <Xamarin.Addins.Core.Project ActiveDebugTarget="MyAppleMacCatalystID" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.TXM PreferredExecutionTarget="/Applications/Safari.app" />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="TXM/Pages/Pairings.razor">
+    <Files>
+      <File FileName="TXM/Pages/Pairings.razor" Line="65" Column="18" />
+      <File FileName="TXM/Pages/Participants.razor" Line="4" Column="25" />
+      <File FileName="TXM.Core/TournamentController.cs" Line="115" Column="18" />
+      <File FileName="TXM.Core/Tournament.cs" Line="231" Column="1" />
+      <File FileName="TXM/Pages/TimerPage.razor" Line="7" Column="1" />
+      <File FileName="TXM/Shared/TXMTimer.razor" Line="8" Column="34" />
+      <File FileName="TXM/Pages/Rounds.razor" Line="17" Column="45" />
+      <File FileName="TXM/Shared/TabControl.razor" Line="15" Column="1" />
+      <File FileName="TXM/Shared/TabPage.razor" Line="2" Column="2" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="TXM" expanded="True">
-            <Node name="TXM" expanded="True" />
+            <Node name="TXM" expanded="True">
+              <Node name="Pages" expanded="True" />
+              <Node name="Shared" expanded="True" />
+            </Node>
+            <Node name="TXM.Core" expanded="True">
+              <Node name="Rules" expanded="True" />
+            </Node>
           </Node>
         </State>
       </Pad>
@@ -15,10 +37,5 @@
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MultiItemStartupConfigurations />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <Xamarin.Addins.Core.Project ActiveDebugTarget="MyAppleMacCatalystID" />
-  <MonoDevelop.Ide.ItemProperties.TXM PreferredExecutionTarget="/Applications/Safari.app" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

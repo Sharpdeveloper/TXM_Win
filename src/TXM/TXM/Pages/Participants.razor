@@ -1,7 +1,7 @@
 ﻿@page "/participants"
 @using TXM.Core;
 
-<h3>Participants</h3>
+<PageTitle>TXM - Players</PageTitle>
 
 <table>
     <thead>
@@ -37,47 +37,50 @@
             <th scope="col">SoS</th> <!--StrenghtOfSchedule-->
             @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("eSoS"))
             {
-                <th scope="col">eSoS</th> <!--extendedStrengthOfSchedule-->
+                <th scope="col">eSoS</th>
+ <!--extendedStrengthOfSchedule-->
             }
         </tr>
-        @foreach(Player p in tournamentController.ActiveTournament.Participants)
-            {
-                <tr>
-                    <td>@p.Rank</td>
-                    <td>@p.Firstname</td>
-                    <td>@p.Nickname</td>
-                    <td>@p.DisplayPaid</td>
-                    <td>@p.DisplayListGiven</td>
-                    <td>@p.DisplayPresent</td>
-                    <td>@p.Team</td>
-                    <td>@p.Faction</td>
-                    <td>@p.TournamentPoints</td>
-                    <td>@p.Wins</td>
-                    @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("ModWins"))
-                    {
-                        <td>@p.ModifiedWins</td>
-                    }
-                    @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsDrawPossible)
-                    {
-                        <td>@p.Draws</td>
-                    }
-                    @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("ModLoss"))
-                    {
-                       <td>@p.ModifiedLosses</td>
-                    }
-                <td>@p.Losses</td>
-                    @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("MoV"))
-                    {
-                        <td>@p.MarginOfVictory</td>
-                    }
-                <td>@p.StrengthOfSchedule</td>
-                    @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("eSoS"))
-                    {
-                        <td>@p.ExtendedStrengthOfSchedule</td>
-                    }
-                </tr>
-            }
     </thead>
+    <tbody>
+        @foreach (var p in tournamentController.ActiveTournament.Participants)
+        {
+            <tr>
+                <td>@p.Rank</td>
+                <td>@p.Firstname</td>
+                <td>@p.Nickname</td>
+                <td>@p.DisplayPaid</td>
+                <td>@p.DisplayListGiven</td>
+                <td>@p.DisplayPresent</td>
+                <td>@p.Team</td>
+                <td>@p.Faction</td>
+                <td>@p.TournamentPoints</td>
+                <td>@p.Wins</td>
+                @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("ModWins"))
+                {
+                    <td>@p.ModifiedWins</td>
+                }
+                @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsDrawPossible)
+                {
+                    <td>@p.Draws</td>
+                }
+                @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("ModLoss"))
+                {
+                    <td>@p.ModifiedLosses</td>
+                }
+                <td>@p.Losses</td>
+                @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("MoV"))
+                {
+                    <td>@p.MarginOfVictory</td>
+                }
+                <td>@p.StrengthOfSchedule</td>
+                @if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.OptionalFields != null && tournamentController.ActiveTournament.Rule.OptionalFields.Contains("eSoS"))
+                {
+                    <td>@p.ExtendedStrengthOfSchedule</td>
+                }
+            </tr>
+        }
+    </tbody>
 </table>
 
 @code {

@@ -45,7 +45,7 @@ namespace TXM.Core
             {
                 firststart = true;
                 Started = true;
-                ActiveIO.Save(ActiveTournament, true, buttonGetResultsText, CutIsEnabled, "TournamentStart");
+                //TODO: ActiveIO.Save(ActiveTournament, true, buttonGetResultsText, CutIsEnabled, "TournamentStart");
                 return true;
             }
             else
@@ -127,11 +127,10 @@ namespace TXM.Core
             ActiveIO.Save(ActiveTournament, autosave, GetResultsText, CutIsEnabled, text + ActiveTournament.Rounds.Count);
         }
 
-        public List<Pairing> GetSeed(bool cut)
+        public void NewRound(bool cut)
         {
-            List<Pairing> temp = ActiveTournament.GetSeed(firststart, cut);
+            ActiveTournament.NewRound(firststart, cut);
             firststart = false;
-            return temp;
         }
 
         public bool GetResults(List<Pairing> pairings, string buttonGetResultsText, bool CutIsEnabled, bool update = false, bool end = false)
