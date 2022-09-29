@@ -1,35 +1,35 @@
 ﻿<Properties StartupConfiguration="{2C8426CB-4EA4-49A8-AECE-0B196B5BE5EE}|Default">
-  <MonoDevelop.Ide.ItemProperties.TXM PreferredExecutionTarget="/Applications/Safari.app" />
-  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.TXM PreferredExecutionTarget="/Applications/Safari.app" />
   <Xamarin.Addins.Core.Project ActiveDebugTarget="MyAppleMacCatalystID" />
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.Workbench ActiveDocument="TXM/Pages/Pairings.razor">
     <Files>
-      <File FileName="TXM/Pages/Pairings.razor" Line="65" Column="18" />
-      <File FileName="TXM/Pages/Participants.razor" Line="4" Column="25" />
-      <File FileName="TXM.Core/TournamentController.cs" Line="115" Column="18" />
-      <File FileName="TXM.Core/Tournament.cs" Line="231" Column="1" />
-      <File FileName="TXM/Pages/TimerPage.razor" Line="7" Column="1" />
-      <File FileName="TXM/Shared/TXMTimer.razor" Line="8" Column="34" />
-      <File FileName="TXM/Pages/Rounds.razor" Line="17" Column="45" />
-      <File FileName="TXM/Shared/TabControl.razor" Line="15" Column="1" />
-      <File FileName="TXM/Shared/TabPage.razor" Line="2" Column="2" />
+      <File FileName="TXM/Pages/Pairings.razor" Line="16" Column="74" />
+      <File FileName="TXM.Core/TournamentController.cs" Line="252" Column="30" />
+      <File FileName="TXM/Pages/Rounds.razor" Line="26" Column="24" />
+      <File FileName="TXM/Pages/Index.razor" Line="1" Column="1" />
+      <File FileName="TXM/Program.cs" Line="1" Column="1" />
+      <File FileName="TXM/App.razor" Line="1" Column="1" />
+      <File FileName="TXM/Shared/MainLayout.razor" Line="16" Column="43" />
+      <File FileName="TXM/_Imports.razor" Line="11" Column="16" />
+      <File FileName="TXM.Core/Tournament.cs" Line="708" Column="25" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="TXM" expanded="True">
             <Node name="TXM" expanded="True">
-              <Node name="Pages" expanded="True" />
+              <Node name="Pages" expanded="True">
+                <Node name="Pairings.razor" selected="True" />
+              </Node>
               <Node name="Shared" expanded="True" />
             </Node>
-            <Node name="TXM.Core" expanded="True">
-              <Node name="Rules" expanded="True" />
-            </Node>
+            <Node name="TXM.Core" expanded="True" />
           </Node>
         </State>
       </Pad>
