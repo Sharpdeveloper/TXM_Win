@@ -45,6 +45,7 @@ IV.  User Manual
 
 * A Game of Thrones™: The Card Game 2nd Edition
 * Android Netrunner: The Card Game
+* Dice Throne
 * Infinity
 * Legend of the Five Rings™: The Card Game (experimental)
 * Runewars Miniatures Game
@@ -57,7 +58,8 @@ IV.  User Manual
 * Star Wars™: X-Wing™ Miniatures Game Second Edition
 * Star Wars™: X-Wing™ Miniatures Game 2.5 Edition
 * The 7th Age
-* Warhammer 40.000
+* Warhammer 40.000 (either sorted by Wins or sorted by Killpoints)
+* Warmachine / Hordes
 
 ## IV. User Manual
 
