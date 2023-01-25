@@ -1,6 +1,6 @@
 # TXM - The Tournament App
 
-With TXM you can organize your boardgame, miniatures game or card game tournament. Specialist on FFG games this app will be extended for other games as well.
+With TXM you can organize your boardgame, miniatures game or card game tournament.
 
 The current version can be find here: [Releases](https://github.com/Sharpdeveloper/TXM/releases)
 
