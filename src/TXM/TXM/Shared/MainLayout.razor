@@ -1,0 +1,34 @@
+﻿@inherits LayoutComponentBase
+@using TXM.Core
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <CascadingValue Value="@tournamentController">
+            <div class="top-row px-4">
+               <TXMTimer />
+                <!--      <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a> -->
+            </div>
+
+            <article class="content px-4">
+                @Body
+            </article>
+        </CascadingValue>
+    </main>
+</div>
+
+@code{
+    private TournamentController tournamentController = new TournamentController(null);
+
+    protected override async Task OnInitializedAsync()
+    {
+        tournamentController.NewTournament(new Tournament("Test", new XWing25Rules()));
+        tournamentController.NewPlayer(new Player("TKundNobody", tournamentController.ActiveTournament.Rule.Factions[1]));
+        tournamentController.NewPlayer(new Player("Tesdeor", tournamentController.ActiveTournament.Rule.Factions[2]));
+        tournamentController.NewPlayer(new Player("tgBrain", tournamentController.ActiveTournament.Rule.Factions[3]));
+        tournamentController.NewPlayer(new Player("Backfire84", tournamentController.ActiveTournament.Rule.Factions[4]));
+    }
+    }

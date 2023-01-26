@@ -1,0 +1,23 @@
+﻿@page "/about"
+@using TXM.Core
+
+<PageTitle>TXM - About</PageTitle>
+
+<h1>About</h1>
+
+@foreach (string s in tournamentController.GetAboutText()){
+        @s<br />
+    }
+
+
+@code {
+    [CascadingParameter]
+    protected TournamentController tournamentController {get; set;}
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+
+    }
+}
+

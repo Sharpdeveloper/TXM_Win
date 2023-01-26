@@ -7,7 +7,7 @@ namespace TXM.Core
 
     public class TournamentTimer
     {
-        private Timer timer;
+        private System.Timers.Timer timer;
         private int hour, min, sec;
         private int defaultTime;
         private int startHour, startMin;
@@ -42,7 +42,7 @@ namespace TXM.Core
             DefaultTime = 60;
             Started = false;
 
-            timer = new Timer();
+            timer = new System.Timers.Timer();
             timer.Interval = 1000;
             timer.Elapsed += new ElapsedEventHandler(Timer_Tick);
         }

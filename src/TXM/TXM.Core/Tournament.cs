@@ -159,19 +159,19 @@ namespace TXM.Core
             Participants = Teamplayer;
         }
 
-        public List<Pairing> GetSeed(bool start, bool cut)
+        public void NewRound(bool start, bool cut)
         {
             if (Rule.IsRandomSeeding)
             {
-                return GetSeedRandom(start, cut);
+                NewRoundRandom(start, cut);
             }
             else
             {
-                return GetSeedNonRandom(start, cut);
+                NewRoundNonRandom(start, cut);
             }
         }
 
-        public List<Pairing> GetSeedRandom(bool start, bool cut)
+        public void NewRoundRandom(bool start, bool cut)
         {
             Pairing.ResetTableNr();
             int temp, pos = 0;
@@ -416,11 +416,9 @@ namespace TXM.Core
             Rounds.Add(new Round(Pairings, Participants));
             DisplayedRound = Rounds.Count;
             CheckTableNr();
-
-            return Pairings;
         }
 
-        public List<Pairing> GetSeedNonRandom(bool start, bool cut)
+        public void NewRoundNonRandom(bool start, bool cut)
         {
             Pairing.ResetTableNr();
             int temp, pos = 0;
@@ -624,8 +622,6 @@ namespace TXM.Core
                 Rounds = new List<Round>();
             Rounds.Add(new Round(Pairings, Participants));
             DisplayedRound = Rounds.Count;
-
-            return Pairings;
         }
 
         private void CheckTableNr()
@@ -859,10 +855,10 @@ namespace TXM.Core
                     }
                     if (a == -1)
                     {
-                        Participants.Add(new Player(tp.Team) { Team = tp.Team, Forename = tp.Forename, Faction = tp.Faction });
+                        Participants.Add(new Player(tp.Team) { Team = tp.Team, Firstname = tp.Firstname, Faction = tp.Faction });
                     }
                     else
-                        Participants[a].Forename += ", " + tp.Forename;
+                        Participants[a].Firstname += ", " + tp.Firstname;
                 }
             }
             WonByes = 0;

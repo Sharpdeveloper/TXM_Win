@@ -14,6 +14,7 @@ namespace TXM.Core
         public TournamentTimer ActiveTimer { get; private set; }
         public IO ActiveIO { get; private set; }
         public bool Started { get; private set; }
+        public string RoundButtonText { get; private set; }
         private IProjectorWindow projectorWindow;
 
         public TournamentController(IO _io)
@@ -23,29 +24,21 @@ namespace TXM.Core
             Started = false;
         }
 
-        public void NewPlayer(IPlayerDialog ipd)
+        public void NewPlayer(Player newPlayer)
         {
-            ipd.ShowDialog();
-            if (ipd.GetDialogResult())
-            {
-                ActiveTournament.AddPlayer(ipd.GetPlayer());
-            }
+             ActiveTournament.AddPlayer(newPlayer);
         }
 
-        public void NewTournament(ITournamentDialog itd)
+        public void NewTournament(Tournament newTournament)
         {
             if (ActiveTournament != null)
             {
                 if (!ActiveIO.ShowMessageWithOKCancel("The current tournament will be overwritten."))
                     return;
             }
-            itd.SetIO(ActiveIO);
-            itd.ShowDialog();
-            if (itd.GetDialogResult())
-            {
-                ActiveTournament = itd.GetTournament();
-                ActiveTimer.DefaultTime = ActiveTournament.Rule.DefaultTime;
-            }
+            ActiveTournament = newTournament;
+            ActiveTimer.DefaultTime = ActiveTournament.Rule.DefaultTime;
+            RoundButtonText = "Start Tournament";
         }
 
         public bool StartTournament(string buttonGetResultsText, bool CutIsEnabled)
@@ -54,7 +47,8 @@ namespace TXM.Core
             {
                 firststart = true;
                 Started = true;
-                ActiveIO.Save(ActiveTournament, true, buttonGetResultsText, CutIsEnabled, "TournamentStart");
+                //TODO: ActiveIO.Save(ActiveTournament, true, buttonGetResultsText, CutIsEnabled, "TournamentStart");
+                RoundButtonText = "Get Results";
                 return true;
             }
             else
@@ -82,7 +76,7 @@ namespace TXM.Core
             Player p = ActiveTournament.Participants[index];
             p.Team = player.Team;
             p.Name = player.Name;
-            p.Forename = player.Forename;
+            p.Firstname = player.Firstname;
             p.WonBye = player.WonBye;
             p.ListGiven = player.ListGiven;
             p.Paid = player.Paid;
@@ -123,6 +117,7 @@ namespace TXM.Core
                     ChangeTournament(itd.GetTournament());
                 }
                 ActiveTimer.DefaultTime = ActiveTournament.Rule.DefaultTime;
+                RoundButtonText = "Start Tournament";
             }
         }
 
@@ -136,15 +131,16 @@ namespace TXM.Core
             ActiveIO.Save(ActiveTournament, autosave, GetResultsText, CutIsEnabled, text + ActiveTournament.Rounds.Count);
         }
 
-        public List<Pairing> GetSeed(bool cut)
+        public void NewRound(bool cut)
         {
-            List<Pairing> temp = ActiveTournament.GetSeed(firststart, cut);
+            ActiveTournament.NewRound(firststart, cut);
             firststart = false;
-            return temp;
+            RoundButtonText = "Get Results";
         }
 
-        public bool GetResults(List<Pairing> pairings, string buttonGetResultsText, bool CutIsEnabled, bool update = false, bool end = false)
+        public bool GetResults(int round, bool CutIsEnabled, bool update = false, bool end = false)
         {
+            List<Pairing> pairings = ActiveTournament.Rounds[round - 1].Pairings;
             if (update)
             {
                 ActiveTournament.GetResults(pairings, true);
@@ -196,6 +192,7 @@ namespace TXM.Core
                 //ChangeGUIState(false);
             }
             ActiveTournament.Sort();
+            RoundButtonText = "Next Round";
             return true;
         }
 
@@ -417,10 +414,22 @@ namespace TXM.Core
             ActiveTimer.ResetTimer();
         }
 
-        public void ShowAbout(IAboutDialog iad)
+        public List<String> GetAboutText()
         {
-            iad.SetText("© " + TXM.Core.Settings.COPYRIGHTYEAR + " Sharpdeveloper aka TKundNobody\nTXM Version: " + TXM.Core.Settings.TXMVERSION + "\nSpecial Thanks to following Friends and Tester:\nBarlmoro - Tester, User and the Reason for at least half of the features.\ntgbrain - Teammate and tester\nKyle_Nemesis - Tester\nPhoton - User who finds every weird error\nN4-DO - Creater of the TXM-Logo\nMercya - Tester\n© Icons: Icons8 (www.icons8.com)");
-            iad.ShowDialog();
+            var aboutText = new List<string>();
+            aboutText.Add("© " + TXM.Core.Settings.COPYRIGHTYEAR + " Sharpdeveloper aka TKundNobody");
+            aboutText.Add("TXM Version: " + TXM.Core.Settings.TXMVERSION);
+            aboutText.Add("");
+            aboutText.Add("Special Thanks to following Friends and Tester:");
+            aboutText.Add("Barlmoro - Tester, User and the Reason for at least half of the features");
+            aboutText.Add("tgbrain - Teammate and tester");
+            aboutText.Add("Kyle_Nemesis - Tester");
+            aboutText.Add("Photon - User who finds every weird error");
+            aboutText.Add("N4-DO - Creater of the TXM-Logo");
+            aboutText.Add("Mercya - Tester");
+            aboutText.Add("");
+            aboutText.Add("© Open Iconic — www.useiconic.com/open");
+            return aboutText;
         }
 
         public void ShowProjector(IProjectorWindow ipw, bool table)

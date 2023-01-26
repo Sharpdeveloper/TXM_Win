@@ -1,0 +1,132 @@
+﻿@page "/rounds"
+@using TXM.Core;
+
+<PageTitle>TXM - Rounds</PageTitle>
+
+<button class="btn btn-primary" @onclick="NextRound">
+    @tournamentController.RoundButtonText
+</button>
+
+<br />
+
+<TabControl>
+
+    @foreach (var roundNo in Enumerable.Range(1, tournamentController.ActiveTournament.Rounds.Count))
+    {
+        <TabPage Text="@SetTabText(roundNo)">
+            <Pairings Round=roundNo />
+        </TabPage>
+    }
+</TabControl>
+
+@code {
+    [CascadingParameter]
+    protected TournamentController tournamentController { get; set; }
+
+    private int roundNo2 = 0;
+    private bool cut = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    internal string incrementRound()
+    {
+        roundNo2++;
+        return "";
+    }
+
+    private string resetRoundNo()
+    {
+        roundNo2 = 0;
+        return "";
+    }
+
+
+   /* private RoundNumber SetCurrentRound()
+    {
+        return new RoundNumber(roundNo2);
+    }*/
+
+    internal string SetTabText()
+    {
+        return "Round " + roundNo2;
+    }
+
+    internal string SetTabText(int no)
+    {
+        return "Round " + no;
+    }
+
+    private void NextRound()
+    {
+        if (tournamentController.RoundButtonText == "Start Tournament")
+        {
+            tournamentController.StartTournament("Test", false);
+            tournamentController.NewRound(cut);
+        }
+        else if (tournamentController.RoundButtonText == "Get Results")
+        {
+            //TODO: Round Number dynamically
+            tournamentController.GetResults(tournamentController.ActiveTournament.Rounds.Count, false);
+        }
+        else if(tournamentController.RoundButtonText == "Next Round")
+        {
+            tournamentController.NewRound(cut);
+        }
+
+
+        StateHasChanged();
+
+
+
+    }
+
+
+    /*   private void ButtonGetResults_Click(object sender, RoutedEventArgs e)
+       {
+           if (ButtonGetResults.Content.ToString() == "Start Tournament")
+           {
+               if (tournamentController.StartTournament(ButtonGetResults.Content.ToString(), ButtonCut.IsEnabled))
+               {
+                   SetGUIState(false, true);
+               }
+               return;
+           }
+           if (ButtonGetResults.Content.ToString() == "Next Round")
+           {
+               GetSeed();
+               return;
+           }
+           if (ButtonGetResults.Content.ToString() == "Update")
+           {
+               if (tournamentController.GetResults((List<Pairing>
+   )DataGridPairing.ItemsSource, ButtonGetResults.Content.ToString(), false, true))
+   {
+   RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+   tournamentController.ActiveIO.ShowMessage("Update done!");
+   ButtonGetResults.IsEnabled = true;
+   ButtonGetResults.Content = tournamentController.ActiveTournament.ButtonGetResultsText;
+   ButtonCut.IsEnabled = tournamentController.ActiveTournament.ButtonCutState;
+   ComboBoxRounds.SelectedIndex = ComboBoxRounds.Items.Count - 1;
+   currentPairingList = tournamentController.ActiveTournament.Pairings;
+   RefreshDataGridPairings();
+   ButtonGetResults.ToolTip = ButtonGetResults.Content.ToString();
+   tournamentController.Save(ButtonGetResults.Content.ToString(), false, true, "Update_Round");
+   }
+   return;
+   }
+   if (ButtonGetResults.Content.ToString() == "Get Results")
+   {
+   if (tournamentController.GetResults((List<Pairing>
+       )DataGridPairing.ItemsSource, ButtonGetResults.Content.ToString(), ButtonCut.IsEnabled))
+       {
+       RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+       ChangeGUIState(false);
+       tournamentController.Save(ButtonGetResults.Content.ToString(), false, true, "Result_Round");
+       }
+       return;
+    }
+       }*/
+    }
