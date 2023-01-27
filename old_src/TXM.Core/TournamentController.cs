@@ -45,6 +45,7 @@ namespace TXM.Core
             {
                 ActiveTournament = itd.GetTournament();
                 ActiveTimer.DefaultTime = ActiveTournament.Rule.DefaultTime;
+                
             }
         }
 

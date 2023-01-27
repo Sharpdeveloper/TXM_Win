@@ -111,6 +111,7 @@ namespace TXM.Core
         protected string name;
         protected string movName = "MoV";
         protected bool tournamentPoints = false;
+        protected bool hasScenarios = false;
         #endregion
 
         #region Public Properties
@@ -136,6 +137,16 @@ namespace TXM.Core
                 return tournamentPoints;
             }
         }
+
+        public bool UsesScenarios
+        {
+            get
+            {
+                return hasScenarios;
+            }
+        }
+
+        public string[] Scenarios { get; protected set; }
         #endregion
 
         #region Public Methods

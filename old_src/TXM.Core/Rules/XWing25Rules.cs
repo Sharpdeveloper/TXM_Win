@@ -7,7 +7,7 @@ namespace TXM.Core
     [Serializable]
 	public class XWing25Rules : AbstractRules
 	{
-        private new static string name = "Star Wars\u2122: X-Wing\u2122 Miniatures Game 2.5 (beta)";
+        private new static string name = "Star Wars\u2122: X-Wing\u2122 Miniatures Game 2.5";
 
         public XWing25Rules()
         {
@@ -21,6 +21,8 @@ namespace TXM.Core
             DefaultTime = 75;
 			movName = "MP";
             base.name = name;
+			hasScenarios = true;
+			Scenarios = new string[] { "Assault at the Satellite Array", "Chance Engagement", "Salvage Mission", "Scramble the Transmissions" };
         }
 
         public static string GetRuleName()

@@ -22,6 +22,7 @@ namespace TXM.GUI
         private int refresh = 0;
         private List<Pairing> currentPairingList;
         private bool hide = false;
+        private string currentScenario;
 
         public MainWindow()
         {
@@ -344,6 +345,25 @@ namespace TXM.GUI
             currentPairingList = tournamentController.ActiveTournament.Pairings;
             RefreshDataGridPairings();
             RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+            if(tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule != null && tournamentController.ActiveTournament.Rule.UsesScenarios)
+            {
+                this.LabelScenario.Visibility = Visibility.Visible;
+                this.ComboboxScenarios.Visibility = Visibility.Visible;
+                this.LabelScenarios.Visibility = Visibility.Visible;
+                SetScenarios();
+            }
+        }
+
+        private void SetScenarios()
+        {
+            ComboboxScenarios.Items.Clear();
+            foreach (var s in tournamentController.ActiveTournament.ActiveScenarios)
+            {
+                ComboBoxItem newListItem = new ComboBoxItem();
+                newListItem.Content = s;
+                ComboboxScenarios.Items.Add(newListItem);
+            }
+            ComboboxScenarios.SelectedIndex = 0;
         }
 
         private void NewTournament_Click(object sender, RoutedEventArgs e)
@@ -398,6 +418,7 @@ namespace TXM.GUI
                 InitDataGridPlayer();
                 InitDataGridPairing();
                 SetGUIState(true);
+                Refresh();
                 DataGridPlayer.ItemsSource = tournamentController.ActiveTournament.Participants;
                 RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
             }
@@ -471,6 +492,8 @@ namespace TXM.GUI
             AddRoundButton();
             ChangeGUIState(true);
             tournamentController.Save(ButtonGetResults.Content.ToString(), ButtonCut.IsEnabled, true);
+            LabelScenarios.Content = "Selected Scenario: " + tournamentController.ActiveTournament.ChoosenScenario;
+            SetScenarios();
         }
 
         private void PariringCurrentCellChanged(object sender, EventArgs e)
@@ -630,6 +653,7 @@ namespace TXM.GUI
                     RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
                     ChangeGUIState(false);
                     tournamentController.Save(ButtonGetResults.Content.ToString(), false, true, "Result_Round");
+                    LabelScenarios.Content = "";
                 }
                 return;
             }
@@ -640,15 +664,18 @@ namespace TXM.GUI
             string header = ((ComboBox)sender).SelectedValue.ToString();
             header = header.Remove(0, header.IndexOf(" "));
             int round = Int32.Parse(header);
-            currentPairingList = tournamentController.ActiveTournament.Rounds[round - 1].Pairings;
+            Round activeRound = tournamentController.ActiveTournament.Rounds[round - 1];
+            currentPairingList = activeRound.Pairings;
             RefreshDataGridPairings();
-            RefreshDataGridPlayer(tournamentController.ActiveTournament.Rounds[round - 1].Participants);
+            RefreshDataGridPlayer(activeRound.Participants);
             if (tournamentController.ActiveTournament.Rounds.Count == round)
             {
                 ButtonGetResults.IsEnabled = true;
                 ButtonGetResults.Content = tournamentController.ActiveTournament.ButtonGetResultsText;
                 ButtonCut.IsEnabled = tournamentController.ActiveTournament.ButtonCutState;
                 InitDataGridPairing();
+                ComboboxScenarios.IsEnabled = true;
+                LabelScenarios.Content = currentScenario;
             }
             else
             {
@@ -658,6 +685,9 @@ namespace TXM.GUI
                 ButtonGetResults.Content = "Update";
                 ButtonCut.IsEnabled = false;
                 InitDataGridPairing(true);
+                ComboboxScenarios.IsEnabled = false;
+                currentScenario = LabelScenarios.Content.ToString();
+                LabelScenarios.Content = "Chosen Scenario: " + activeRound.Scenario;
             }
             tournamentController.ActiveTournament.DisplayedRound = round;
             ButtonGetResults.ToolTip = ButtonGetResults.Content.ToString();
@@ -1075,6 +1105,12 @@ namespace TXM.GUI
         {
             hide = SliderHide.Value == 2.0;
             RefreshDataGridPairings();
+        }
+
+        private void ComboboxScenarios_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((ComboBox)sender).SelectedValue != null)
+                tournamentController.ActiveTournament.ChoosenScenario = ((ComboBoxItem)((ComboBox)sender).SelectedItem).Content.ToString();
         }
     }
 }

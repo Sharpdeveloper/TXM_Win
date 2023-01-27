@@ -96,6 +96,10 @@
             <Button x:Name="ButtonTimer" ToolTip="Timer" Click="NewTimer_Click" >
                 <Image Source="pack://application:,,,/Resources/Watch-100.png" Width="25" Height="25" />
             </Button>
+            <Separator/>
+            <Label x:Name="LabelScenario" Visibility="Hidden" Content="Select Scenario:"/>
+            <ComboBox x:Name="ComboboxScenarios" ToolTip="Scenarios" Visibility="Hidden" SelectionChanged="ComboboxScenarios_SelectionChanged" />
+            <Label x:Name="LabelScenarios" ToolTip="Choosen Scenario" Visibility="Hidden" />
         </ToolBar>
         <Grid Grid.Row="2" Grid.Column="0">
             <DataGrid x:Name="DataGridPlayer" AutoGenerateColumns="False" SelectionChanged="DataGridPlayer_SelectionChanged" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" MouseDoubleClick="DataGridPlayer_DoubleClicked" CellEditEnding="DataGridPlayer_CellEditEnding"/>

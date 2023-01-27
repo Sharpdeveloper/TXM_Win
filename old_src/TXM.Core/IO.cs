@@ -5,6 +5,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography;
 //using System.Drawing;
 
 namespace TXM.Core
@@ -78,9 +79,9 @@ namespace TXM.Core
                     //tournament.TeamProtection = false;
                     return tournament;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    messageManager.Show("Please chosse a valid gip-File.");
+                    messageManager.Show("Please choose a valid gip-File.");
                     return null;
                 }
             }
@@ -408,6 +409,10 @@ namespace TXM.Core
                 title = tournament.Name + " - Pairings - Round " + tournament.DisplayedRound;
 
             string head = "<!DOCTYPE html><html><head><title>" + title + "</title></head><body><h2>" + title + "</h2> <br />";
+            if(tournament.Rule.UsesScenarios)
+            {
+                head += "<h3>Scenario: " + tournament.ActiveScenario + "</h3><br />";
+            }
             string tb = "<table>"; //Table begin
             string te = "</table>"; //Table end
             string rb = "<tr>"; //Table row begin
@@ -420,6 +425,10 @@ namespace TXM.Core
             if (bbcode)
             {
                 head = "[b]" + title + "[/b]";
+                if (tournament.Rule.UsesScenarios)
+                {
+                    head += " [u]Scenario: " + tournament.ActiveScenario + "[/u]";
+                }
                 tb = "[table]";
                 te = "[/table]";
                 rb = "[tr]";
