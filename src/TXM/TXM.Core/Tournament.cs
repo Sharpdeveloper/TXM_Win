@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -18,7 +19,7 @@ namespace TXM.Core
     [Serializable]
     public class Tournament : ISerializable
     {
-        private int version = 2;
+        private int version = 3;
 
         #region Tournament Information
         public List<Player> Participants { get; set; }
@@ -40,8 +41,25 @@ namespace TXM.Core
         public bool Single { get; set; }
         public bool PrintDDGER { get; set; }
         public bool PrintDDENG { get; set; }
-        public AbstractRules Rule { get; set; }
+        public AbstractRules Rule
+        {
+            get
+            {
+                return rule;
+            }
+            set
+            {
+                rule = value;
+                if (rule != null && rule.UsesScenarios)
+                {
+                    ResetScenarios();
+                }
+            }
+        }
         public bool bonus;
+        public List<string> ActiveScenarios { get; private set; }
+        public string ChoosenScenario { get; set; }
+        public string ActiveScenario { get; set; }
         #endregion
 
         #region GUI_State
@@ -65,6 +83,7 @@ namespace TXM.Core
         internal int currentCountOfPlayer;
         internal List<Player> WinnerLastRound;
         internal bool bye;
+        private AbstractRules rule;
         #endregion
 
         #region Constructors
@@ -159,19 +178,36 @@ namespace TXM.Core
             Participants = Teamplayer;
         }
 
-        public void NewRound(bool start, bool cut)
+        public List<Pairing> GetSeed(bool start, bool cut)
         {
+            if (Rule.UsesScenarios)
+            {
+                if (ChoosenScenario == "Random")
+                {
+                    Random random = new Random();
+                    int temp = random.Next(1, ActiveScenarios.Count);
+                    ChoosenScenario = ActiveScenarios[temp];
+                    ActiveScenario = ChoosenScenario;
+                }
+
+                ActiveScenarios.Remove(ChoosenScenario);
+
+                if (ActiveScenarios == null || ActiveScenarios.Count == 1)
+                {
+                    ResetScenarios();
+                }
+            }
             if (Rule.IsRandomSeeding)
             {
-                NewRoundRandom(start, cut);
+                return GetSeedRandom(start, cut);
             }
             else
             {
-                NewRoundNonRandom(start, cut);
+                return GetSeedNonRandom(start, cut);
             }
         }
 
-        public void NewRoundRandom(bool start, bool cut)
+        public List<Pairing> GetSeedRandom(bool start, bool cut)
         {
             Pairing.ResetTableNr();
             int temp, pos = 0;
@@ -306,8 +342,8 @@ namespace TXM.Core
                             temp = random.Next(1, ListOfPlayers.Count);
                             if (TeamProtection && (Pairings[pos].Player1.Team != ListOfPlayers[temp].Team || Pairings[pos].Player1.Team == ""))
                             {
-                            Pairings[pos].Player2 = ListOfPlayers[temp];
-                            break;
+                                Pairings[pos].Player2 = ListOfPlayers[temp];
+                                break;
                             }
                             else
                                 Pairings[pos].Player2 = ListOfPlayers[temp];
@@ -413,12 +449,14 @@ namespace TXM.Core
 
             if (Rounds == null)
                 Rounds = new List<Round>();
-            Rounds.Add(new Round(Pairings, Participants));
+            Rounds.Add(new Round(Pairings, Participants, ChoosenScenario));
             DisplayedRound = Rounds.Count;
             CheckTableNr();
+
+            return Pairings;
         }
 
-        public void NewRoundNonRandom(bool start, bool cut)
+        public List<Pairing> GetSeedNonRandom(bool start, bool cut)
         {
             Pairing.ResetTableNr();
             int temp, pos = 0;
@@ -620,8 +658,10 @@ namespace TXM.Core
 
             if (Rounds == null)
                 Rounds = new List<Round>();
-            Rounds.Add(new Round(Pairings, Participants));
+            Rounds.Add(new Round(Pairings, Participants, ChoosenScenario));
             DisplayedRound = Rounds.Count;
+
+            return Pairings;
         }
 
         private void CheckTableNr()
@@ -652,11 +692,11 @@ namespace TXM.Core
             int tablenrb = b;
             a--;
             b--;
-            if(a >= Pairings.Count)
+            if (a >= Pairings.Count)
             {
-                a = Pairings.Count-1;
+                a = Pairings.Count - 1;
             }
-            if(b >= Pairings.Count)
+            if (b >= Pairings.Count)
             {
                 b = Pairings.Count - 1;
             }
@@ -696,7 +736,7 @@ namespace TXM.Core
             int winnerID = 0;
             bool winner;
             WinnerLastRound = new List<Player>();
-            if(bonus)
+            if (bonus)
             {
                 foreach (Pairing pairing in results)
                 {
@@ -711,7 +751,7 @@ namespace TXM.Core
                 {
                     if (pairing.Winner == "Player 1")
                         winnerID = pairing.Player1.ID;
-                    else if(pairing.Winner == "Player 2")
+                    else if (pairing.Winner == "Player 2")
                         winnerID = pairing.Player2.ID;
                     else
                         winnerID = (pairing.Player1Score > pairing.Player2Score) ? pairing.Player1.ID : pairing.Player2.ID;
@@ -759,7 +799,7 @@ namespace TXM.Core
             else
                 Rounds[Rounds.Count - 1].Pairings = results;
             PrePaired = new List<Pairing>();
-			Sort();
+            Sort();
         }
 
         public void ChangePlayer(Player player)
@@ -838,16 +878,16 @@ namespace TXM.Core
 
         private void Start()
         {
-            if(!Single)
+            if (!Single)
             {
                 Teamplayer = Participants;
                 Participants = new List<Player>();
-                foreach( var tp in Teamplayer)
+                foreach (var tp in Teamplayer)
                 {
                     int a = -1;
-                    for(int i = 0; i < Participants.Count; i++)
+                    for (int i = 0; i < Participants.Count; i++)
                     {
-                        if(Participants[i].Team == tp.Team)
+                        if (Participants[i].Team == tp.Team)
                         {
                             a = i;
                             break;
@@ -855,10 +895,10 @@ namespace TXM.Core
                     }
                     if (a == -1)
                     {
-                        Participants.Add(new Player(tp.Team) { Team = tp.Team, Firstname = tp.Firstname, Faction = tp.Faction });
+                        Participants.Add(new Player(tp.Team) { Team = tp.Team, Forename = tp.Forename, Faction = tp.Faction });
                     }
                     else
-                        Participants[a].Firstname += ", " + tp.Firstname;
+                        Participants[a].Forename += ", " + tp.Forename;
                 }
             }
             WonByes = 0;
@@ -945,6 +985,19 @@ namespace TXM.Core
                 Pairings[player2Game].ResultEdited = true;
             }
         }
+
+        private void ResetScenarios()
+        {
+            ActiveScenarios = new List<string>();
+            if (Rule.UsesScenarios)
+            {
+                ActiveScenarios.Add("Random");
+                foreach (var s in Rule.Scenarios)
+                {
+                    ActiveScenarios.Add(s);
+                }
+            }
+        }
         #endregion
 
         public void RemovePlayer(Player player)
@@ -1004,14 +1057,14 @@ namespace TXM.Core
         {
             Pairings = new List<Pairing>();
 
-            foreach(var p in Participants)
+            foreach (var p in Participants)
             {
                 Pairings.Add(new Pairing() { Player1 = p, Player2 = Bonus });
             }
 
             if (Rounds == null)
                 Rounds = new List<Round>();
-            Rounds.Add(new Round(Pairings, Participants));
+            Rounds.Add(new Round(Pairings, Participants, ChoosenScenario));
             DisplayedRound = Rounds.Count;
             bonus = true;
             return Pairings;
@@ -1057,11 +1110,11 @@ namespace TXM.Core
                 currentCountOfPlayer = (int)info.GetValue("Tournament_currentCountOfPlayer", typeof(int));
                 WinnerLastRound = (List<Player>)info.GetValue("Tournament_WinnerLastRound", typeof(List<Player>));
                 bye = (bool)info.GetValue("Tournament_bye", typeof(bool));
-                if(ButtonNextRoundState == true)
+                if (ButtonNextRoundState == true)
                 {
                     ButtonGetResultsText = "Next Round";
                 }
-                else if(ButtonGetResultState == true)
+                else if (ButtonGetResultState == true)
                 {
                     ButtonGetResultsText = "Get Results";
                 }
@@ -1070,7 +1123,9 @@ namespace TXM.Core
                     ButtonGetResultsText = "Start Tournament";
                 }
                 bonus = false;
-                version = 2;
+                ActiveScenarios = new List<string>();
+                ChoosenScenario = "";
+                version = 3;
             }
             else if (version == 1)
             {
@@ -1106,7 +1161,9 @@ namespace TXM.Core
                 WinnerLastRound = (List<Player>)info.GetValue("Tournament_WinnerLastRound", typeof(List<Player>));
                 bye = (bool)info.GetValue("Tournament_bye", typeof(bool));
                 bonus = false;
-                version = 2;
+                ActiveScenarios = new List<string>();
+                ChoosenScenario = "";
+                version = 3;
             }
             else if (version == 2)
             {
@@ -1142,45 +1199,87 @@ namespace TXM.Core
                 WinnerLastRound = (List<Player>)info.GetValue("Tournament_WinnerLastRound", typeof(List<Player>));
                 bye = (bool)info.GetValue("Tournament_bye", typeof(bool));
                 bonus = (bool)info.GetValue("Tournament_bonus", typeof(bool));
+                ActiveScenarios = new List<string>();
+                ChoosenScenario = "";
+                version = 3;
+            }
+            else if (version == 3)
+            {
+                Participants = (List<Player>)info.GetValue("Tournament_Participants", typeof(List<Player>));
+                Teamplayer = (List<Player>)info.GetValue("Tournament_Teamplayer", typeof(List<Player>));
+                FirstRound = (bool)info.GetValue("Tournament_FirstRound", typeof(bool));
+                PrePaired = (List<Pairing>)info.GetValue("Tournament_PrePaired", typeof(List<Pairing>));
+                Name = (string)info.GetValue("Tournament_Name", typeof(string));
+                Nicknames = (List<string>)info.GetValue("Tournament_Nicknames", typeof(List<string>));
+                MaxPoints = (int)info.GetValue("Tournament_MaxPoints", typeof(int));
+                Rounds = (List<Round>)info.GetValue("Tournament_Rounds", typeof(List<Round>));
+                FilePath = (string)info.GetValue("Tournament_FilePath", typeof(string));
+                AutoSavePath = (string)info.GetValue("Tournament_AutoSavePath", typeof(string));
+                DisplayedRound = (int)info.GetValue("Tournament_DisplayedRound", typeof(int));
+                Cut = (TournamentCut)info.GetValue("Tournament_Cut", typeof(TournamentCut));
+                CutStarted = (bool)info.GetValue("Tournament_CutStarted", typeof(bool));
+                WonByeCalculated = (bool)info.GetValue("Tournament_WonByeCalculated", typeof(bool));
+                Pairings = (List<Pairing>)info.GetValue("Tournament_Pairings", typeof(List<Pairing>));
+                TeamProtection = (bool)info.GetValue("Tournament_TeamProtection", typeof(bool));
+                Single = (bool)info.GetValue("Tournament_Single", typeof(bool));
+                PrintDDGER = (bool)info.GetValue("Tournament_PrintDDGER", typeof(bool));
+                PrintDDENG = (bool)info.GetValue("Tournament_PrintDDENG", typeof(bool));
+                Rule = (AbstractRules)info.GetValue("Tournament_Rule", typeof(AbstractRules));
+                ButtonGetResultsText = (string)info.GetValue("Tournament_ButtonGetResultsText", typeof(string));
+                ButtonCutState = (bool)info.GetValue("Tournament_ButtonCutState", typeof(bool));
+                T3ID = (int)info.GetValue("Tournament_T3ID", typeof(int));
+                GOEPPVersion = (string)info.GetValue("Tournament_GOEPPVersion", typeof(string));
+                givenStartNo = (List<int>)info.GetValue("Tournament_givenStartNo", typeof(List<int>));
+                ListOfPlayers = (List<Player>)info.GetValue("Tournament_ListOfPlayers", typeof(List<Player>));
+                PointGroup = (List<Player>[])info.GetValue("Tournament_PointGroup", typeof(List<Player>[]));
+                WonByes = (int)info.GetValue("Tournament_WonByes", typeof(int));
+                currentCountOfPlayer = (int)info.GetValue("Tournament_currentCountOfPlayer", typeof(int));
+                WinnerLastRound = (List<Player>)info.GetValue("Tournament_WinnerLastRound", typeof(List<Player>));
+                bye = (bool)info.GetValue("Tournament_bye", typeof(bool));
+                bonus = (bool)info.GetValue("Tournament_bonus", typeof(bool));
+                ActiveScenarios = (List<string>)info.GetValue("Tournament_ActiveScenarios", typeof(List<string>));
+                ChoosenScenario = (string)info.GetValue("Tournament_ChoosenScenario", typeof(string));
             }
             Rule = AbstractRules.GetRule(Rule.GetName());
         }
 
-		public void GetObjectData(SerializationInfo info, StreamingContext context)
-		{
-			info.AddValue("Tournament_Version", version, typeof(int));
-			info.AddValue("Tournament_Participants", Participants, typeof(List<Player>));
-			info.AddValue("Tournament_Teamplayer", Teamplayer, typeof(List<Player>));
-			info.AddValue("Tournament_FirstRound", FirstRound, typeof(bool));
-			info.AddValue("Tournament_PrePaired", PrePaired, typeof(List<Pairing>));
-			info.AddValue("Tournament_Name", Name, typeof(string));
-			info.AddValue("Tournament_Nicknames", Nicknames, typeof(List<string>));
-			info.AddValue("Tournament_MaxPoints", MaxPoints, typeof(int));
-			info.AddValue("Tournament_Rounds", Rounds, typeof(List<Round>));
-			info.AddValue("Tournament_FilePath", FilePath, typeof(string));
-			info.AddValue("Tournament_AutoSavePath", AutoSavePath, typeof(string));
-			info.AddValue("Tournament_DisplayedRound", DisplayedRound, typeof(int));
-			info.AddValue("Tournament_Cut", Cut, typeof(TournamentCut));
-			info.AddValue("Tournament_CutStarted", CutStarted, typeof(bool));
-			info.AddValue("Tournament_WonByeCalculated", WonByeCalculated, typeof(bool));
-			info.AddValue("Tournament_Pairings", Pairings, typeof(List<Pairing>));
-			info.AddValue("Tournament_TeamProtection", TeamProtection, typeof(bool));
-			info.AddValue("Tournament_Single", Single, typeof(bool));
-			info.AddValue("Tournament_PrintDDGER", PrintDDGER, typeof(bool));
-			info.AddValue("Tournament_PrintDDENG", PrintDDENG, typeof(bool));
-			info.AddValue("Tournament_Rule", Rule, typeof(AbstractRules));
-			info.AddValue("Tournament_ButtonGetResultsText", ButtonGetResultsText, typeof(string));
-			info.AddValue("Tournament_ButtonCutState", ButtonCutState, typeof(bool));
-			info.AddValue("Tournament_T3ID", T3ID, typeof(int));
-			info.AddValue("Tournament_GOEPPVersion", GOEPPVersion, typeof(string));
-			info.AddValue("Tournament_givenStartNo", givenStartNo, typeof(List<int>));
-			info.AddValue("Tournament_ListOfPlayers", ListOfPlayers, typeof(List<Player>));
-			info.AddValue("Tournament_PointGroup", PointGroup, typeof(List<Player>[]));
-			info.AddValue("Tournament_WonByes", WonByes, typeof(int));
-			info.AddValue("Tournament_currentCountOfPlayer", currentCountOfPlayer, typeof(int));
-			info.AddValue("Tournament_WinnerLastRound", WinnerLastRound, typeof(List<Player>));
-			info.AddValue("Tournament_bye", bye, typeof(bool));
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Tournament_Version", version, typeof(int));
+            info.AddValue("Tournament_Participants", Participants, typeof(List<Player>));
+            info.AddValue("Tournament_Teamplayer", Teamplayer, typeof(List<Player>));
+            info.AddValue("Tournament_FirstRound", FirstRound, typeof(bool));
+            info.AddValue("Tournament_PrePaired", PrePaired, typeof(List<Pairing>));
+            info.AddValue("Tournament_Name", Name, typeof(string));
+            info.AddValue("Tournament_Nicknames", Nicknames, typeof(List<string>));
+            info.AddValue("Tournament_MaxPoints", MaxPoints, typeof(int));
+            info.AddValue("Tournament_Rounds", Rounds, typeof(List<Round>));
+            info.AddValue("Tournament_FilePath", FilePath, typeof(string));
+            info.AddValue("Tournament_AutoSavePath", AutoSavePath, typeof(string));
+            info.AddValue("Tournament_DisplayedRound", DisplayedRound, typeof(int));
+            info.AddValue("Tournament_Cut", Cut, typeof(TournamentCut));
+            info.AddValue("Tournament_CutStarted", CutStarted, typeof(bool));
+            info.AddValue("Tournament_WonByeCalculated", WonByeCalculated, typeof(bool));
+            info.AddValue("Tournament_Pairings", Pairings, typeof(List<Pairing>));
+            info.AddValue("Tournament_TeamProtection", TeamProtection, typeof(bool));
+            info.AddValue("Tournament_Single", Single, typeof(bool));
+            info.AddValue("Tournament_PrintDDGER", PrintDDGER, typeof(bool));
+            info.AddValue("Tournament_PrintDDENG", PrintDDENG, typeof(bool));
+            info.AddValue("Tournament_Rule", Rule, typeof(AbstractRules));
+            info.AddValue("Tournament_ButtonGetResultsText", ButtonGetResultsText, typeof(string));
+            info.AddValue("Tournament_ButtonCutState", ButtonCutState, typeof(bool));
+            info.AddValue("Tournament_T3ID", T3ID, typeof(int));
+            info.AddValue("Tournament_GOEPPVersion", GOEPPVersion, typeof(string));
+            info.AddValue("Tournament_givenStartNo", givenStartNo, typeof(List<int>));
+            info.AddValue("Tournament_ListOfPlayers", ListOfPlayers, typeof(List<Player>));
+            info.AddValue("Tournament_PointGroup", PointGroup, typeof(List<Player>[]));
+            info.AddValue("Tournament_WonByes", WonByes, typeof(int));
+            info.AddValue("Tournament_currentCountOfPlayer", currentCountOfPlayer, typeof(int));
+            info.AddValue("Tournament_WinnerLastRound", WinnerLastRound, typeof(List<Player>));
+            info.AddValue("Tournament_bye", bye, typeof(bool));
             info.AddValue("Tournament_bonus", bonus, typeof(bool));
+            info.AddValue("Tournament_ActiveScenarios", ActiveScenarios, typeof(List<string>));
+            info.AddValue("Tournament_ChoosenScenario", ChoosenScenario, typeof(string));
         }
     }
 }

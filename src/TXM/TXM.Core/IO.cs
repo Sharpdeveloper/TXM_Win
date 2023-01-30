@@ -5,11 +5,12 @@ using System.IO;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography;
 //using System.Drawing;
 
 namespace TXM.Core
 {
-	[Serializable]
+    [Serializable]
     public class IO
     {
         private IFile fileManager;
@@ -63,7 +64,7 @@ namespace TXM.Core
                     //3. T3ID:      12484
                     //4. Number:    30
                     //              0     1          2     3          4         5            6                 7  8  9  10  11
-                    //5.+ Player:   ID  ||Firstname ||Name||Nickname ||Faction ||City       ||Team            ||A||B||C||D||x
+                    //5.+ Player:   ID  ||Forename ||Name||Nickname ||Faction ||City       ||Team            ||A||B||C||D||x
                     //              7619||Dieter   ||Chri||DieChri  ||Rebellen||Leverkusen ||PGF Siegen e. V.||3|| ||1|| ||x
                     //A: ArmyListGiven 3 = Yes, 0 = No
                     //B: ?
@@ -78,9 +79,9 @@ namespace TXM.Core
                     //tournament.TeamProtection = false;
                     return tournament;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    messageManager.Show("Please chosse a valid gip-File.");
+                    messageManager.Show("Please choose a valid gip-File.");
                     return null;
                 }
             }
@@ -116,7 +117,7 @@ namespace TXM.Core
         public void GOEPPExport(Tournament tournament)
         {
             fileManager.AddFilter("gep", "GÖPP Export File");
-            if(!tournament.Single)
+            if (!tournament.Single)
             {
                 tournament.SplitTeams();
             }
@@ -159,7 +160,7 @@ namespace TXM.Core
                         city = xwp.City.Substring(0, 20);
                     else
                         city = xwp.City;
-                    line = xwp.T3ID + sep + xwp.Firstname + sep + lastname + sep + xwp.Nickname + sep + xwp.Faction + sep + city + sep + xwp.Team + sep + xwp.Rank + sep + (xwp.TournamentPoints + xwp.ArmyRank) + sep + xwp.TournamentPoints + sep + xwp.MarginOfVictory + sep + xwp.ArmyRank + rest;
+                    line = xwp.T3ID + sep + xwp.Forename + sep + lastname + sep + xwp.Nickname + sep + xwp.Faction + sep + city + sep + xwp.Team + sep + xwp.Rank + sep + (xwp.TournamentPoints + xwp.ArmyRank) + sep + xwp.TournamentPoints + sep + xwp.MarginOfVictory + sep + xwp.ArmyRank + rest;
                     temp.Add(xwp.Nickname);
                     WriteLine(file, line);
                 }
@@ -209,7 +210,7 @@ namespace TXM.Core
             {
                 splitedLine[7].ToString();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 splitedLine = line.Split(',');
             }
@@ -240,7 +241,7 @@ namespace TXM.Core
             string end = "</body></html>";
             string nl = Environment.NewLine;
 
-            if(bbcode)
+            if (bbcode)
             {
                 head = "[b]" + title + "[/b]";
                 tb = "[table]";
@@ -266,7 +267,7 @@ namespace TXM.Core
             sb.Append("#"); //Rank
             sb.Append(de);
             sb.Append(db);
-            sb.Append("Firstname"); //Firstname
+            sb.Append("Forename"); //Forename
             sb.Append(de);
             sb.Append(db);
             sb.Append("Nickname"); //Nickname
@@ -283,7 +284,7 @@ namespace TXM.Core
             sb.Append(db);
             sb.Append("W"); //Wins
             sb.Append(de);
-            if(tournament.Rule.OptionalFields.Contains("ModWins"))
+            if (tournament.Rule.OptionalFields.Contains("ModWins"))
             {
                 sb.Append(db);
                 sb.Append("MW"); //Modified Wins
@@ -329,7 +330,7 @@ namespace TXM.Core
                 sb.Append(p.Rank); //Rank
                 sb.Append(de);
                 sb.Append(db);
-                sb.Append(p.Firstname); //Firstname
+                sb.Append(p.Forename); //Forename
                 sb.Append(de);
                 sb.Append(db);
                 sb.Append(p.Nickname); //Nickname
@@ -408,6 +409,10 @@ namespace TXM.Core
                 title = tournament.Name + " - Pairings - Round " + tournament.DisplayedRound;
 
             string head = "<!DOCTYPE html><html><head><title>" + title + "</title></head><body><h2>" + title + "</h2> <br />";
+            if (tournament.Rule.UsesScenarios)
+            {
+                head += "<h3>Scenario: " + tournament.ActiveScenario + "</h3><br />";
+            }
             string tb = "<table>"; //Table begin
             string te = "</table>"; //Table end
             string rb = "<tr>"; //Table row begin
@@ -420,6 +425,10 @@ namespace TXM.Core
             if (bbcode)
             {
                 head = "[b]" + title + "[/b]";
+                if (tournament.Rule.UsesScenarios)
+                {
+                    head += " [u]Scenario: " + tournament.ActiveScenario + "[/u]";
+                }
                 tb = "[table]";
                 te = "[/table]";
                 rb = "[tr]";
@@ -431,11 +440,11 @@ namespace TXM.Core
 
             sb.Append(head);
 
-			////Added marquee to see all Pairings without manually scrolling
-   //         if (!bbcode)
-			//{
-			//	sb.Append("<marquee direction=\"up\" behavior=\"alternate\">");
-			//}
+            ////Added marquee to see all Pairings without manually scrolling
+            //         if (!bbcode)
+            //{
+            //	sb.Append("<marquee direction=\"up\" behavior=\"alternate\">");
+            //}
 
             sb.Append(tb);
             sb.Append(rb);
@@ -464,11 +473,11 @@ namespace TXM.Core
             sb.Append(nl);
 
             int round = tournament.Rounds.Count - 1;
-            if(result)
+            if (result)
             {
                 round--;
             }
-            if(round < 0)
+            if (round < 0)
             {
                 return "";
             }
@@ -502,11 +511,11 @@ namespace TXM.Core
 
             sb.Append(te);
 
-			//end marquee tag
-			//if (!bbcode)
-			//{
-			//	sb.Append("</marquee>");
-			//}
+            //end marquee tag
+            //if (!bbcode)
+            //{
+            //	sb.Append("</marquee>");
+            //}
 
             sb.Append(end);
             return sb.ToString();
@@ -514,7 +523,7 @@ namespace TXM.Core
 
         public string GetBBCode(Tournament tournament, bool table, bool result = false)
         {
-            if(table)
+            if (table)
             {
                 return WriteTable(tournament, true);
             }
@@ -526,7 +535,7 @@ namespace TXM.Core
 
         public string Print(Tournament tournament)
         {
-			string title = tournament.Name + " - Table - Round " + tournament.DisplayedRound;
+            string title = tournament.Name + " - Table - Round " + tournament.DisplayedRound;
 
             string print = WriteTable(tournament, false);
             if (!Directory.Exists(TempPath))
@@ -543,7 +552,7 @@ namespace TXM.Core
         {
             string title = "";
             if (result)
-                title = tournament.Name + " - Results - Round " + (tournament.DisplayedRound-1);
+                title = tournament.Name + " - Results - Round " + (tournament.DisplayedRound - 1);
             else
                 title = tournament.Name + " - Pairings - Round " + tournament.DisplayedRound;
 
@@ -591,22 +600,22 @@ namespace TXM.Core
                 file += Settings.FILEEXTENSION;
 
             IFormatter formatter = new BinaryFormatter();
-			try
-			{
-				using (Stream stream = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None))
-				{
-					formatter.Serialize(stream, tournament);
-				}
-			}
-			catch (Exception)
-			{
-				file = AutosavePath;
+            try
+            {
+                using (Stream stream = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    formatter.Serialize(stream, tournament);
+                }
+            }
+            catch (Exception)
+            {
+                file = AutosavePath;
                 file += Path.PathSeparator + "Autosave_" + DateTime.Now.ToFileTime() + "_A_Tournament_" + Autosavetype + "." + Settings.FILEEXTENSION;
-				using (Stream stream = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None))
-				{
-					formatter.Serialize(stream, tournament);
-				}
-			}
+                using (Stream stream = new FileStream(file, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    formatter.Serialize(stream, tournament);
+                }
+            }
         }
 
         public Tournament Load(string filename = "")
@@ -624,21 +633,21 @@ namespace TXM.Core
                 else
                     return null;
             }
-                try
+            try
+            {
+                Tournament t = null;
+                IFormatter formatter = new BinaryFormatter();
+                using (Stream stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
-                    Tournament t = null;
-                    IFormatter formatter = new BinaryFormatter();
-                    using (Stream stream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                        t = (Tournament)formatter.Deserialize(stream);
-                    }
-                    return t;
+                    t = (Tournament)formatter.Deserialize(stream);
                 }
-                catch (Exception)
-                {
-                    messageManager.Show("Choose a valid file.");
-                    return null;
-                }
+                return t;
+            }
+            catch (Exception)
+            {
+                messageManager.Show("Choose a valid file.");
+                return null;
+            }
         }
 
         public bool ShowMessageWithOKCancel(string text)
@@ -695,7 +704,7 @@ namespace TXM.Core
 
         public void WriteColor(bool whiteText)
         {
-            if(!Directory.Exists(SavePath))
+            if (!Directory.Exists(SavePath))
             {
                 Directory.CreateDirectory(SavePath);
             }
@@ -789,7 +798,7 @@ namespace TXM.Core
                 imgending = ".tiff";
             }
             TempImgPath = ReadBGImage();
-            if(TempImgPath != "" && (imgurl != TempImgPath))
+            if (TempImgPath != "" && (imgurl != TempImgPath))
             {
                 File.Delete(imgurl);
                 imgending = TempImgPath.Remove(0, TempImgPath.LastIndexOf('.'));
