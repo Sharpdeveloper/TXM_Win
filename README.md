@@ -36,8 +36,8 @@ IV.  User Manual
 * Fixed table number for player (e. g. wheel chair drivers, streaming/filming)  
 * Print pairing stripes for easy distribution and recollection  
 * Optional Teamprotection in the first round (not recommend at offical tournaments like Store Championships, Regionals and so on)  
-* CSV Import
-** save your participant excel list as csv and import it
+* CSV Import  
+** save your participant excel list as csv and import it  
 ** you can see and download an example here: [ImportCSVExample.CSV](https://github.com/Sharpdeveloper/TXM/blob/master/Examples/ImportCSVExample.CSV)
 
 
