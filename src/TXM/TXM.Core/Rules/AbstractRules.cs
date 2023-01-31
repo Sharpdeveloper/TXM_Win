@@ -22,6 +22,7 @@ namespace TXM.Core
             SWLCGRules.GetRuleName(),
             XWingRules.GetRuleName(),
             XWing2Rules.GetRuleName(),
+            XWing2LegacyRules.GetRuleName(),
             XWing25Rules.GetRuleName(),
             The9thAgeRules.GetRuleName(),
             W40KKPRules.GetRuleName(),
@@ -37,6 +38,7 @@ namespace TXM.Core
             LegionRules.GetRuleName(),
             XWingRules.GetRuleName(),
             XWing2Rules.GetRuleName(),
+            XWing2LegacyRules.GetRuleName(),
             XWing25Rules.GetRuleName(),
             The9thAgeRules.GetRuleName(),
             W40KKPRules.GetRuleName(),
@@ -74,6 +76,8 @@ namespace TXM.Core
                 return new W40KWLRules();
             else if (name == XWing2Rules.GetRuleName())
                 return new XWing2Rules();
+            else if (name == XWing2LegacyRules.GetRuleName())
+                return new XWing2LegacyRules();
             else if (name == XWing25Rules.GetRuleName())
                 return new XWing25Rules();
             else if (name == The9thAgeRules.GetRuleName())

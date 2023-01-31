@@ -1,6 +1,6 @@
 ﻿namespace TXM.Core
 {
-    public interface IAboutDialog
+    public interface IInfoDialog
     {
         void SetText(string text);
         void ShowDialog();

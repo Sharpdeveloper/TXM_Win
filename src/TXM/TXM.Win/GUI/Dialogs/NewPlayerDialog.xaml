@@ -14,8 +14,8 @@
         <Label x:Name="LabelObligate" Content="*=Obligatory" HorizontalAlignment="Left" Margin="13,278,0,0" VerticalAlignment="Top"/>
         <Label x:Name="LabelFaction" Content="Faction*" HorizontalAlignment="Left" Margin="12,166,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="ComboBoxFaction" HorizontalAlignment="Left" Margin="166,170,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="ValueChanged" TabIndex="5"/>
-        <Label x:Name="LabelForename" Content="First Name" HorizontalAlignment="Left" Margin="12,86,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="TextBoxForename" HorizontalAlignment="Left" Height="23" Margin="166,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="ValueChanged" TabIndex="3"/>
+        <Label x:Name="LabelFirstname" Content="First Name" HorizontalAlignment="Left" Margin="12,86,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="TextBoxFirstname" HorizontalAlignment="Left" Height="23" Margin="166,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="ValueChanged" TabIndex="3"/>
         <CheckBox x:Name="CheckboxFreeticket" Content="Won Bye" HorizontalAlignment="Left" Margin="130,258,0,0" VerticalAlignment="Top" TabIndex="9" RenderTransformOrigin="0.849,0.467"/>
         <CheckBox x:Name="CheckboxPayed" Content="Paid ($)" HorizontalAlignment="Left" Margin="20,238,0,0" VerticalAlignment="Top" TabIndex="7"/>
         <CheckBox x:Name="CheckboxSquadListGiven" Content="List given" HorizontalAlignment="Left" Margin="130,238,0,0" VerticalAlignment="Top" TabIndex="8"/>

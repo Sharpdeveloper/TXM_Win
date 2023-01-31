@@ -30,7 +30,7 @@ namespace TXM.GUI.Dialogs
         public void SetPlayer(Player player)
         {
             CurrentPlayer = player;
-            TextBoxForename.Text = CurrentPlayer.Firstname;
+            TextBoxFirstname.Text = CurrentPlayer.Firstname;
             TextBoxName.Text = CurrentPlayer.Name;
             TextBoxNickname.Text = CurrentPlayer.Nickname;
             TextBoxTeam.Text = CurrentPlayer.Team;
@@ -55,7 +55,7 @@ namespace TXM.GUI.Dialogs
             Player player = new Player(TextBoxNickname.Text, ComboBoxFaction.SelectedValue.ToString());
             player.Team = TextBoxTeam.Text;
             player.Name = TextBoxName.Text;
-            player.Firstname = TextBoxForename.Text;
+            player.Firstname = TextBoxFirstname.Text;
             player.WonBye = CheckboxFreeticket.IsChecked == true;
             player.ListGiven = CheckboxSquadListGiven.IsChecked == true;
             player.Paid = CheckboxPayed.IsChecked == true;

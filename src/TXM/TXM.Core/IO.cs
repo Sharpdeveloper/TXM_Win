@@ -798,6 +798,8 @@ namespace TXM.Core
                 imgending = ".tiff";
             }
             TempImgPath = ReadBGImage();
+            if (imgurl == null)
+                imgurl = TempImgPath;
             if (TempImgPath != "" && (imgurl != TempImgPath))
             {
                 File.Delete(imgurl);
@@ -809,7 +811,7 @@ namespace TXM.Core
             return imgurl;
         }
 
-        public void NewImage()
+        public bool NewImage()
         {
             fileManager.AddFilter("*.jpg;*.jpeg;*.png;*.tif;*.tiff", "All Images");
             if (fileManager.Open())
@@ -822,7 +824,9 @@ namespace TXM.Core
                 imgnr++;
                 File.Copy(imgurl, TempImgPath, true);
                 WriteBGImage(TempImgPath);
+                return true;
             }
+            return false;
         }
 
         public string PrintScoreSheet(Tournament tournament)

@@ -5,11 +5,11 @@ using TXM.Core;
 namespace TXM.GUI.Dialogs
 {
     /// <summary>
-    /// Interaction logic for AboutDialog.xaml
+    /// Interaction logic for ThanksDialog.xaml
     /// </summary>
-    public partial class AboutDialog : Window, IInfoDialog
+    public partial class ThanksDialog : Window, IInfoDialog
     {
-        public AboutDialog()
+        public ThanksDialog()
         {
             InitializeComponent();
         }

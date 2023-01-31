@@ -60,8 +60,10 @@
             <MenuItem x:Name="MenuItemTools" Header="Tools">
                 <MenuItem x:Name="MenuItemTimer" Header="Timer" Click="NewTimer_Click" />
             </MenuItem>
-            <MenuItem x:Name="MenuItemHelp" Header="Help">
+            <MenuItem x:Name="MenuItemHelp" Header="Info">
                 <MenuItem x:Name="MenuItemUserHelp" Header="User Manual (online)" Click="MenuItemUserHelp_Click"/>
+                <MenuItem x:Name="MenuItemThanks" Header="Special Thanks to..." Click="MenuItemThanks_Click"/>
+                <MenuItem x:Name="MenuItemSupport" Header="Support TXM" Click="MenuItemSupport_Click"/>
                 <MenuItem x:Name="MenuItemAbout" Header="About TXM" Click="MenuItemAbout_Click"/>
             </MenuItem>
         </Menu>
@@ -102,11 +104,11 @@
             <Label x:Name="LabelScenarios" ToolTip="Choosen Scenario" Visibility="Hidden" />
         </ToolBar>
         <Grid Grid.Row="2" Grid.Column="0">
-            <DataGrid x:Name="DataGridPlayer" AutoGenerateColumns="False" SelectionChanged="DataGridPlayer_SelectionChanged" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" MouseDoubleClick="DataGridPlayer_DoubleClicked" CellEditEnding="DataGridPlayer_CellEditEnding"/>
+            <DataGrid x:Name="DataGridPlayer" AutoGenerateColumns="False" SelectionChanged="DataGridPlayer_SelectionChanged" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" MouseDoubleClick="DataGridPlayer_DoubleClicked" CellEditEnding="DataGridPlayer_CellEditEnding" />
         </Grid>
         <GridSplitter Grid.Column="1" Grid.Row="2" Width="5" HorizontalAlignment="Stretch" />
         <Grid Grid.Row="2" Grid.Column="2">
-            <DataGrid x:Name="DataGridPairing" DataGridCell.Selected="DataGrid_GotFocus" AutoGenerateColumns="False" CurrentCellChanged="PariringCurrentCellChanged" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" MouseLeftButtonUp="GridMouseLeftButtonUp" CanUserAddRows="False" BeginningEdit="DataGridPairing_BeginningEdit"/>
+            <DataGrid x:Name="DataGridPairing" DataGridCell.Selected="DataGrid_GotFocus" SelectionUnit="Cell" AutoGenerateColumns="False" CurrentCellChanged="PariringCurrentCellChanged" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" MouseLeftButtonUp="GridMouseLeftButtonUp" CanUserAddRows="False" BeginningEdit="DataGridPairing_BeginningEdit"/>
         </Grid>
         <Grid Grid.Column="3" Grid.Row="2">
             <Label x:Name="LabelTime" Content="MM:SS" VerticalAlignment="Top" Height="40" FontSize="20" Margin="0,0,0,0" HorizontalAlignment="Center"/>

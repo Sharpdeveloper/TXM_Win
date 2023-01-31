@@ -8,7 +8,7 @@ namespace TXM.Core
     public class Player
     {
         private static int currentID = 0;
-        private int version = 0;
+        private int version = 1;
 
         #region Player Informations
         public string Name { get; set; }
@@ -105,10 +105,10 @@ namespace TXM.Core
 
         }
 
-        public Player(string name, string forename, string nickname, string team, string city, int wins, int modifiedWins, int looses, int draws, int points, int pointsDestroyed, int pointsLost, double pointsOfEnemies, int marginOfVictory, string playersFaction, bool freeticket, bool paired, bool wonFreeticket, int t3ID, int rank, int armyRank, bool payed, bool squadListGiven, int nr = -1)
+        public Player(string name, string firstname, string nickname, string team, string city, int wins, int modifiedWins, int looses, int draws, int points, int pointsDestroyed, int pointsLost, double pointsOfEnemies, int marginOfVictory, string playersFaction, bool freeticket, bool paired, bool wonFreeticket, int t3ID, int rank, int armyRank, bool payed, bool squadListGiven, int nr = -1)
         {
             Name = name;
-            Firstname = forename;
+            Firstname = firstname;
             Nickname = nickname;
             Team = team;
             City = city;
@@ -138,8 +138,8 @@ namespace TXM.Core
             Results = new List<Result>();
         }
 
-        public Player(int t3ID, string forename, string name, string nickname, string faction, string city, string team, bool payed, bool armylistgiven)
-            : this(name, forename, nickname, team, city, 0, 0, 0, 0, 0, 0, 0, 0, 0, faction, false, false, false, t3ID, 0, 0, payed, armylistgiven)
+        public Player(int t3ID, string firstname, string name, string nickname, string faction, string city, string team, bool payed, bool armylistgiven)
+            : this(name, firstname, nickname, team, city, 0, 0, 0, 0, 0, 0, 0, 0, 0, faction, false, false, false, t3ID, 0, 0, payed, armylistgiven)
         { }
 
         public Player(string nickname, string playersFaction)
@@ -345,11 +345,14 @@ namespace TXM.Core
 		public Player(SerializationInfo info, StreamingContext context)
 		{
 			version = (int)info.GetValue("Player_Version", typeof(int));
-			if (version == 0)
+			if (version == 0 || version == 1)
 			{
 				currentID = (int)info.GetValue("Player_currentID", typeof(int));
                 Name = (string)info.GetValue("Player_Name", typeof(string));
-                Firstname = (string)info.GetValue("Player_Forename", typeof(string));
+                if (version == 0)
+                    Firstname = (string)info.GetValue("Player_Forename", typeof(string));
+                else
+                    Firstname = (string)info.GetValue("Player_Firstname", typeof(string));
                 Nickname = (string)info.GetValue("Player_Nickname", typeof(string));
                 TableNo = (int)info.GetValue("Player_TableNo", typeof(int));
                 Team = (string)info.GetValue("Player_Team", typeof(string));
@@ -389,7 +392,7 @@ namespace TXM.Core
 			info.AddValue("Player_Version", version, typeof(int));
 			info.AddValue("Player_currentID", currentID, typeof(int));
 			info.AddValue("Player_Name", Name, typeof(string));
-			info.AddValue("Player_Forename", Firstname, typeof(string));
+			info.AddValue("Player_Firstname", Firstname, typeof(string));
 			info.AddValue("Player_Nickname", Nickname, typeof(string));
 			info.AddValue("Player_TableNo", TableNo, typeof(int));
 			info.AddValue("Player_Team", Team, typeof(string));

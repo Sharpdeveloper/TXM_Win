@@ -418,9 +418,21 @@ namespace TXM.Core
             ActiveTimer.ResetTimer();
         }
 
-        public void ShowAbout(IAboutDialog iad)
+        public void ShowAbout(IInfoDialog iad)
         {
-            iad.SetText("© " + TXM.Core.Settings.COPYRIGHTYEAR + " Sharpdeveloper aka TKundNobody\nTXM Version: " + TXM.Core.Settings.TXMVERSION + "\nSpecial Thanks to following Friends and Tester:\nBarlmoro - Tester, User and the Reason for at least half of the features.\ntgbrain - Teammate and tester\nKyle_Nemesis - Tester\nPhoton - User who finds every weird error\nN4-DO - Creater of the TXM-Logo\nMercya - Tester\n© Icons: Icons8 (www.icons8.com)");
+            iad.SetText("© " + TXM.Core.Settings.COPYRIGHTYEAR + " Sharpdeveloper aka TKundNobody\nTXM Version: " + TXM.Core.Settings.TXMVERSION + "\n© Icons: Icons8 (www.icons8.com)");
+            iad.ShowDialog();
+        }
+
+        public void ShowThanks(IInfoDialog iad)
+        {
+            iad.SetText("Special Thanks to following Friends and Tester:\n\nBarlmoro - Tester, User and the Reason for at least half of the features.\ntgbrain - Teammate and tester\nKyle_Nemesis - Tester\nPhoton - User who finds every weird error\nN4-DO - Creater of the TXM-Logo\nMercya - Tester\nBackfire84 - Poweruser\nGreenViper - Tester");
+            iad.ShowDialog();
+        }
+
+        public void ShowSupport(IInfoDialog iad)
+        {
+            iad.SetText("If you like TXM and want to support it, you can do it ins serval ways:\n\n* Spread the word, the more use it, the better it gets!\n* Test everything!\n* Help to add more Games. More information click the Button 'New Game Manual'\n* Leave a tip. If you want to leave a tip, click the Button 'Donate a Tip'");
             iad.ShowDialog();
         }
 
@@ -495,23 +507,27 @@ namespace TXM.Core
 
         public void SetImage()
         {
-            ActiveIO.NewImage();
-            if (!timerWindow.SetImage(new Uri(ActiveIO.TempImgPath)))
+            if (ActiveIO.NewImage())
             {
-                ActiveIO.ShowMessage("The Image is invalid.");
+                if (timerWindow != null && !timerWindow.SetImage(new Uri(ActiveIO.TempImgPath)))
+                {
+                    ActiveIO.ShowMessage("The Image is invalid.");
+                }
             }
         }
 
         public void SetTimerLabelColor(bool white)
         {
             ActiveIO.WriteColor(white);
-            timerWindow.SetLabelColor(white);
+            if(timerWindow != null)
+                timerWindow.SetLabelColor(white);
         }
 
         public void SetTimerTextSize(double size)
         {
             ActiveIO.WriteSize(size);
-            timerWindow.SetTextSize(size);
+            if (timerWindow != null)
+                timerWindow.SetTextSize(size);
         }
 
         public void Close()
@@ -529,7 +545,11 @@ namespace TXM.Core
 
         public void ShowUserManual()
         {
-            Process.Start("https://github.com/Sharpdeveloper/TXM/wiki/User-Manual");
+            var uri = "https://github.com/Sharpdeveloper/TXM/wiki/User-Manual";
+            var psi = new ProcessStartInfo();
+            psi.UseShellExecute = true;
+            psi.FileName = uri;
+            Process.Start(psi);
         }
 
         public List<Pairing> AwardBonusPoints()

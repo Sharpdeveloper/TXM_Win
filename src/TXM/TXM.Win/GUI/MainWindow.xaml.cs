@@ -68,8 +68,8 @@ namespace TXM.GUI
             DataGridPlayer.Columns.Add(dgc);
             dgc = new DataGridTextColumn()
             {
-                Header = "Forename",
-                Binding = new Binding("Forename"),
+                Header = "Firstname",
+                Binding = new Binding("Firstname"),
                 IsReadOnly = true
             };
             DataGridPlayer.Columns.Add(dgc);
@@ -320,8 +320,8 @@ namespace TXM.GUI
                 dgcb.Binding = b;
                 DataGridPairing.Columns.Add(dgcb);
             }
-
         }
+  
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
@@ -492,8 +492,11 @@ namespace TXM.GUI
             AddRoundButton();
             ChangeGUIState(true);
             tournamentController.Save(ButtonGetResults.Content.ToString(), ButtonCut.IsEnabled, true);
-            LabelScenarios.Content = "Selected Scenario: " + tournamentController.ActiveTournament.ChoosenScenario;
-            SetScenarios();
+            if (tournamentController.ActiveTournament.Rule.UsesScenarios)
+            {
+                LabelScenarios.Content = "Selected Scenario: " + tournamentController.ActiveTournament.ChoosenScenario;
+                SetScenarios();
+            }
         }
 
         private void PariringCurrentCellChanged(object sender, EventArgs e)
@@ -562,9 +565,18 @@ namespace TXM.GUI
             // Lookup for the source to be DataGridCell
             if (e.OriginalSource.GetType() == typeof(DataGridCell))
             {
-                // Starts the Edit on the row;
-                DataGrid grd = (DataGrid)sender;
-                grd.BeginEdit(e);
+                var cell = (DataGridCell)e.OriginalSource;
+                if(cell.Content.GetType() == typeof(CheckBox))
+                {
+                    var cb = (CheckBox)cell.Content;
+                    cb.IsChecked = !cb.IsChecked;
+                }
+                else
+                {
+                    // Starts the Edit on the row;
+                    DataGrid grd = (DataGrid)sender;
+                    grd.BeginEdit(e);
+                }  
             }
         }
 
@@ -1001,6 +1013,24 @@ namespace TXM.GUI
             tournamentController.ShowAbout(ad);
         }
 
+        private void MenuItemSupport_Click(object sender, RoutedEventArgs e)
+        {
+            SupportDialog ad = new SupportDialog()
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            tournamentController.ShowSupport(ad);
+        }
+
+        private void MenuItemThanks_Click(object sender, RoutedEventArgs e)
+        {
+            ThanksDialog ad = new ThanksDialog()
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            tournamentController.ShowThanks(ad);
+        }
+
         private void DataGridPlayer_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             //(List<Player>)Data.ItemsSource
@@ -1050,22 +1080,18 @@ namespace TXM.GUI
 
         private void SliderColor_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            try
-            {
+            if (tournamentController != null)
+            { 
                 tournamentController.SetTimerLabelColor(SliderText.Value == 1.0);
             }
-            catch (NullReferenceException)
-            { }
         }
 
         private void SliderSize_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            try
+            if (tournamentController != null)
             {
                 tournamentController.SetTimerTextSize(SliderSize.Value);
             }
-            catch (NullReferenceException)
-            { }
         }
 
         private void EndTournament_Click(object sender, RoutedEventArgs e)
