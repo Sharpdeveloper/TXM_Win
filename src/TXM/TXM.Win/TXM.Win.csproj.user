@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <ApplicationDefinition Update="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="GUI\Dialogs\AboutDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="GUI\Dialogs\AutosaveDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="GUI\Dialogs\NewPlayerDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="GUI\Dialogs\NewTournamentDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="GUI\Dialogs\OutputDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="GUI\Dialogs\ReportBugDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="GUI\Dialogs\SetPairingDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="GUI\MainWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="GUI\Windows\ProjectorWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="GUI\Windows\TimerWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="GUI\Dialogs\AboutDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="GUI\Dialogs\AutosaveDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="GUI\Dialogs\NewPlayerDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="GUI\Dialogs\NewTournamentDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="GUI\Dialogs\OutputDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="GUI\Dialogs\ReportBugDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="GUI\Dialogs\SetPairingDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="GUI\MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="GUI\Windows\ProjectorWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="GUI\Windows\TimerWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>

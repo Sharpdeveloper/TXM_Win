@@ -895,10 +895,10 @@ namespace TXM.Core
                     }
                     if (a == -1)
                     {
-                        Participants.Add(new Player(tp.Team) { Team = tp.Team, Forename = tp.Forename, Faction = tp.Faction });
+                        Participants.Add(new Player(tp.Team) { Team = tp.Team, Firstname = tp.Firstname, Faction = tp.Faction });
                     }
                     else
-                        Participants[a].Forename += ", " + tp.Forename;
+                        Participants[a].Firstname += ", " + tp.Firstname;
                 }
             }
             WonByes = 0;

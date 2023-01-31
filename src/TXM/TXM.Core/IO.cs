@@ -64,7 +64,7 @@ namespace TXM.Core
                     //3. T3ID:      12484
                     //4. Number:    30
                     //              0     1          2     3          4         5            6                 7  8  9  10  11
-                    //5.+ Player:   ID  ||Forename ||Name||Nickname ||Faction ||City       ||Team            ||A||B||C||D||x
+                    //5.+ Player:   ID  ||Firstname||Name||Nickname ||Faction ||City       ||Team            ||A||B||C||D||x
                     //              7619||Dieter   ||Chri||DieChri  ||Rebellen||Leverkusen ||PGF Siegen e. V.||3|| ||1|| ||x
                     //A: ArmyListGiven 3 = Yes, 0 = No
                     //B: ?
@@ -160,7 +160,7 @@ namespace TXM.Core
                         city = xwp.City.Substring(0, 20);
                     else
                         city = xwp.City;
-                    line = xwp.T3ID + sep + xwp.Forename + sep + lastname + sep + xwp.Nickname + sep + xwp.Faction + sep + city + sep + xwp.Team + sep + xwp.Rank + sep + (xwp.TournamentPoints + xwp.ArmyRank) + sep + xwp.TournamentPoints + sep + xwp.MarginOfVictory + sep + xwp.ArmyRank + rest;
+                    line = xwp.T3ID + sep + xwp.Firstname + sep + lastname + sep + xwp.Nickname + sep + xwp.Faction + sep + city + sep + xwp.Team + sep + xwp.Rank + sep + (xwp.TournamentPoints + xwp.ArmyRank) + sep + xwp.TournamentPoints + sep + xwp.MarginOfVictory + sep + xwp.ArmyRank + rest;
                     temp.Add(xwp.Nickname);
                     WriteLine(file, line);
                 }
@@ -267,7 +267,7 @@ namespace TXM.Core
             sb.Append("#"); //Rank
             sb.Append(de);
             sb.Append(db);
-            sb.Append("Forename"); //Forename
+            sb.Append("Firstname"); //Firstname
             sb.Append(de);
             sb.Append(db);
             sb.Append("Nickname"); //Nickname
@@ -330,7 +330,7 @@ namespace TXM.Core
                 sb.Append(p.Rank); //Rank
                 sb.Append(de);
                 sb.Append(db);
-                sb.Append(p.Forename); //Forename
+                sb.Append(p.Firstname); //Firstname
                 sb.Append(de);
                 sb.Append(db);
                 sb.Append(p.Nickname); //Nickname

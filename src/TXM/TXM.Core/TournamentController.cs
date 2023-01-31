@@ -83,7 +83,7 @@ namespace TXM.Core
             Player p = ActiveTournament.Participants[index];
             p.Team = player.Team;
             p.Name = player.Name;
-            p.Forename = player.Forename;
+            p.Firstname = player.Firstname;
             p.WonBye = player.WonBye;
             p.ListGiven = player.ListGiven;
             p.Paid = player.Paid;
