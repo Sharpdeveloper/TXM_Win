@@ -1,21 +1,21 @@
 ﻿<Properties StartupConfiguration="{2C8426CB-4EA4-49A8-AECE-0B196B5BE5EE}|Default">
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.Workbench ActiveDocument="TXM.Core/Rules/AbstractRules.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TXM.Core/TournamentController.cs">
     <Files>
       <File FileName="TXM/Pages/Pairings.razor" />
-      <File FileName="TXM.Core/TournamentController.cs" />
-      <File FileName="TXM/Pages/Rounds.razor" Line="25" Column="1" />
+      <File FileName="TXM.Core/TournamentController.cs" Line="17" Column="50" />
+      <File FileName="TXM/Pages/Rounds.razor" />
       <File FileName="TXM/Pages/Index.razor" />
       <File FileName="TXM/Program.cs" />
       <File FileName="TXM/App.razor" />
       <File FileName="TXM/Shared/MainLayout.razor" />
       <File FileName="TXM/_Imports.razor" />
-      <File FileName="TXM.Core/Tournament.cs" />
-      <File FileName="TXM.Core/Rules/XWing25Rules.cs" />
-      <File FileName="TXM.Core/Rules/XWingRules.cs" Line="13" Column="10" />
-      <File FileName="TXM.Core/Rules/AbstractRules.cs" Line="109" Column="35" />
+      <File FileName="TXM.Core/Tournament.cs" Line="1286" Column="1" />
+      <File FileName="TXM.Core/Rules/XWing25Rules.cs" Line="96" Column="1" />
+      <File FileName="TXM.Core/Rules/XWingRules.cs" />
+      <File FileName="TXM.Core/Rules/AbstractRules.cs" Line="240" Column="1" />
+      <File FileName="TXM.Core/IO.cs" Line="886" Column="1" />
+      <File FileName="TXM.Core/Round.cs" Line="49" Column="1" />
+      <File FileName="TXM.Core/Setting.cs" Line="46" Column="2" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -25,19 +25,18 @@
               <Node name="Pages" expanded="True" />
               <Node name="Shared" expanded="True" />
             </Node>
-            <Node name="TXM.Core" expanded="True">
-              <Node name="Rules">
-                <Node name="W40KKPRules.cs" selected="True" />
-              </Node>
-            </Node>
+            <Node name="TXM.Core" expanded="True" />
           </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <Xamarin.Addins.Core.Project ActiveDebugTarget="MyAppleMacCatalystID" />
   <MultiItemStartupConfigurations />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.ItemProperties.TXM PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <Xamarin.Addins.Core.Project ActiveDebugTarget="MyAppleMacCatalystID" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
 </Properties>
