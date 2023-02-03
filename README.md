@@ -36,8 +36,8 @@ IV.  User Manual
 * Fixed table number for player (e. g. wheel chair drivers, streaming/filming)  
 * Print pairing stripes for easy distribution and recollection  
 * Optional Teamprotection in the first round (not recommend at offical tournaments like Store Championships, Regionals and so on)  
-* CSV Import
-** save your participant excel list as csv and import it
+* CSV Import  
+** save your participant excel list as csv and import it  
 ** you can see and download an example here: [ImportCSVExample.CSV](https://github.com/Sharpdeveloper/TXM/blob/master/Examples/ImportCSVExample.CSV)
 
 
@@ -56,6 +56,7 @@ IV.  User Manual
 * Star Wars™: The Card Game
 * Star Wars™: X-Wing™ Miniatures Game
 * Star Wars™: X-Wing™ Miniatures Game Second Edition
+* Star Wars™: X-Wing™ Miniatures Game Second Edition - Legacy   
 * Star Wars™: X-Wing™ Miniatures Game 2.5 Edition
 * The 7th Age
 * Warhammer 40.000 (either sorted by Wins or sorted by Killpoints)
