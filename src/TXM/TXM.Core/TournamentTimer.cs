@@ -12,6 +12,9 @@ namespace TXM.Core
         private int defaultTime;
         private int startHour, startMin;
         private bool startTimeReached = true;
+        public bool RandomTime { get; set; }
+        public int RandomMins { get; set; }
+
         public int DefaultTime {
             get
             {
@@ -56,9 +59,17 @@ namespace TXM.Core
             Start();
         }
 
-        private void SetTime()
+        private void SetTime(bool reset = false)
         {
             min = DefaultTime;
+            if (RandomTime && !reset)
+            {
+                Random r = new Random();
+                if (r.Next(0, 2) == 0)
+                    min += r.Next(0, RandomMins + 1);
+                else
+                    min -= r.Next(0, RandomMins + 1);
+            }
             if (min > 60)
             {
                 hour = min / 60;
@@ -139,7 +150,7 @@ namespace TXM.Core
         public void ResetTimer()
         {
             Stop();
-            SetTime();
+            SetTime(true);
             AktZeit();
         }
 

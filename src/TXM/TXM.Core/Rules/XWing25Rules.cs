@@ -19,6 +19,7 @@ namespace TXM.Core
             DefaultMaxPoints = 20;
             Factions = new string[] { "First Order", "Galactic Empire", "Galactic Republic", "Rebel Alliance", "Resistance", "Scum and Villainy", "Separatist Allaince" };
             DefaultTime = 75;
+            DefaultRandomMins = 3;
             movName = "MP";
             base.name = name;
             hasScenarios = true;

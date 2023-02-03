@@ -27,7 +27,7 @@ namespace TXM
                 filter = new List<string>();
                 filterName = new List<string>();
             }
-            filter.Add("*." + _filter);
+            filter.Add(_filter);
             filterName.Add(_filtername);
         }
 
@@ -37,10 +37,10 @@ namespace TXM
             {
                 Filter = ""
             };
-            dlg.Filter += filterName[0] + " |" + filter[0];
+            dlg.Filter += filterName[0] + "|" + filter[0];
             for (int i = 1; i < filter.Count; i++)
-                dlg.Filter += "|" + filterName[i] + " |" + filter[i];
-            Nullable<bool> result = dlg.ShowDialog();
+                dlg.Filter += "|" + filterName[i] + "|" + filter[i];
+             Nullable<bool> result = dlg.ShowDialog();
             if (result == true)
                 FileName = dlg.FileName;
             return result == true;

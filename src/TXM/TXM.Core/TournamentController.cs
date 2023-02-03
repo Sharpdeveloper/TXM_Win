@@ -344,7 +344,13 @@ namespace TXM.Core
             }
 
             if (print)
-                Process.Start("file://" + file);
+            {
+                var uri = "file://" + file;
+                var psi = new ProcessStartInfo();
+                psi.UseShellExecute = true;
+                psi.FileName = uri;
+                Process.Start(psi);
+            }
 
             return file;
         }
@@ -352,8 +358,11 @@ namespace TXM.Core
         public void PrintScoreSheet()
         {
             string file = ActiveIO.PrintScoreSheet(ActiveTournament);
-
-            Process.Start("file://" + file);
+            var uri = "file://" + file;
+            var psi = new ProcessStartInfo();
+            psi.UseShellExecute = true;
+            psi.FileName = uri;
+            Process.Start(psi);
         }
 
         public void StartTimer(string startTime)
@@ -426,7 +435,7 @@ namespace TXM.Core
 
         public void ShowThanks(IInfoDialog iad)
         {
-            iad.SetText("Special Thanks to following Friends and Tester:\n\nBarlmoro - Tester, User and the Reason for at least half of the features.\ntgbrain - Teammate and tester\nKyle_Nemesis - Tester\nPhoton - User who finds every weird error\nN4-DO - Creater of the TXM-Logo\nMercya - Tester\nBackfire84 - Poweruser\nGreenViper - Tester");
+            iad.SetText("Special Thanks to following Friends and Tester:\n\nBarlmoro - Tester, User and the Reason for at least half of the features.\ntgbrain - Teammate and tester\nKyle_Nemesis - Tester\nPhoton - User who finds every weird error\nN4-DO - Creater of the TXM-Logo\nMercya - Tester\nBackfire84 - Poweruser\nGreenViper - Tester with the ability to find stranger errors\nCarnis - Tester");
             iad.ShowDialog();
         }
 
@@ -503,6 +512,41 @@ namespace TXM.Core
             }
 
             return ActiveTimer.DefaultTime.ToString();
+        }
+
+        public string SetRandomTime(string time)
+        {
+            try
+            {
+                ActiveTimer.RandomMins = Int32.Parse(time);
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    ActiveTimer.RandomMins = ActiveTournament.Rule.DefaultRandomMins;
+                }
+                catch (Exception)
+                {
+                    ActiveTimer.RandomMins = 0;
+                }
+            }
+
+            return ActiveTimer.RandomMins.ToString();
+        }
+
+        public string GetRandomTime()
+        {
+            if(ActiveTournament != null && ActiveTournament.Rule != null && ActiveTournament.Rule.DefaultRandomMins != 0)
+            {
+                ActiveTimer.RandomTime = true;
+                if (ActiveTimer.RandomMins != 0)
+                    return ActiveTimer.RandomMins.ToString();
+                else
+                    return SetRandomTime(ActiveTournament.Rule.DefaultRandomMins.ToString());
+            }
+            ActiveTimer.RandomTime = false;
+            return "";
         }
 
         public void SetImage()

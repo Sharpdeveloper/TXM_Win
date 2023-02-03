@@ -421,6 +421,7 @@ namespace TXM.GUI
                 Refresh();
                 DataGridPlayer.ItemsSource = tournamentController.ActiveTournament.Participants;
                 RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+                SetRandomTime();
             }
         }
 
@@ -481,7 +482,24 @@ namespace TXM.GUI
                     }
                     ButtonGetResults.ToolTip = ButtonGetResults.Content.ToString();
                 }
+                SetRandomTime();
             }
+        }
+
+        private void SetRandomTime()
+        {
+            string rand =  tournamentController.GetRandomTime();
+            if (tournamentController.GetRandomTime() != "")
+            {
+                CheckboxRandomTime.IsChecked = true;
+                TextBoxRandomTime.Text = rand;
+            }
+            else
+            {
+                CheckboxRandomTime.IsChecked = false;
+                TextBoxRandomTime.Text = "";
+            }
+            SetRandomStatus();
         }
 
         private void GetSeed(bool cut = false)
@@ -716,6 +734,10 @@ namespace TXM.GUI
         private void MenuItemOpenAutoSaveFolder_Click(object sender, RoutedEventArgs e)
         {
             tournamentController.ActiveIO.OpenAutosaveFolder();
+            if(tournamentController.ActiveTournament != null)
+            {
+                SetRandomTime();
+            }
         }
 
         private void MenuItemTSettings_Click(object sender, RoutedEventArgs e)
@@ -771,6 +793,8 @@ namespace TXM.GUI
             {
                 NewPlayerIsEnabled = true;
                 MenuItemTSettings.IsEnabled = tournamentController.ActiveTournament != null;
+                MenuItemBonusPoints.IsEnabled = tournamentController.ActiveTournament != null;
+                ButtonEndTournament.IsEnabled = tournamentController.ActiveTournament != null;
                 ButtonNewTournament.IsEnabled = true;
                 ButtonGOEPPImport.IsEnabled = true;
                 EditPlayerIsEnabled = tournamentController.ActiveTournament != null;
@@ -789,6 +813,8 @@ namespace TXM.GUI
                 else
                     NewPlayerIsEnabled = true;
                 MenuItemTSettings.IsEnabled = true;
+                MenuItemBonusPoints.IsEnabled = true; 
+                ButtonEndTournament.IsEnabled = true;
                 ButtonGOEPPExport.IsEnabled = true;
                 //ButtonEndTournament.IsEnabled = true;
                 EditPlayerIsEnabled = false;
@@ -967,10 +993,6 @@ namespace TXM.GUI
         private void MenuItemTimePause_Click(object sender, RoutedEventArgs e)
         {
             tournamentController.PauseTimer();
-            if (tournamentController.ActiveTimer.Started)
-                ButtonPause.Content = "Pause";
-            else
-                ButtonPause.Content = "Resume";
         }
 
         private void MenuItemTimeReset_Click(object sender, RoutedEventArgs e)
@@ -1065,6 +1087,7 @@ namespace TXM.GUI
                 SetGUIState(true);
                 DataGridPlayer.ItemsSource = tournamentController.ActiveTournament.Participants;
                 RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+                SetRandomTime();
             }
         }
 
@@ -1137,6 +1160,24 @@ namespace TXM.GUI
         {
             if (((ComboBox)sender).SelectedValue != null)
                 tournamentController.ActiveTournament.ChoosenScenario = ((ComboBoxItem)((ComboBox)sender).SelectedItem).Content.ToString();
+        }
+
+        private void CheckboxRandomTime_Click(object sender, RoutedEventArgs e)
+        {
+            SetRandomStatus();
+        }
+
+        private void SetRandomStatus()
+        {
+            tournamentController.ActiveTimer.RandomTime = CheckboxRandomTime.IsChecked == true;
+            TextBoxRandomTime.IsEnabled = CheckboxRandomTime.IsChecked == true;
+            LabelRandomMin.IsEnabled = CheckboxRandomTime.IsChecked == true;
+            LabelRandomPM.IsEnabled = CheckboxRandomTime.IsChecked == true;
+        }
+
+        private void TextBoxRandomTime_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBoxRandomTime.Text = tournamentController.SetRandomTime(TextBoxRandomTime.Text);
         }
     }
 }

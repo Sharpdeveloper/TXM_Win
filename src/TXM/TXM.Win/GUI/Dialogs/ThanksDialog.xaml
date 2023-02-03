@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TXM.GUI.Dialogs"
         mc:Ignorable="d"
-        Title="Thanks" Height="210px" Width="400px" ResizeMode="NoResize">
+        Title="Thanks" Height="225px" Width="400px" ResizeMode="NoResize">
         <Grid>
             <TextBox x:Name="textBox" TextWrapping="Wrap" Text="" IsEnabled="True" IsReadOnly="True"/>
 

@@ -127,6 +127,7 @@ namespace TXM.Core
         public int DefaultMaxPoints { get; protected set; }
         public string[] Factions { get; protected set; }
         public int DefaultTime { get; protected set; }
+        public int DefaultRandomMins { get; protected set; } = 0;
         public string MoVName
         {
             get

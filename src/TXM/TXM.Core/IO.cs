@@ -44,7 +44,7 @@ namespace TXM.Core
 
         public Tournament GOEPPImport()
         {
-            fileManager.AddFilter("gip", "GÖPP Import File");
+            fileManager.AddFilter("*.gip", "GÖPP Import File");
             if (fileManager.Open())
             {
                 try
@@ -116,7 +116,7 @@ namespace TXM.Core
 
         public void GOEPPExport(Tournament tournament)
         {
-            fileManager.AddFilter("gep", "GÖPP Export File");
+            fileManager.AddFilter("*.gep", "GÖPP Export File");
             if (!tournament.Single)
             {
                 tournament.SplitTeams();
@@ -169,7 +169,7 @@ namespace TXM.Core
 
         public Tournament CSVImport()
         {
-            fileManager.AddFilter("csv", "Excel File (CSV)");
+            fileManager.AddFilter("*.csv", "Excel File (CSV)");
             if (fileManager.Open())
             {
                 try
@@ -231,7 +231,7 @@ namespace TXM.Core
             StringBuilder sb = new StringBuilder();
             string title = tournament.Name + " - Table - Round " + tournament.DisplayedRound;
 
-            string head = "<!DOCTYPE html><html><head><title>" + title + "</title></head><body><h2>" + title + "</h2> <br />";
+            string head = "<!DOCTYPE html><meta charset=\"UTF-8\"><html><head><title>" + title + "</title></head><body><h2>" + title + "</h2> <br />";
             string tb = "<table>"; //Table begin
             string te = "</table>"; //Table end
             string rb = "<tr>"; //Table row begin
@@ -408,7 +408,7 @@ namespace TXM.Core
             else
                 title = tournament.Name + " - Pairings - Round " + tournament.DisplayedRound;
 
-            string head = "<!DOCTYPE html><html><head><title>" + title + "</title></head><body><h2>" + title + "</h2> <br />";
+            string head = "<!DOCTYPE html><meta charset=\"UTF-8\"><html><head><title>" + title + "</title></head><body><h2>" + title + "</h2> <br />";
             if (tournament.Rule.UsesScenarios)
             {
                 head += "<h3>Scenario: " + tournament.ActiveScenario + "</h3><br />";
@@ -588,7 +588,7 @@ namespace TXM.Core
             }
             else
             {
-                fileManager.AddFilter(Settings.FILEEXTENSION, Settings.FILEEXTENSIONSNAME);
+                fileManager.AddFilter("*." + Settings.FILEEXTENSION, Settings.FILEEXTENSIONSNAME);
                 if (fileManager.Save())
                 {
                     file = fileManager.FileName;
@@ -627,7 +627,7 @@ namespace TXM.Core
             }
             else
             {
-                fileManager.AddFilter(Settings.FILEEXTENSION, Settings.FILEEXTENSIONSNAME);
+                fileManager.AddFilter("*." + Settings.FILEEXTENSION, Settings.FILEEXTENSIONSNAME);
                 if (fileManager.Open())
                     file = fileManager.FileName;
                 else

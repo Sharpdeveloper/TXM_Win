@@ -41,8 +41,8 @@
                 <MenuItem x:Name="MenuItemChangePairing" Header="Change Pairings" IsEnabled="false" Click="ButtonChangePairing_Click"/>
                 <MenuItem x:Name="MenuItemResetLastResults" Header="Reset Last Results" IsEnabled="False" Click="MenuItemResetLastResults_Click"/>
                 <MenuItem x:Name="MenuItemTSettings" Header="Change Tournamentsettings" IsEnabled="False" Click="MenuItemTSettings_Click"/>
-                <MenuItem x:Name="ButtonEndTournament" Header="Calculate SoS for Won Byes" IsEnabled="true" Click="EndTournament_Click"/>
-                <MenuItem x:Name="MenuItemBonusPoints" Header="Award Bonus Points" IsEnabled="True" Click="MenuItemBonusPoints_Click"/>
+                <MenuItem x:Name="ButtonEndTournament" Header="Calculate SoS for Won Byes" IsEnabled="False" Click="EndTournament_Click"/>
+                <MenuItem x:Name="MenuItemBonusPoints" Header="Award Bonus Points" IsEnabled="False" Click="MenuItemBonusPoints_Click"/>
             </MenuItem>
             <MenuItem x:Name="MenuItemPlayerManagement" Header="Playermanagement">
                 <MenuItem x:Name="MenuItemNewPlayer"  Header="Create new Player" Click="NewPlayer_Click" IsEnabled="False"/>
@@ -112,25 +112,58 @@
         </Grid>
         <Grid Grid.Column="3" Grid.Row="2">
             <Label x:Name="LabelTime" Content="MM:SS" VerticalAlignment="Top" Height="40" FontSize="20" Margin="0,0,0,0" HorizontalAlignment="Center"/>
-            <Button x:Name="ButtonStartTimer" Content="Start" ToolTip="Start" VerticalAlignment="Top" Click="MenuItemTimeStart_Click" Margin="0,40,0,0" Height="20"/>
-            <Button x:Name="ButtonPause" Content="Pause" ToolTip="Pause" VerticalAlignment="Top" Click="MenuItemTimePause_Click" Margin="0,60,0,0" Height="20"/>
-            <Button x:Name="ButtonReset" Content="Reset" ToolTip="Reset" VerticalAlignment="Top" Click="MenuItemTimeReset_Click" Margin="0,80,0,0" Height="20"/>
-            <Button x:Name="ButtonSetImage" Content="Set Image" ToolTip="Set Image" VerticalAlignment="Top" Click="SetImage_Click" Margin="0,100,0,0" Height="20"/>
-            <TextBox x:Name="TextBoxTime" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,120,0,0" Height="20" Width="120" TextChanged="TextBoxTime_TextChanged"/>
-            <Label Content="Min" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,117,0,0" Height="25" Width="30"/>
-            <Slider x:Name="SliderText" HorizontalAlignment="Center" Margin="0,140,0,22" Height="20" VerticalAlignment="Top" Maximum="2" Minimum="1" SmallChange="1" Width="50" ValueChanged="SliderColor_Changed"/>
-            <Label x:Name="LabelWhiteText" Content="White" HorizontalAlignment="Left" Margin="0,137,0,0" Height="25" VerticalAlignment="Top"/>
-            <Label x:Name="LabelBlackText" Content="Black" HorizontalAlignment="Right" Margin="0,137,0,0" Height="25" VerticalAlignment="Top"/>
-            <Slider x:Name="SliderSize" HorizontalAlignment="Center" Margin="0,160,0,22" Height="20" VerticalAlignment="Top" Maximum="100" Minimum="1" SmallChange="1" Width="75" ValueChanged="SliderSize_Changed"/>
-            <Label x:Name="LabelSmall" Content="Small" HorizontalAlignment="Left" Margin="0,157,0,0" Height="25" VerticalAlignment="Top"/>
-            <Label x:Name="LabelBig" Content="Large" HorizontalAlignment="Right" Margin="0,157,0,0" Height="25" VerticalAlignment="Top"/>
-            <Label x:Name="LabelTimerStart" Content="Start Timer at" HorizontalAlignment="Left" Margin="0,180,0,0" Height="25" VerticalAlignment="Top"/>
-            <TextBox x:Name="TextBoxStartTime" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,205,0,0" Height="20" Width="100"/>
-            <Label Content="HH:MM" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,202,0,0" Height="25" Width="50"/>
-            <Label x:Name="LabelHideHint" Content="H/S locked/edited rows." HorizontalAlignment="Left" Margin="0,230,0,0" Height="25" VerticalAlignment="Top"/>
-            <Slider x:Name="SliderHide" HorizontalAlignment="Center" Margin="0,250,0,22" Height="20" VerticalAlignment="Top" Maximum="2" Minimum="1" SmallChange="1" Width="75" ValueChanged="SliderHide_ValueChanged"/>
-            <Label x:Name="LabelShow" Content="Show" HorizontalAlignment="Left" Margin="0,247,0,0" Height="25" VerticalAlignment="Top"/>
-            <Label x:Name="LabelHide" Content="Hide" HorizontalAlignment="Right" Margin="0,247,0,0" Height="25" VerticalAlignment="Top"/>
+            <Button x:Name="ButtonStartTimer" ToolTip="Start" VerticalAlignment="Top" Click="MenuItemTimeStart_Click" Margin="0,40,0,0" Height="25" Width="50" HorizontalAlignment="Left">
+                <Image Source="pack://application:,,,/Resources/icons8-play-96.png" Width="24" Height="24" />
+            </Button>
+            <Button x:Name="ButtonPause" ToolTip="Pause/Resume" VerticalAlignment="Top" Click="MenuItemTimePause_Click" Margin="0,40,0,0" Height="25" Width="50" HorizontalAlignment="Center">
+                <Image Source="pack://application:,,,/Resources/icons8-pause-96.png" Width="24"  Height="24" />
+            </Button>
+            <Button x:Name="ButtonReset" ToolTip="Reset" VerticalAlignment="Top" Click="MenuItemTimeReset_Click" Margin="0,40,0,0" Height="25" Width="50" HorizontalAlignment="Right">
+                <Image Source="pack://application:,,,/Resources/icons8-stop-96.png" Width="24"  Height="24" />
+            </Button>
+
+            <Separator VerticalAlignment="Top" Margin="0,65,0,0" Height="5px" />
+            
+            <Label x:Name="LabelTimerDefault" Content="Set new Default Time" HorizontalAlignment="Left" Margin="0,70,0,0" Height="25" VerticalAlignment="Top"/>
+            <TextBox x:Name="TextBoxTime" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,95,0,0" Height="20" Width="120" TextChanged="TextBoxTime_TextChanged"/>
+            <Label Content="Min" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,92,0,0" Height="25" Width="30"/>
+
+            <Separator VerticalAlignment="Top" Margin="0,115,0,0" Height="5px" />
+
+            <CheckBox x:Name="CheckboxRandomTime" Content="Random +/- on Timer?" HorizontalAlignment="Left" Margin="0,120,0,0" Height="25" VerticalAlignment="Top" Click="CheckboxRandomTime_Click"/>
+            <Label x:Name="LabelRandomPM" Content="+/-" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,142,0,0" Height="25" Width="30" IsEnabled="false"/>
+            <TextBox x:Name="TextBoxRandomTime" Text="" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,145,0,0" Height="20" Width="90" IsEnabled="false" TextChanged="TextBoxRandomTime_TextChanged"/>
+            <Label x:Name="LabelRandomMin" Content="Min" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,142,0,0" Height="25" Width="30" IsEnabled="False"/>
+
+            <Separator VerticalAlignment="Top" Margin="0,170,0,0" Height="5px" />
+
+            <Label x:Name="LabelTimerStart" Content="Start Timer at" HorizontalAlignment="Left" Margin="0,175,0,0" Height="25" VerticalAlignment="Top"/>
+            <TextBox x:Name="TextBoxStartTime" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,200,0,0" Height="20" Width="100"/>
+            <Label Content="HH:MM" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,197,0,0" Height="25" Width="50"/>
+
+            <Separator VerticalAlignment="Top" Margin="0,225,0,0" Height="5px" />
+
+            <Label x:Name="LabelTimerText" Content="Customize Timers Text" HorizontalAlignment="Left" Margin="0,230,0,0" Height="25" VerticalAlignment="Top"/>
+            <Slider x:Name="SliderText" HorizontalAlignment="Center" Margin="0,255,0,22" Height="20" VerticalAlignment="Top" Maximum="2" Minimum="1" SmallChange="1" Width="50" ValueChanged="SliderColor_Changed"/>
+            <Label x:Name="LabelWhiteText" Content="White" HorizontalAlignment="Left" Margin="0,252,0,0" Height="25" VerticalAlignment="Top"/>
+            <Label x:Name="LabelBlackText" Content="Black" HorizontalAlignment="Right" Margin="0,252,0,0" Height="25" VerticalAlignment="Top"/>
+            <Slider x:Name="SliderSize" HorizontalAlignment="Center" Margin="0,275,0,22" Height="20" VerticalAlignment="Top" Maximum="100" Minimum="1" SmallChange="1" Width="50" ValueChanged="SliderSize_Changed"/>
+            <Label x:Name="LabelSmall" Content="Small" HorizontalAlignment="Left" Margin="0,272,0,0" Height="25" VerticalAlignment="Top"/>
+            <Label x:Name="LabelBig" Content="Large" HorizontalAlignment="Right" Margin="0,272,0,0" Height="25" VerticalAlignment="Top"/>
+
+            <Separator VerticalAlignment="Top" Margin="0,300,0,0" Height="5px" />
+
+            <Label x:Name="LabelTimerBG" Content="Set Timer Background" HorizontalAlignment="Left" Margin="0,305,0,0" Height="25" VerticalAlignment="Top"/>
+            <Button x:Name="ButtonSetImage" Content="Load Image" ToolTip="Set Image" VerticalAlignment="Top" Click="SetImage_Click" Margin="0,330,0,0" Height="20"/>
+
+            <Separator VerticalAlignment="Top" Margin="0,355,0,0" Height="5px" />
+
+            <Label x:Name="LabelHideHint" Content="Hide or show locked" HorizontalAlignment="Left" Margin="0,360,0,0" Height="25" VerticalAlignment="Top"/>
+            <Label x:Name="LabelHideHint2" Content="or edited rows:" HorizontalAlignment="Left" Margin="0,380,0,0" Height="25" VerticalAlignment="Top"/>
+            <Slider x:Name="SliderHide" HorizontalAlignment="Center" Margin="0,405,0,22" Height="20" VerticalAlignment="Top" Maximum="2" Minimum="1" SmallChange="1" Width="50" ValueChanged="SliderHide_ValueChanged"/>
+            <Label x:Name="LabelShow" Content="Show" HorizontalAlignment="Left" Margin="0,402,0,0" Height="25" VerticalAlignment="Top"/>
+            <Label x:Name="LabelHide" Content="Hide" HorizontalAlignment="Right" Margin="0,402,0,0" Height="25" VerticalAlignment="Top"/>
+            
             <Image x:Name="ImageLogo" VerticalAlignment="Bottom" Source="pack://application:,,,/Resources/TXM_Logo.png"/>
         </Grid>
     </Grid>
