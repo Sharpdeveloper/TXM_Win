@@ -805,6 +805,7 @@ namespace TXM.GUI
                 ButtonGetResults.IsEnabled = true;
                 ButtonGetResults.Content = "Start Tournament";
                 DisqualifyPlayerIsEnabled = false;
+                MenuItemPrintHeader.IsEnabled = tournamentController.ActiveTournament != null;
             }
             if (tournamentStart)
             {

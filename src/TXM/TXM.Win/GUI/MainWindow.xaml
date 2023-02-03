@@ -29,7 +29,7 @@
                     <MenuItem x:Name="MenuItemCSVImport" Header="Excel (CSV) Import" Click="MenuItemCSVImport_Click"/>
                     <MenuItem x:Name="ButtonGOEPPExport" Header="T3 Export" IsEnabled="false" Click="GOEPPExport_Click"/>
                 </MenuItem>
-                <MenuItem x:Name="MenuItemPrintHeader" Header="Print">
+                <MenuItem x:Name="MenuItemPrintHeader" Header="Print" IsEnabled="False">
                     <MenuItem x:Name="MenuItemPrint" Header="Print Table" Click="MenuItemPrint_Click"/>
                     <MenuItem x:Name="MenuItemPrintPairing" Header="Print Pairings (without Results)" Click="MenuItemPrintPairing_Click"/>
                     <MenuItem x:Name="MenuItemPrintResult" Header="Print Pairings (with Results)" Click="MenuItemPrintResult_Click"/>
