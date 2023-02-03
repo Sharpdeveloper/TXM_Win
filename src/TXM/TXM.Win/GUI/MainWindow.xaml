@@ -165,7 +165,6 @@
             <Label x:Name="LabelHide" Content="Hide" HorizontalAlignment="Right" Margin="0,402,0,0" Height="25" VerticalAlignment="Top"/>
             
             <Image x:Name="ImageLogo" VerticalAlignment="Bottom" Source="pack://application:,,,/Resources/TXM_Logo.png"/>
-       
         </Grid>
     </Grid>
 </Window>
