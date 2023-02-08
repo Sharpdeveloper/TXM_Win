@@ -5,3 +5,5 @@
 bin/
 obj/
 .vs/
+src/TXM/.vs/TXM/xs/UserPrefs.xml
+src/TXM/.vs/TXM/xs/project-cache/TXM.Core-Debug.json
