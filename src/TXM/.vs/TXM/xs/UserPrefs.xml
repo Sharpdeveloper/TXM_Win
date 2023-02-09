@@ -1,4 +1,6 @@
 ﻿<Properties StartupConfiguration="{2C8426CB-4EA4-49A8-AECE-0B196B5BE5EE}|Default">
+  <Xamarin.Addins.Core.Project ActiveDebugTarget="MyAppleMacCatalystID" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints />
   <MonoDevelop.Ide.Workbench ActiveDocument="TXM.Core/TournamentController.cs">
     <Files>
       <File FileName="TXM/Pages/Pairings.razor" />
@@ -9,13 +11,13 @@
       <File FileName="TXM/App.razor" />
       <File FileName="TXM/Shared/MainLayout.razor" />
       <File FileName="TXM/_Imports.razor" />
-      <File FileName="TXM.Core/Tournament.cs" Line="1286" Column="1" />
-      <File FileName="TXM.Core/Rules/XWing25Rules.cs" Line="96" Column="1" />
+      <File FileName="TXM.Core/Tournament.cs" />
+      <File FileName="TXM.Core/Rules/XWing25Rules.cs" />
       <File FileName="TXM.Core/Rules/XWingRules.cs" />
-      <File FileName="TXM.Core/Rules/AbstractRules.cs" Line="240" Column="1" />
-      <File FileName="TXM.Core/IO.cs" Line="886" Column="1" />
-      <File FileName="TXM.Core/Round.cs" Line="49" Column="1" />
-      <File FileName="TXM.Core/Setting.cs" Line="46" Column="2" />
+      <File FileName="TXM.Core/Rules/AbstractRules.cs" />
+      <File FileName="TXM.Core/IO.cs" />
+      <File FileName="TXM.Core/Round.cs" />
+      <File FileName="TXM.Core/Setting.cs" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -31,12 +33,8 @@
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.ItemProperties.TXM PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <Xamarin.Addins.Core.Project ActiveDebugTarget="MyAppleMacCatalystID" />
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
