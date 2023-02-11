@@ -797,6 +797,7 @@ namespace TXM.GUI
                 ButtonEndTournament.IsEnabled = tournamentController.ActiveTournament != null;
                 ButtonNewTournament.IsEnabled = true;
                 ButtonGOEPPImport.IsEnabled = true;
+                MenuItemListFortressExport.IsEnabled = true;
                 EditPlayerIsEnabled = tournamentController.ActiveTournament != null;
                 RemovePlayerIsEnabled = tournamentController.ActiveTournament != null;
                 ChangePairingIsEnabled = tournamentController.ActiveTournament.Pairings != null;
@@ -806,6 +807,8 @@ namespace TXM.GUI
                 ButtonGetResults.Content = "Start Tournament";
                 DisqualifyPlayerIsEnabled = false;
                 MenuItemPrintHeader.IsEnabled = tournamentController.ActiveTournament != null;
+                MenuItemCSVAdd.IsEnabled = tournamentController.ActiveTournament != null;
+                MenuItemListFortressExport.IsEnabled = tournamentController.ActiveTournament != null;
             }
             if (tournamentStart)
             {
@@ -817,6 +820,7 @@ namespace TXM.GUI
                 MenuItemBonusPoints.IsEnabled = true; 
                 ButtonEndTournament.IsEnabled = true;
                 ButtonGOEPPExport.IsEnabled = true;
+                MenuItemListFortressExport.IsEnabled = true;
                 //ButtonEndTournament.IsEnabled = true;
                 EditPlayerIsEnabled = false;
                 RemovePlayerIsEnabled = false;
@@ -1179,6 +1183,17 @@ namespace TXM.GUI
         private void TextBoxRandomTime_TextChanged(object sender, TextChangedEventArgs e)
         {
             TextBoxRandomTime.Text = tournamentController.SetRandomTime(TextBoxRandomTime.Text);
+        }
+
+        private void MenuItemCSVAdd_Click(object sender, RoutedEventArgs e)
+        {
+            tournamentController.AddCSV();
+            RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+        }
+
+        private void MenuItemListFortressExport_Click(object sender, RoutedEventArgs e)
+        {
+            tournamentController.GetJSON(new WindowsClipboard());
         }
     }
 }

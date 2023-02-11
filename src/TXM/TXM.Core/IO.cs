@@ -203,7 +203,7 @@ namespace TXM.Core
             return null;
         }
 
-        public void CSVImportAdd(ref Tournament tournament)
+        public void CSVImportAdd(Tournament tournament)
         {
             fileManager.AddFilter("*.csv", "Excel File (CSV)");
             if (fileManager.Open())
@@ -225,10 +225,10 @@ namespace TXM.Core
                     for (int i = 1; i < csvFile.Count; i++)
                     {
                         var player = ConvertCSVToPlayer(csvFile[i]);
-                        var p = (Player) tournament.Participants.Where(x => x.Nickname == player.Nickname);
+                        var p = (Player) tournament.Participants.Where(x => x.Nickname == player.Nickname).FirstOrDefault(); ;
                         if (p == null)
                         {
-                            p = (Player) tournament.Participants.Where(x => x.Name == player.Name).Where(x => x.Firstname == player.Firstname);
+                            p = (Player) tournament.Participants.Where(x => x.Name == player.Name).Where(x => x.Firstname == player.Firstname).FirstOrDefault();
                         }
                         if(p == null)
                         {

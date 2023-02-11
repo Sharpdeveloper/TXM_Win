@@ -6,18 +6,18 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace TXM.Core
 {
     [Serializable]
-    public partial class Player:ObservableObject
+    public partial class Player//:ObservableObject
     {
         private static int currentID = 0;
         private int version = 1;
 
         #region Player Informations
-        [ObservableProperty]
-        public string name;
-        //public string Name { get; set; }
-        [ObservableProperty]
-        public string firstname;
-        //public string Firstname { get; set; }
+        //[ObservableProperty]
+        //public string name;
+        public string Name { get; set; }
+        //[ObservableProperty]
+        //public string firstname;
+        public string Firstname { get; set; }
         public string Nickname { get; set; }
         public int TableNo { get; set; }
         public string DisplayName

@@ -47,7 +47,7 @@ namespace TXM.GUI.Dialogs
             nicknameRequiered = false;
             TextBoxTableNR.Text = player.TableNo.ToString();
             CheckboxPresent.IsChecked = CurrentPlayer.Present;
-
+            TextBoxSquadList.Text = player.SquadList;
         }
 
         public Player GetPlayer()
@@ -61,6 +61,7 @@ namespace TXM.GUI.Dialogs
             player.Paid = CheckboxPayed.IsChecked == true;
             player.TableNo = TableNr;
             player.Present = CheckboxPresent.IsChecked == true;
+            player.SquadList = TextBoxSquadList.Text;
             return player;
         }
 

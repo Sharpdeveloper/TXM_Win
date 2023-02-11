@@ -493,7 +493,7 @@ namespace TXM.Core
             }
         }
 
-        public void GetJSON(IOutputDialog iod, IClipboard ic)
+        public void GetJSON(IClipboard ic)
         {
             (string json, string file) result = ActiveIO.GetJSON(ActiveTournament);
             ic.SetText(result.json);
@@ -606,6 +606,11 @@ namespace TXM.Core
         public List<Pairing> AwardBonusPoints()
         {
             return ActiveTournament.GetBonusSeed();
+        }
+
+        public void AddCSV()
+        {
+            ActiveIO.CSVImportAdd(ActiveTournament);
         }
     }
 }

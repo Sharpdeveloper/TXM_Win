@@ -27,7 +27,9 @@
                 <MenuItem x:Name="MenuItemImportExport" Header="Import/Export">
                     <MenuItem x:Name="ButtonGOEPPImport" Header="T3 Import" Click="GOEPPImport_Click"/>
                     <MenuItem x:Name="MenuItemCSVImport" Header="Excel (CSV) Import" Click="MenuItemCSVImport_Click"/>
+                    <MenuItem x:Name="MenuItemCSVAdd" Header="Add Information from Excel (CSV)" IsEnabled="False" Click="MenuItemCSVAdd_Click"/>
                     <MenuItem x:Name="ButtonGOEPPExport" Header="T3 Export" IsEnabled="false" Click="GOEPPExport_Click"/>
+                    <MenuItem x:Name="MenuItemListFortressExport" Header="Export for ListFortress" IsEnabled="false" Click="MenuItemListFortressExport_Click"/>
                 </MenuItem>
                 <MenuItem x:Name="MenuItemPrintHeader" Header="Print" IsEnabled="False">
                     <MenuItem x:Name="MenuItemPrint" Header="Print Table" Click="MenuItemPrint_Click"/>
