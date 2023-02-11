@@ -374,7 +374,9 @@ namespace TXM.Core
             sb.Append(re);
             sb.Append(nl);
 
-            foreach (Player p in tournament.Rounds[tournament.Rounds.Count - 1].Participants)
+            var participants = tournament.Rounds.Count >= 1 ? tournament.Rounds[tournament.Rounds.Count - 1].Participants : tournament.Participants;
+
+            foreach (Player p in participants)
             {
                 sb.Append(rb);
                 sb.Append(db);
@@ -452,6 +454,17 @@ namespace TXM.Core
 
         private string WritePairings(Tournament tournament, bool bbcode, bool result)
         {
+            if(tournament.Rounds.Count == 0)
+            {
+                if (bbcode)
+                {
+                    return "[b]No Round started => No Pairings yet[/b]";
+                }
+                else
+                {
+                    return "<html><body><h1>No Round started => No Pairings yet</h1></body></html>";
+                }
+            }
             StringBuilder sb = new StringBuilder();
             string title = "";
             if (result)
