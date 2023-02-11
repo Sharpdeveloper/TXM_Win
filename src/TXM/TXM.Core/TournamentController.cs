@@ -493,6 +493,13 @@ namespace TXM.Core
             }
         }
 
+        public void GetJSON(IOutputDialog iod, IClipboard ic)
+        {
+            (string json, string file) result = ActiveIO.GetJSON(ActiveTournament);
+            ic.SetText(result.json);
+            ActiveIO.ShowMessage($"The Tournament is in your clipboard you can paste it to listfortress.\nAlternative you finde the here: {result.file}");
+        }
+
         public string SetTimer(string time)
         {
             try

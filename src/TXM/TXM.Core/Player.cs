@@ -349,12 +349,12 @@ namespace TXM.Core
 
 		public Player(SerializationInfo info, StreamingContext context)
 		{
-			version = (int)info.GetValue("Player_Version", typeof(int));
-			if (version == 0 || version == 1)
+			int _version = (int)info.GetValue("Player_Version", typeof(int));
+			if (_version == 0 || _version == 1)
 			{
 				currentID = (int)info.GetValue("Player_currentID", typeof(int));
                 Name = (string)info.GetValue("Player_Name", typeof(string));
-                if (version == 0)
+                if (_version == 0)
                     Firstname = (string)info.GetValue("Player_Forename", typeof(string));
                 else
                     Firstname = (string)info.GetValue("Player_Firstname", typeof(string));

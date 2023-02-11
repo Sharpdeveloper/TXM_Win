@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
-//using System.Drawing;
+using TXM.Core.Export.JSON;
 
 namespace TXM.Core
 {
@@ -184,8 +184,8 @@ namespace TXM.Core
                         }
                     }
                     //Fileformat:
-                    //0          1         2        3    4       5    6          7         
-                    //First Name;Last Name;Nickname;Team;Faction;Paid;List given;Won Bye
+                    //0          1         2        3    4       5    6          7       8  
+                    //First Name;Last Name;Nickname;Team;Faction;Paid;List given;Won Bye;Squadlist
                     Tournament tournament = new Tournament(fileManager.FileName.Split(Path.DirectorySeparatorChar)[fileManager.FileName.Split(Path.DirectorySeparatorChar).Length - 1].Split('.')[0], null);
                     for (int i = 1; i < csvFile.Count; i++)
                     {
@@ -203,20 +203,71 @@ namespace TXM.Core
             return null;
         }
 
+        public void CSVImportAdd(ref Tournament tournament)
+        {
+            fileManager.AddFilter("*.csv", "Excel File (CSV)");
+            if (fileManager.Open())
+            {
+                try
+                {
+                    List<string> csvFile = new List<string>();
+                    using (StreamReader sr = new StreamReader(fileManager.FileName))
+                    {
+                        string line;
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            csvFile.Add(line);
+                        }
+                    }
+                    //Fileformat:
+                    //0          1         2        3    4       5    6          7       8  
+                    //First Name;Last Name;Nickname;Team;Faction;Paid;List given;Won Bye;Squadlist
+                    for (int i = 1; i < csvFile.Count; i++)
+                    {
+                        var player = ConvertCSVToPlayer(csvFile[i]);
+                        var p = (Player) tournament.Participants.Where(x => x.Nickname == player.Nickname);
+                        if (p == null)
+                        {
+                            p = (Player) tournament.Participants.Where(x => x.Name == player.Name).Where(x => x.Firstname == player.Firstname);
+                        }
+                        if(p == null)
+                        {
+                            tournament.AddPlayer(player);
+                        }
+                        else
+                        {
+                            p.WonBye = player.WonBye;
+                            p.SquadList = player.SquadList;
+                            p.ListGiven = player.ListGiven;
+                            if(!p.ListGiven && p.SquadList != String.Empty)
+                            {
+                                p.ListGiven = true;
+                            }
+                        }
+                        
+                    }
+                }
+                catch (Exception)
+                {
+                    messageManager.Show("Please chosse a valid csv-File.");
+                    return;
+                }
+            }
+        }
+
         private Player ConvertCSVToPlayer(string line)
         {
             string[] splitedLine = line.Split(';');
             try
             {
-                splitedLine[7].ToString();
+                splitedLine[8].ToString();
             }
             catch (Exception)
             {
                 splitedLine = line.Split(',');
             }
-            return new Player(0, splitedLine[0], splitedLine[1], splitedLine[2], splitedLine[4], "", splitedLine[3], splitedLine[5].ToUpper() == "X", splitedLine[6].ToUpper() == "X") { WonBye = splitedLine[7].ToUpper() == "X" };
+            return new Player(0, splitedLine[0], splitedLine[1], splitedLine[2], splitedLine[4], "", splitedLine[3], splitedLine[5].ToUpper() == "X", splitedLine[6].ToUpper() == "X") { WonBye = splitedLine[7].ToUpper() == "X", SquadList = splitedLine[8] };
         }
-
 
         private void WriteLine(string file, string line)
         {
@@ -531,6 +582,20 @@ namespace TXM.Core
             {
                 return WritePairings(tournament, true, result);
             }
+        }
+
+        public (string, string) GetJSON(Tournament tournament)
+        {
+            (string json, string file) r = ("", "");
+            r.json = JSONCreator.TournamentToListFortress(tournament);
+            r.file = Path.Combine(SavePath, $"{tournament.Name}.json");
+            if (!Directory.Exists(SavePath))
+                Directory.CreateDirectory(SavePath);
+            using (StreamWriter sw = new StreamWriter(r.file, false))
+            {
+                sw.Write(r.json);
+            }
+            return r;
         }
 
         public string Print(Tournament tournament)

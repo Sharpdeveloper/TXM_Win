@@ -1,33 +1,16 @@
 ﻿<Properties StartupConfiguration="{2C8426CB-4EA4-49A8-AECE-0B196B5BE5EE}|Default">
   <Xamarin.Addins.Core.Project ActiveDebugTarget="MyAppleMacCatalystID" />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints />
-  <MonoDevelop.Ide.Workbench ActiveDocument="TXM.Core/TournamentController.cs">
-    <Files>
-      <File FileName="TXM/Pages/Pairings.razor" />
-      <File FileName="TXM.Core/TournamentController.cs" Line="17" Column="50" />
-      <File FileName="TXM/Pages/Rounds.razor" />
-      <File FileName="TXM/Pages/Index.razor" />
-      <File FileName="TXM/Program.cs" />
-      <File FileName="TXM/App.razor" />
-      <File FileName="TXM/Shared/MainLayout.razor" />
-      <File FileName="TXM/_Imports.razor" />
-      <File FileName="TXM.Core/Tournament.cs" />
-      <File FileName="TXM.Core/Rules/XWing25Rules.cs" />
-      <File FileName="TXM.Core/Rules/XWingRules.cs" />
-      <File FileName="TXM.Core/Rules/AbstractRules.cs" />
-      <File FileName="TXM.Core/IO.cs" />
-      <File FileName="TXM.Core/Round.cs" />
-      <File FileName="TXM.Core/Setting.cs" />
-    </Files>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="TXM" expanded="True">
-            <Node name="TXM" expanded="True">
-              <Node name="Pages" expanded="True" />
-              <Node name="Shared" expanded="True" />
+            <Node name="TXM.Core" expanded="True">
+              <Node name="IO.cs" selected="True" />
             </Node>
-            <Node name="TXM.Core" expanded="True" />
           </Node>
         </State>
       </Pad>

@@ -8,8 +8,14 @@
 
   <ItemGroup>
     <None Remove="CommunityToolkit.Mvvm" />
+    <None Remove="Export\" />
+    <None Remove="Export\JSON\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Export\" />
+    <Folder Include="Export\JSON\" />
   </ItemGroup>
 </Project>

@@ -96,8 +96,8 @@ namespace TXM.Core
 
 		public Pairing(SerializationInfo info, StreamingContext context)
 		{
-			version = (int)info.GetValue("Pairing_Version", typeof(int));
-			if (version == 0)
+            int _version = (int)info.GetValue("Pairing_Version", typeof(int));
+			if (_version == 0)
 			{
 				tableNr = (int)info.GetValue("Pairing_tableNr", typeof(int));
                 TableNr = (int)info.GetValue("Pairing_TableNr", typeof(int));
@@ -110,9 +110,8 @@ namespace TXM.Core
                 Player1Points = 0;
                 Player2Points = 0;
                 Locked = false;
-                version = 2;
 			}
-            else if (version == 1)
+            else if (_version == 1)
             {
                 tableNr = (int)info.GetValue("Pairing_tableNr", typeof(int));
                 TableNr = (int)info.GetValue("Pairing_TableNr", typeof(int));
@@ -125,7 +124,6 @@ namespace TXM.Core
                 Player1Points = (int)info.GetValue("Pairing_Player1Points", typeof(int));
                 Player2Points = (int)info.GetValue("Pairing_Player2Points", typeof(int));
                 Locked = false;
-                version = 2;
             }
             else if (version == 2)
             {

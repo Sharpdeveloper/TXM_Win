@@ -27,8 +27,8 @@ namespace TXM.Core
 
 		public Result(SerializationInfo info, StreamingContext context)
 		{
-			version = (int)info.GetValue("Result_Version", typeof(int));
-			if (version == 0)
+            int _version = (int)info.GetValue("Result_Version", typeof(int));
+			if (_version == 0)
 			{
                 Enemy = (Player)info.GetValue("Result_Enemy", typeof(Player));
                 Destroyed = (int)info.GetValue("Result_Destroyed", typeof(int));
@@ -36,9 +36,8 @@ namespace TXM.Core
                 MaxPoints = (int)info.GetValue("Result_MaxPoints", typeof(int));
                 WinnerID = (int)info.GetValue("Result_WinnerID", typeof(int));
                 TournamentPoints = 0;
-                version = 1;
 			}
-            else if (version == 1)
+            else if (_version == 1)
             {
                 Enemy = (Player)info.GetValue("Result_Enemy", typeof(Player));
                 Destroyed = (int)info.GetValue("Result_Destroyed", typeof(int));

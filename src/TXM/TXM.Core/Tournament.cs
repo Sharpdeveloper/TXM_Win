@@ -449,7 +449,7 @@ namespace TXM.Core
 
             if (Rounds == null)
                 Rounds = new List<Round>();
-            Rounds.Add(new Round(Pairings, Participants, ChoosenScenario));
+            Rounds.Add(new Round(Rounds.Count + 1, Pairings, Participants, ChoosenScenario));
             DisplayedRound = Rounds.Count;
             CheckTableNr();
 
@@ -658,7 +658,7 @@ namespace TXM.Core
 
             if (Rounds == null)
                 Rounds = new List<Round>();
-            Rounds.Add(new Round(Pairings, Participants, ChoosenScenario));
+            Rounds.Add(new Round(Rounds.Count + 1, Pairings, Participants, ChoosenScenario));
             DisplayedRound = Rounds.Count;
 
             return Pairings;
@@ -1064,7 +1064,7 @@ namespace TXM.Core
 
             if (Rounds == null)
                 Rounds = new List<Round>();
-            Rounds.Add(new Round(Pairings, Participants, ChoosenScenario));
+            Rounds.Add(new Round(Rounds.Count + 1, Pairings, Participants, ChoosenScenario));
             DisplayedRound = Rounds.Count;
             bonus = true;
             return Pairings;
@@ -1072,11 +1072,11 @@ namespace TXM.Core
 
         public Tournament(SerializationInfo info, StreamingContext context)
         {
-            version = (int)info.GetValue("Tournament_Version", typeof(int));
+            int _version = (int)info.GetValue("Tournament_Version", typeof(int));
             WonBye = Player.GetWonBye();
             Bye = Player.GetBye();
             Bonus = Player.GetBonus();
-            if (version == 0)
+            if (_version == 0)
             {
                 Participants = (List<Player>)info.GetValue("Tournament_Participants", typeof(List<Player>));
                 Teamplayer = (List<Player>)info.GetValue("Tournament_Teamplayer", typeof(List<Player>));
@@ -1125,9 +1125,8 @@ namespace TXM.Core
                 bonus = false;
                 ActiveScenarios = new List<string>();
                 ChoosenScenario = "";
-                version = 3;
             }
-            else if (version == 1)
+            else if (_version == 1)
             {
                 Participants = (List<Player>)info.GetValue("Tournament_Participants", typeof(List<Player>));
                 Teamplayer = (List<Player>)info.GetValue("Tournament_Teamplayer", typeof(List<Player>));
@@ -1163,9 +1162,8 @@ namespace TXM.Core
                 bonus = false;
                 ActiveScenarios = new List<string>();
                 ChoosenScenario = "";
-                version = 3;
             }
-            else if (version == 2)
+            else if (_version == 2)
             {
                 Participants = (List<Player>)info.GetValue("Tournament_Participants", typeof(List<Player>));
                 Teamplayer = (List<Player>)info.GetValue("Tournament_Teamplayer", typeof(List<Player>));
@@ -1201,9 +1199,8 @@ namespace TXM.Core
                 bonus = (bool)info.GetValue("Tournament_bonus", typeof(bool));
                 ActiveScenarios = new List<string>();
                 ChoosenScenario = "";
-                version = 3;
             }
-            else if (version == 3)
+            else if (_version == 3)
             {
                 Participants = (List<Player>)info.GetValue("Tournament_Participants", typeof(List<Player>));
                 Teamplayer = (List<Player>)info.GetValue("Tournament_Teamplayer", typeof(List<Player>));
