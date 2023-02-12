@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
+using TXM.Core.Logic;
+
 namespace TXM.Core
 {
     public class TournamentController

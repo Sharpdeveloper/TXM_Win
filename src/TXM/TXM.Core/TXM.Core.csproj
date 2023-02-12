@@ -10,6 +10,9 @@
     <None Remove="CommunityToolkit.Mvvm" />
     <None Remove="Export\" />
     <None Remove="Export\JSON\" />
+    <None Remove="Models\" />
+    <None Remove="ViewModels\" />
+    <None Remove="Logic\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
@@ -17,5 +20,8 @@
   <ItemGroup>
     <Folder Include="Export\" />
     <Folder Include="Export\JSON\" />
+    <Folder Include="Models\" />
+    <Folder Include="ViewModels\" />
+    <Folder Include="Logic\" />
   </ItemGroup>
 </Project>

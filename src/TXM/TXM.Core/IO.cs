@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
 using TXM.Core.Export.JSON;
+using TXM.Core.Logic;
 
 namespace TXM.Core
 {

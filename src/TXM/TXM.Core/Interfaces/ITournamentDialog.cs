@@ -1,4 +1,6 @@
-﻿namespace TXM.Core
+﻿using TXM.Core.Logic;
+
+namespace TXM.Core
 {
     public interface ITournamentDialog
     {

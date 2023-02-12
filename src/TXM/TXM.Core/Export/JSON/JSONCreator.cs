@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Text.Json;
 
+using TXM.Core.Logic;
+
 namespace TXM.Core.Export.JSON
 {
 	public class JSONCreator
@@ -24,7 +26,8 @@ namespace TXM.Core.Export.JSON
                 }).ToArray();
             JSONTournament tournament = new JSONTournament(t.Name, players, rounds);
 
-			return JsonSerializer.Serialize(tournament);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            return JsonSerializer.Serialize(tournament, options);
 		}
 	}
 }
