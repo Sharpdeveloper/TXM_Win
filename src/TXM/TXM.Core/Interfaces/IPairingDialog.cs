@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace TXM.Core
 {
     public interface IPairingDialog
     {
-        void SetPairings(List<Pairing> pairings);
-        void SetParticipants(List<Player> participants);
+        void SetPairings(ObservableCollection<Pairing> pairings);
+        void SetParticipants(ObservableCollection<Player> participants);
         void ShowDialog();
-        List<Pairing> GetPairings();
+        ObservableCollection<Pairing> GetPairings();
         bool GetDialogResult();
     }
 }

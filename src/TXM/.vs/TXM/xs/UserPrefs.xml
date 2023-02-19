@@ -1,23 +1,29 @@
-﻿<Properties StartupConfiguration="{2C8426CB-4EA4-49A8-AECE-0B196B5BE5EE}|Default">
-  <Xamarin.Addins.Core.Project ActiveDebugTarget="MyAppleMacCatalystID" />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.Workbench>
+﻿<Properties StartupConfiguration="{51654F8F-23D8-4C94-A46A-32A840BB5AE8}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="TXM.Core/IO.cs">
+    <Files>
+      <File FileName="TXM.Core/IO.cs" Line="23" Column="34" />
+      <File FileName="TXM.Core/Texts.cs" Line="50" Column="64" />
+      <File FileName="TXM.Core/Literals.cs" Line="6" Column="81" />
+      <File FileName="TXM.Core/TournamentController.cs" Line="483" Column="73" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="TXM" expanded="True">
-            <Node name="TXM.Core" expanded="True">
-              <Node name="IO.cs" selected="True" />
-            </Node>
+            <Node name="TXM.Core" expanded="True" />
+            <Node name="TXM.Test" expanded="True" />
           </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.TXM PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <Xamarin.Addins.Core.Project ActiveDebugTarget="MyAppleMacCatalystID" />
+  <MonoDevelop.Ide.ItemProperties.TXM.Test PreferredExecutionTarget="MonoDevelop.Default" />
   <MultiItemStartupConfigurations />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.TXM PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
 </Properties>

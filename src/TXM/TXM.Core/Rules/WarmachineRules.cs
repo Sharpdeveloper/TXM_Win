@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace TXM.Core
@@ -54,17 +55,17 @@ namespace TXM.Core
             //TdestroyedPoints = f.Invoke(0, newResult.Destroyed);
             //TlostPoints = f.Invoke(0, newResult.Lost);
             TtournamentPoints = f.Invoke(0, tP);
-            if (newResult.WinnerID == newResult.Enemy.ID)
+            if (newResult.WinnerID == newResult.EnemyID)
                 Tlosses = f.Invoke(0, 1);
             else
                 Twins = f.Invoke(0, 1);
 
-            return newResult.WinnerID != newResult.Enemy.ID;
+            return newResult.WinnerID != newResult.EnemyID;
         }
 
-        public override List<Player> SortTable(List<Player> unsorted)
+        public override ObservableCollection<Player> SortTable(ObservableCollection<Player> unsorted)
         {
-            List<Player> t = unsorted.OrderByDescending(x => x.Wins).ThenByDescending(x => x.StrengthOfSchedule).ThenByDescending(x => x.TournamentPoints).ThenBy(x => x.Order).ToList<Player>();
+            ObservableCollection<Player> t = (ObservableCollection<Player>)unsorted.OrderByDescending(x => x.Wins).ThenByDescending(x => x.StrengthOfSchedule).ThenByDescending(x => x.TournamentPoints).ThenBy(x => x.Order);
             for (int i = 0; i < t.Count; i++)
                 t[i].Rank = i + 1;
             return t;

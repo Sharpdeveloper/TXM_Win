@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
-
-using TXM.Core.Logic;
 
 namespace TXM.Core
 {
@@ -86,11 +86,11 @@ namespace TXM.Core
             p.Team = player.Team;
             p.Name = player.Name;
             p.Firstname = player.Firstname;
-            p.WonBye = player.WonBye;
-            p.ListGiven = player.ListGiven;
-            p.Paid = player.Paid;
+            p.HasWonBye = player.HasWonBye;
+            p.HasListGiven = player.HasListGiven;
+            p.HasPaid = player.HasPaid;
             p.TableNo = player.TableNo;
-            p.Present = player.Present;
+            p.IsPresent = player.IsPresent;
         }
 
         private void ChangeTournament(Tournament tournament)
@@ -150,7 +150,7 @@ namespace TXM.Core
         {
             if (update)
             {
-                ActiveTournament.GetResults(pairings, true);
+                //ActiveTournament.GetResults(pairings, true);
                 return true;
             }
             if (pairings.Count == 1)
@@ -160,7 +160,7 @@ namespace TXM.Core
             {
                 foreach (Pairing p in pairings)
                 {
-                    if (!p.ResultEdited)
+                    if (!p.IsResultEdited)
                     {
                         allResultsEdited = false;
                         break;
@@ -169,15 +169,15 @@ namespace TXM.Core
             }
             if (allResultsEdited)
             {
-                if (CheckResults(pairings) || ActiveTournament.bonus)
-                {
-                    ActiveTournament.GetResults(pairings);
-                }
-                else
-                {
-                    ActiveIO.ShowMessage("One ore more results are invalid.");
-                    return false;
-                }
+                //if (CheckResults(pairings) || ActiveTournament.bonus)
+                //{
+                //    //ActiveTournament.GetResults(pairings);
+                //}
+                //else
+                //{
+                //    ActiveIO.ShowMessage("One ore more results are invalid.");
+                //    return false;
+                //}
             }
             else
             {
@@ -206,13 +206,13 @@ namespace TXM.Core
         {
             timerWindow = itw;
             timerWindow.SetTimer(ActiveTimer);
-            string imgurl = ActiveIO.GetImagePath();
-            if (imgurl != "" && imgurl != null)
+            string imgurl = ActiveIO.ActiveSettings.BGImagePath;
+            if (imgurl != "")
             {
                 timerWindow.SetImage(new Uri(imgurl));
             }
-            timerWindow.SetLabelColor(ActiveIO.GetColor());
-            timerWindow.SetTextSize(ActiveIO.GetSize());
+            timerWindow.SetLabelColor(ActiveIO.ActiveSettings.TextColor);
+            timerWindow.SetTextSize(ActiveIO.ActiveSettings.TextSize);
             timerWindow.Show();
         }
 
@@ -247,23 +247,23 @@ namespace TXM.Core
             }
         }
 
-        private bool CheckResults(List<Pairing> pairings)
-        {
-            //Todo in Rules auslagern
-            foreach (Pairing p in pairings)
-            {
-                //if (p.Player1Score != 0 && p.Player1Score < 12)
-                //    return false;
-                //if (p.Player2Score != 0 && p.Player2Score < 12)
-                //    return false;
-                if (!ActiveTournament.Rule.IsDrawPossible)
-                {
-                    if (p.Player1Score == p.Player2Score && p.Winner == "Automatic" && p.Player2 != ActiveTournament.Bye && p.Player2 != ActiveTournament.WonBye)
-                        return false;
-                }
-            }
-            return true;
-        }
+        //private bool CheckResults(List<Pairing> pairings)
+        //{
+        //    //Todo in Rules auslagern
+        //    foreach (Pairing p in pairings)
+        //    {
+        //        //if (p.Player1Score != 0 && p.Player1Score < 12)
+        //        //    return false;
+        //        //if (p.Player2Score != 0 && p.Player2Score < 12)
+        //        //    return false;
+        //        if (!ActiveTournament.Rule.IsDrawPossible)
+        //        {
+        //            if (p.Player1Score == p.Player2Score && p.Winner == "Automatic" && p.Player2 != ActiveTournament.Bye && p.Player2 != ActiveTournament.WonBye)
+        //                return false;
+        //        }
+        //    }
+        //    return true;
+        //}
 
         public void EditTournament(ITournamentDialog itd)
         {
@@ -328,7 +328,7 @@ namespace TXM.Core
         {
             List<Pairing> pl = new List<Pairing>();
             foreach (var p in ActiveTournament.Rounds[ActiveTournament.Rounds.Count - 1].Pairings)
-                pl.Add(new Pairing(p) { ResultEdited = true, });
+                pl.Add(new Pairing(p) { IsResultEdited = true, });
             ActiveTournament.RemoveLastRound();
             return pl;
         }
@@ -338,11 +338,11 @@ namespace TXM.Core
             string file = "";
             if (!pairings && ActiveTournament != null)
             {
-                file = ActiveIO.Print(ActiveTournament);
+                file = ActiveIO.PrintPlayerList(ActiveTournament);
             }
             else if (pairings)
             {
-                file = ActiveIO.Print(ActiveTournament, results);
+                file = ActiveIO.PrintPairings(ActiveTournament, results);
             }
 
             if (print)
@@ -481,15 +481,15 @@ namespace TXM.Core
                 StringBuilder sb = new StringBuilder();
                 if (iod.IsResultOutput())
                 {
-                    sb.Append(ActiveIO.GetBBCode(ActiveTournament, false, true));
+                    sb.Append(ActiveIO.CreateOutputForPairings(ActiveTournament, true, true));
                 }
                 if (iod.IsTableOutput())
                 {
-                    sb.Append(ActiveIO.GetBBCode(ActiveTournament, true));
+                    sb.Append(ActiveIO.CreateOutputForPairings(ActiveTournament, true, false));
                 }
                 if (iod.IsPairingOutput())
                 {
-                    sb.Append(ActiveIO.GetBBCode(ActiveTournament, false));
+                    sb.Append(ActiveIO.CreateOutputForTable(ActiveTournament, true));
                 }
                 ic.SetText(sb.ToString());
             }
@@ -497,7 +497,7 @@ namespace TXM.Core
 
         public void GetJSON(IClipboard ic)
         {
-            (string json, string file) result = ActiveIO.GetJSON(ActiveTournament);
+            (string json, string file) result = ActiveIO.GetJsonForListfortress(ActiveTournament);
             ic.SetText(result.json);
             ActiveIO.ShowMessage($"The Tournament is in your clipboard you can paste it to listfortress.\nAlternative you finde the here: {result.file}");
         }
@@ -569,18 +569,24 @@ namespace TXM.Core
             }
         }
 
-        public void SetTimerLabelColor(bool white)
+        public void SetTimerLabelColor(string color)
         {
-            ActiveIO.WriteColor(white);
-            if(timerWindow != null)
-                timerWindow.SetLabelColor(white);
+            ActiveIO.ActiveSettings.TextColor = color;
+            ActiveIO.SaveSettings();
+            if (timerWindow != null)
+            {
+                timerWindow.SetLabelColor(color);
+            }
         }
 
         public void SetTimerTextSize(double size)
         {
-            ActiveIO.WriteSize(size);
+            ActiveIO.ActiveSettings.TextSize = size;
+            ActiveIO.SaveSettings();
             if (timerWindow != null)
+            {
                 timerWindow.SetTextSize(size);
+            }
         }
 
         public void Close()
@@ -605,7 +611,7 @@ namespace TXM.Core
             Process.Start(psi);
         }
 
-        public List<Pairing> AwardBonusPoints()
+        public ObservableCollection<Pairing> AwardBonusPoints()
         {
             return ActiveTournament.GetBonusSeed();
         }

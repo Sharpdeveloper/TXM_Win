@@ -1,13 +1,13 @@
 ﻿using System;
-namespace TXM.Core.Logic
+using System.Collections.ObjectModel;
+
+namespace TXM.Core
 {
 	public partial class Tournament
 	{
-        private int version = 3;
-
         #region Tournament Information
-        public List<Player> Participants { get; set; }
-        public List<Player> Teamplayer { get; set; }
+        public ObservableCollection<Player> Participants { get; set; }
+        public ObservableCollection<Player> Teamplayer { get; set; }
         public bool FirstRound { get; set; }
         public List<Pairing> PrePaired { get; set; }
         public string Name { get; set; }
@@ -20,7 +20,7 @@ namespace TXM.Core.Logic
         public TournamentCut Cut { get; set; }
         public bool CutStarted { get; internal set; }
         public bool WonByeCalculated { get; internal set; }
-        public List<Pairing> Pairings { get; set; }
+        public ObservableCollection<Pairing> Pairings { get; set; }
         public bool TeamProtection { get; set; }
         public bool Single { get; set; }
         public bool PrintDDGER { get; set; }
@@ -58,9 +58,9 @@ namespace TXM.Core.Logic
 
         #region internal Fields
         internal static List<int> givenStartNo = new List<int>();
-        public Player WonBye = Player.GetWonBye();
-        public Player Bye = Player.GetBye();
-        private Player Bonus = Player.GetBonus();
+        public Player WonBye = Player.WonBye;
+        public Player Bye = Player.Bye;
+        private Player Bonus = Player.Bonus;
         internal List<Player> ListOfPlayers;
         private List<Player>[] PointGroup;
         internal int WonByes;

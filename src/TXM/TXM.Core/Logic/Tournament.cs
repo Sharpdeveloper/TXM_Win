@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace TXM.Core.Logic
+namespace TXM.Core
 {
-    [Serializable]
-    public partial class Tournament : ISerializable
-    { 
+    public partial class Tournament
+    {
         #region Constructors
         public Tournament(string name, int t3ID, string GOEPPversion, AbstractRules rules, bool firstround = true, int maxPoints = 100, TournamentCut cut = TournamentCut.NoCut)
         {
@@ -16,7 +16,7 @@ namespace TXM.Core.Logic
             Name = name;
             T3ID = t3ID;
             GOEPPVersion = GOEPPversion;
-            Participants = new List<Player>();
+            Participants = new ObservableCollection<Player>();
             Nicknames = new List<string>();
             givenStartNo = new List<int>();
             FirstRound = firstround;
@@ -24,7 +24,7 @@ namespace TXM.Core.Logic
             Cut = cut;
             CutStarted = false;
             WonByeCalculated = false;
-            Pairings = new List<Pairing>();
+            Pairings = new ObservableCollection<Pairing>();
             Rounds = new List<Round>();
             Rule = rules;
             Single = true;
@@ -43,15 +43,7 @@ namespace TXM.Core.Logic
         #endregion
 
         #region public functions
-        public Player GetPlayerByNr(int nr)
-        {
-            foreach (var p in Participants)
-            {
-                if (p.ID == nr)
-                    return p;
-            }
-            return null;
-        }
+        public Player GetPlayer(int id) => Participants.Where(x => x.ID == id).First();
 
         public void AddPlayer(Player player)
         {
@@ -59,13 +51,13 @@ namespace TXM.Core.Logic
             Nicknames.Add(player.Nickname);
             if (Pairings.Count > 0)
             {
-                if (Pairings[Pairings.Count - 1].Player2 == Bye)
+                if (Pairings[Pairings.Count - 1].Player2ID == Bye.ID)
                 {
                     Pairings[Pairings.Count - 1].Player2 = player;
-                    Pairings[Pairings.Count - 1].ResultEdited = false;
+                    Pairings[Pairings.Count - 1].IsResultEdited = false;
                 }
                 else
-                    Pairings.Add(new Pairing() { Player1 = player, ResultEdited = true, Player2 = Bye });
+                    Pairings.Add(new Pairing() { Player1 = player, IsResultEdited = true, Player2 = Bye });
             }
         }
 
@@ -120,610 +112,598 @@ namespace TXM.Core.Logic
                     ResetScenarios();
                 }
             }
-            if (Rule.IsRandomSeeding)
-            {
-                return GetSeedRandom(start, cut);
-            }
-            else
-            {
-                return GetSeedNonRandom(start, cut);
-            }
+            //if (Rule.IsRandomSeeding)
+            //{
+            //    return GetSeedRandom(start, cut);
+            //}
+            //else
+            //{
+            //    return GetSeedNonRandom(start, cut);
+            //}
+            return new List<Pairing>();
         }
 
-        public List<Pairing> GetSeedRandom(bool start, bool cut)
-        {
-            Pairing.ResetTableNr();
-            int temp, pos = 0;
-            bool swappedGroup = false;
+        
+        //public List<Pairing> GetSeedRandom(bool start, bool cut)
+        //{
+        //    Pairing.ResetTableNo();
+        //    int temp, pos = 0;
+        //    bool swappedGroup = false;
 
-            #region Cut
-            if (Cut != TournamentCut.NoCut && (cut || CutStarted))
-            {
-                CalculateWonBye();
-                if (cut)
-                {
-                    Sort();
-                    CutStarted = true;
-                    if (Cut == TournamentCut.Top8)
-                        currentCountOfPlayer = 8;
-                    else if (Cut == TournamentCut.Top16)
-                        currentCountOfPlayer = 16;
-                    else if (Cut == TournamentCut.Top32)
-                        currentCountOfPlayer = 32;
-                    else if (Cut == TournamentCut.Top64)
-                        currentCountOfPlayer = 64;
-                    else
-                        currentCountOfPlayer = 4;
+        //    #region Cut
+        //    if (Cut != TournamentCut.NoCut && (cut || CutStarted))
+        //    {
+        //        CalculateWonBye();
+        //        if (cut)
+        //        {
+        //            Sort();
+        //            CutStarted = true;
+        //            if (Cut == TournamentCut.Top8)
+        //                currentCountOfPlayer = 8;
+        //            else if (Cut == TournamentCut.Top16)
+        //                currentCountOfPlayer = 16;
+        //            else if (Cut == TournamentCut.Top32)
+        //                currentCountOfPlayer = 32;
+        //            else if (Cut == TournamentCut.Top64)
+        //                currentCountOfPlayer = 64;
+        //            else
+        //                currentCountOfPlayer = 4;
 
-                    ListOfPlayers = new List<Player>();
+        //            ListOfPlayers = new List<Player>();
 
-                    for (int i = 0; i < currentCountOfPlayer; i++)
-                        ListOfPlayers.Add(Participants[i]);
+        //            for (int i = 0; i < currentCountOfPlayer; i++)
+        //                ListOfPlayers.Add(Participants[i]);
 
-                    Pairings = new List<Pairing>();
+        //            Pairings = new List<Pairing>();
 
-                    while (ListOfPlayers.Count > 0)
-                    {
-                        Pairings.Add(new Pairing());
-                        Pairings[pos].Player1 = ListOfPlayers[0];
-                        Pairings[pos].Player2 = ListOfPlayers[ListOfPlayers.Count - 1];
-                        ListOfPlayers.Remove(Pairings[pos].Player1);
-                        ListOfPlayers.Remove(Pairings[pos].Player2);
-                        pos++;
-                    }
-                }
-                else
-                {
-                    Pairings = new List<Pairing>();
+        //            while (ListOfPlayers.Count > 0)
+        //            {
+        //                Pairings.Add(new Pairing());
+        //                Pairings[pos].Player1 = ListOfPlayers[0];
+        //                Pairings[pos].Player2 = ListOfPlayers[ListOfPlayers.Count - 1];
+        //                ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == Pairings[pos].Player1ID).First());
+        //                ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == Pairings[pos].Player2ID).First());
+        //                pos++;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Pairings = new List<Pairing>();
 
-                    for (int i = 0; i < WinnerLastRound.Count / 2; i++)
-                    {
-                        Pairings.Add(new Pairing());
-                        Pairings[i].Player1 = WinnerLastRound[i];
-                        Pairings[i].Player2 = WinnerLastRound[WinnerLastRound.Count - 1 - i];
-                    }
-                }
-            }
-            #endregion
-            else
-            {
-                if (start)
-                    Start();
-                else
-                {
-                    Sort();
-                    Rounds[Rounds.Count - 1].Participants = new List<Player>();
-                    foreach (Player p in Participants)
-                        Rounds[Rounds.Count - 1].Participants.Add(new Player(p));
+        //            for (int i = 0; i < WinnerLastRound.Count / 2; i++)
+        //            {
+        //                Pairings.Add(new Pairing());
+        //                Pairings[i].Player1 = WinnerLastRound[i];
+        //                Pairings[i].Player2 = WinnerLastRound[WinnerLastRound.Count - 1 - i];
+        //            }
+        //        }
+        //    }
+        //    #endregion
+        //    else
+        //    {
+        //        if (start)
+        //            Start();
+        //        else
+        //        {
+        //            Sort();
+        //            Rounds[Rounds.Count - 1].Participants = new List<Player>();
+        //            foreach (Player p in Participants)
+        //                Rounds[Rounds.Count - 1].Participants.Add(new Player(p));
 
-                }
+        //        }
 
-                ListOfPlayers = new List<Player>();
-                Random random = new Random();
+        //        ListOfPlayers = new List<Player>();
+        //        Random random = new Random();
 
-                foreach (Player p in Participants)
-                {
-                    if (!(p.Disqualified || p.Dropped))
-                        ListOfPlayers.Add(p);
-                }
+        //        foreach (Player p in Participants)
+        //        {
+        //            if (!(p.IsDisqualified || p.HasDropped))
+        //                ListOfPlayers.Add(p);
+        //        }
 
-                Pairings = new List<Pairing>();
+        //        Pairings = new List<Pairing>();
 
-                if (start)
-                {
-                    if (PrePaired != null)
-                    {
-                        foreach (Pairing p in PrePaired)
-                        {
-                            Pairings.Add(p);
-                            ListOfPlayers.Remove(p.Player1);
-                            ListOfPlayers.Remove(p.Player2);
-                            if (p.Player1.Bye)
-                                p.ResultEdited = true;
-                            pos++;
-                        }
-                    }
-                    List<Player> wonByes = GetWonByes();
-                    for (int i = 0; i < wonByes.Count; i++)
-                    {
-                        Pairings.Add(new Pairing());
-                        Pairings[pos].Player1 = wonByes[i];
-                        Pairings[pos].Player2 = WonBye;
-                        Pairings[pos].ResultEdited = true;
-                        pos++;
-                    }
-                    if (ListOfPlayers.Count % 2 == 0)
-                        bye = false;
-                    else
-                        bye = true;
-                }
-                else
-                {
-                    if (ListOfPlayers.Count % 2 == 0)
-                        bye = false;
-                    else
-                        bye = true;
-                }
-                if (start)
-                {
-                    while (ListOfPlayers.Count > 0)
-                    {
-                        Pairings.Add(new Pairing());
-                        if (ListOfPlayers.Count == 1)
-                        {
-                            Pairings[pos].Player1 = ListOfPlayers[0];
-                            Pairings[pos].Player2 = Bye;
-                            Pairings[pos].Player1.Bye = true;
-                            Pairings[pos].ResultEdited = true;
-                            ListOfPlayers.Remove(Pairings[pos].Player1);
-                            pos++;
-                            break;
-                        }
-                        Pairings[pos].Player1 = ListOfPlayers[0];
-                        for (int i = 0; i < ListOfPlayers.Count; i++)
-                        {
-                            temp = random.Next(1, ListOfPlayers.Count);
-                            if (TeamProtection && (Pairings[pos].Player1.Team != ListOfPlayers[temp].Team || Pairings[pos].Player1.Team == ""))
-                            {
-                                Pairings[pos].Player2 = ListOfPlayers[temp];
-                                break;
-                            }
-                            else
-                                Pairings[pos].Player2 = ListOfPlayers[temp];
-                        }
-                        if (Pairings[pos].Player2 == null)
-                            Pairings[pos].Player2 = ListOfPlayers[1];
+        //        if (start)
+        //        {
+        //            if (PrePaired != null)
+        //            {
+        //                foreach (Pairing p in PrePaired)
+        //                {
+        //                    Pairings.Add(p);
+        //                    ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == p.Player1ID).First());
+        //                    ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == p.Player2ID).First());
+        //                    if (Participants.Where(x => x.ID == p.Player1ID).First().HasBye)
+        //                    {
+        //                        p.ResultEdited = true;
+        //                    }
+        //                    pos++;
+        //                }
+        //            }
+        //            List<Player> wonByes = GetWonByes();
+        //            for (int i = 0; i < wonByes.Count; i++)
+        //            {
+        //                Pairings.Add(new Pairing());
+        //                Pairings[pos].Player1 = wonByes[i];
+        //                Pairings[pos].Player2 = WonBye;
+        //                Pairings[pos].ResultEdited = true;
+        //                pos++;
+        //            }
+        //            if (ListOfPlayers.Count % 2 == 0)
+        //                bye = false;
+        //            else
+        //                bye = true;
+        //        }
+        //        else
+        //        {
+        //            if (ListOfPlayers.Count % 2 == 0)
+        //                bye = false;
+        //            else
+        //                bye = true;
+        //        }
+        //        if (start)
+        //        {
+        //            while (ListOfPlayers.Count > 0)
+        //            {
+        //                Pairings.Add(new Pairing());
+        //                if (ListOfPlayers.Count == 1)
+        //                {
+        //                    Pairings[pos].Player1 = ListOfPlayers[0];
+        //                    Pairings[pos].Player2 = Bye;
+        //                    Participants.Where(x => x.ID == Pairings[pos].Player1ID).First().HasBye = true;
+        //                    Pairings[pos].ResultEdited = true;
+        //                    ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == Pairings[pos].Player1ID).First());
+        //                    pos++;
+        //                    break;
+        //                }
+        //                Pairings[pos].Player1 = ListOfPlayers[0];
+        //                for (int i = 0; i < ListOfPlayers.Count; i++)
+        //                {
+        //                    temp = random.Next(1, ListOfPlayers.Count);
+        //                    if (TeamProtection && (Pairings[pos].Player1.Team != ListOfPlayers[temp].Team || Pairings[pos].Player1.Team == ""))
+        //                    {
+        //                        Pairings[pos].Player2 = ListOfPlayers[temp];
+        //                        break;
+        //                    }
+        //                    else
+        //                        Pairings[pos].Player2 = ListOfPlayers[temp];
+        //                }
+        //                if (Participants.Where(x => x.ID == (Pairings[pos].Player2ID) == null)
+        //                    Pairings[pos].Player2 = ListOfPlayers[1];
 
-                        ListOfPlayers.Remove(Pairings[pos].Player1);
-                        ListOfPlayers.Remove(Pairings[pos].Player2);
-                        pos++;
-                    }
-                }
-                else
-                {
-                    CountGroups();
+        //                ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == Pairings[pos].Player1ID).First());
+        //                ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == Pairings[pos].Player2ID).First());
+        //                pos++;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            CountGroups();
 
-                    int group = 0;
-                    for (int i = 0; i < PointGroup.Length; i++)
-                    {
-                        while (PointGroup[i].Count >= 2)
-                        {
-                            Pairings.Add(new Pairing());
-                            if (swappedGroup)
-                            {
-                                temp = PointGroup[i].Count - 1;
-                                swappedGroup = false;
-                            }
-                            else
-                            {
-                                temp = random.Next(0, PointGroup[i].Count);
-                            }
-                            Pairings[pos].Player1 = PointGroup[i][temp];
-                            PointGroup[i].RemoveAt(temp);
-                            temp = random.Next(0, PointGroup[i].Count);
-                            group = -1;
-                            for (int j = i; j < PointGroup.Length; j++)
-                            {
-                                if (!HasPlayedVsWholePointGroup((Player)Pairings[pos].Player1, j))
-                                {
-                                    group = j;
-                                    break;
-                                }
-                            }
-                            if (group != -1)
-                            {
-                                temp = random.Next(0, PointGroup[i].Count);
-                                while (Pairings[pos].Player1.HasPlayedVS(PointGroup[group][temp]))
-                                {
-                                    temp = random.Next(0, PointGroup[i].Count);
-                                }
-                            }
-                            else
-                            {
-                                //Was passiert wenn ein Spieler schon gegen alle gespielt hat?
-                                group = i;
-                            }
-                            Pairings[pos].Player2 = PointGroup[group][temp];
-                            PointGroup[group].RemoveAt(temp);
-                            pos++;
-                        }
-                        if (PointGroup[i].Count == 1)
-                        {
-                            if (PointGroup.Length == i + 1 && bye)
-                            {
-                                Pairings.Add(new Pairing());
-                                Pairings[pos].Player1 = PointGroup[i][0];
-                                Pairings[pos].Player2 = Bye;
-                                Pairings[pos].Player1.Bye = true;
-                                Pairings[pos].ResultEdited = true;
-                            }
-                            else
-                            {
-                                PointGroup[i + 1].Add(PointGroup[i][0]);
-                                swappedGroup = true;
-                            }
-                        }
-                    }
-                }
+        //            int group = 0;
+        //            for (int i = 0; i < PointGroup.Length; i++)
+        //            {
+        //                while (PointGroup[i].Count >= 2)
+        //                {
+        //                    Pairings.Add(new Pairing());
+        //                    if (swappedGroup)
+        //                    {
+        //                        temp = PointGroup[i].Count - 1;
+        //                        swappedGroup = false;
+        //                    }
+        //                    else
+        //                    {
+        //                        temp = random.Next(0, PointGroup[i].Count);
+        //                    }
+        //                    Pairings[pos].Player1 = PointGroup[i][temp];
+        //                    PointGroup[i].RemoveAt(temp);
+        //                    temp = random.Next(0, PointGroup[i].Count);
+        //                    group = -1;
+        //                    for (int j = i; j < PointGroup.Length; j++)
+        //                    {
+        //                        if (!HasPlayedVsWholePointGroup((Player)Pairings[pos].Player1, j))
+        //                        {
+        //                            group = j;
+        //                            break;
+        //                        }
+        //                    }
+        //                    if (group != -1)
+        //                    {
+        //                        temp = random.Next(0, PointGroup[i].Count);
+        //                        while (Pairings[pos].Player1.HasPlayedVS(PointGroup[group][temp].ID))
+        //                        {
+        //                            temp = random.Next(0, PointGroup[i].Count);
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        //Was passiert wenn ein Spieler schon gegen alle gespielt hat?
+        //                        group = i;
+        //                    }
+        //                    Pairings[pos].Player2 = PointGroup[group][temp];
+        //                    PointGroup[group].RemoveAt(temp);
+        //                    pos++;
+        //                }
+        //                if (PointGroup[i].Count == 1)
+        //                {
+        //                    if (PointGroup.Length == i + 1 && bye)
+        //                    {
+        //                        Pairings.Add(new Pairing());
+        //                        Pairings[pos].Player1 = PointGroup[i][0];
+        //                        Pairings[pos].Player2 = Bye;
+        //                        Pairings[pos].Player1.HasBye = true;
+        //                        Pairings[pos].ResultEdited = true;
+        //                    }
+        //                    else
+        //                    {
+        //                        PointGroup[i + 1].Add(PointGroup[i][0]);
+        //                        swappedGroup = true;
+        //                    }
+        //                }
+        //            }
+        //        }
 
-                //Prüfen, ob die letzten beiden schon gegeneinander gespielt haben
-                temp = Pairings.Count - 1;
+        //        //Prüfen, ob die letzten beiden schon gegeneinander gespielt haben
+        //        temp = Pairings.Count - 1;
 
-                if (Pairings[temp] == null)
-                    temp--;
+        //        if (Pairings[temp] == null)
+        //            temp--;
 
-                if (Pairings[temp].Player1.HasPlayedVS(Pairings[temp].Player2) && Pairings[temp].Player1.EnemyCount < Participants.Count)
-                {
-                    for (int i = temp - 1; i >= 0; i--)
-                    {
-                        if (!Pairings[temp].Player1.HasPlayedVS(Pairings[i].Player1) && !Pairings[temp].Player2.HasPlayedVS(Pairings[i].Player2))
-                        {
-                            ChangePairing(temp, 0, i, 0);
-                            break;
-                        }
-                        if (!Pairings[temp].Player1.HasPlayedVS(Pairings[i].Player2) && !Pairings[temp].Player2.HasPlayedVS(Pairings[i].Player1))
-                        {
-                            ChangePairing(temp, 0, i, 1);
-                            break;
-                        }
-                    }
-                }
-            }
+        //        if (Pairings[temp].Player1.HasPlayedVS(Pairings[temp].Player2.ID) && Pairings[temp].Player1.Enemies.Count < Participants.Count)
+        //        {
+        //            for (int i = temp - 1; i >= 0; i--)
+        //            {
+        //                if (!Pairings[temp].Player1.HasPlayedVS(Pairings[i].Player1.ID) && !Pairings[temp].Player2.HasPlayedVS(Pairings[i].Player2.ID))
+        //                {
+        //                    ChangePairing(temp, 0, i, 0);
+        //                    break;
+        //                }
+        //                if (!Pairings[temp].Player1.HasPlayedVS(Pairings[i].Player2.ID) && !Pairings[temp].Player2.HasPlayedVS(Pairings[i].Player1.ID))
+        //                {
+        //                    ChangePairing(temp, 0, i, 1);
+        //                    break;
+        //                }
+        //            }
+        //        }
+        //    }
 
-            if (Rounds == null)
-                Rounds = new List<Round>();
-            Rounds.Add(new Round(Rounds.Count + 1, Pairings, Participants, ChoosenScenario));
-            DisplayedRound = Rounds.Count;
-            CheckTableNr();
+        //    if (Rounds == null)
+        //        Rounds = new List<Round>();
+        //    Rounds.Add(new Round(Rounds.Count + 1, Pairings, Participants, ChoosenScenario));
+        //    DisplayedRound = Rounds.Count;
+        //    CheckTableNr();
 
-            return Pairings;
-        }
+        //    return Pairings;
+        //}
 
-        public List<Pairing> GetSeedNonRandom(bool start, bool cut)
-        {
-            Pairing.ResetTableNr();
-            int temp, pos = 0;
+        //public List<Pairing> GetSeedNonRandom(bool start, bool cut)
+        //{
+        //    Pairing.ResetTableNr();
+        //    int temp, pos = 0;
 
-            if (Cut != TournamentCut.NoCut && (cut || CutStarted))
-            {
-                CalculateWonBye();
-                if (cut)
-                {
-                    Sort();
-                    CutStarted = true;
-                    if (Cut == TournamentCut.Top8)
-                        currentCountOfPlayer = 8;
-                    else if (Cut == TournamentCut.Top16)
-                        currentCountOfPlayer = 16;
-                    else
-                        currentCountOfPlayer = 4;
+        //    if (Cut != TournamentCut.NoCut && (cut || CutStarted))
+        //    {
+        //        CalculateWonBye();
+        //        if (cut)
+        //        {
+        //            Sort();
+        //            CutStarted = true;
+        //            if (Cut == TournamentCut.Top8)
+        //                currentCountOfPlayer = 8;
+        //            else if (Cut == TournamentCut.Top16)
+        //                currentCountOfPlayer = 16;
+        //            else
+        //                currentCountOfPlayer = 4;
 
-                    ListOfPlayers = new List<Player>();
+        //            ListOfPlayers = new List<Player>();
 
-                    for (int i = 0; i < currentCountOfPlayer; i++)
-                        ListOfPlayers.Add(Participants[i]);
+        //            for (int i = 0; i < currentCountOfPlayer; i++)
+        //                ListOfPlayers.Add(Participants[i]);
 
-                    Pairings = new List<Pairing>();
+        //            Pairings = new List<Pairing>();
 
-                    while (ListOfPlayers.Count > 0)
-                    {
-                        Pairings.Add(new Pairing());
-                        Pairings[pos].Player1 = ListOfPlayers[0];
-                        Pairings[pos].Player2 = ListOfPlayers[ListOfPlayers.Count - 1];
-                        ListOfPlayers.Remove(Pairings[pos].Player1);
-                        ListOfPlayers.Remove(Pairings[pos].Player2);
-                        pos++;
-                    }
-                }
-                else
-                {
-                    Pairings = new List<Pairing>();
+        //            while (ListOfPlayers.Count > 0)
+        //            {
+        //                Pairings.Add(new Pairing());
+        //                Pairings[pos].Player1 = ListOfPlayers[0];
+        //                Pairings[pos].Player2 = ListOfPlayers[ListOfPlayers.Count - 1];
+        //                ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == Pairings[pos].Player1ID).First());
+        //                ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == Pairings[pos].Player2ID).First());
+        //                pos++;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Pairings = new List<Pairing>();
 
-                    for (int i = 0; i < WinnerLastRound.Count / 2; i++)
-                    {
-                        Pairings.Add(new Pairing());
-                        Pairings[i].Player1 = WinnerLastRound[i];
-                        Pairings[i].Player2 = WinnerLastRound[WinnerLastRound.Count - 1 - i];
-                    }
-                }
-            }
-            else
-            {
-                if (start)
-                    Start();
-                else
-                {
-                    Sort();
-                    Rounds[Rounds.Count - 1].Participants = new List<Player>();
-                    foreach (Player p in Participants)
-                        Rounds[Rounds.Count - 1].Participants.Add(new Player(p));
+        //            for (int i = 0; i < WinnerLastRound.Count / 2; i++)
+        //            {
+        //                Pairings.Add(new Pairing());
+        //                Pairings[i].Player1 = WinnerLastRound[i];
+        //                Pairings[i].Player2 = WinnerLastRound[WinnerLastRound.Count - 1 - i];
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (start)
+        //            Start();
+        //        else
+        //        {
+        //            Sort();
+        //            Rounds[Rounds.Count - 1].Participants = new List<Player>();
+        //            foreach (Player p in Participants)
+        //                Rounds[Rounds.Count - 1].Participants.Add(new Player(p));
 
-                }
+        //        }
 
-                ListOfPlayers = new List<Player>();
+        //        ListOfPlayers = new List<Player>();
 
-                foreach (Player p in Participants)
-                {
-                    if (!p.Disqualified)
-                        ListOfPlayers.Add(p);
-                }
+        //        foreach (Player p in Participants)
+        //        {
+        //            if (!p.IsDisqualified)
+        //                ListOfPlayers.Add(p);
+        //        }
 
-                Pairings = new List<Pairing>();
+        //        Pairings = new List<Pairing>();
 
-                if (start)
-                {
-                    if (PrePaired != null)
-                    {
-                        foreach (Pairing p in PrePaired)
-                        {
-                            Pairings.Add(p);
-                            ListOfPlayers.Remove(p.Player1);
-                            ListOfPlayers.Remove(p.Player2);
-                            if (p.Player1.Bye)
-                                p.ResultEdited = true;
-                            pos++;
-                        }
-                    }
-                    List<Player> wonFreeTickets = GetWonByes();
-                    for (int i = 0; i < wonFreeTickets.Count; i++)
-                    {
-                        Pairings.Add(new Pairing());
-                        Pairings[pos].Player1 = wonFreeTickets[i];
-                        Pairings[pos].Player2 = WonBye;
-                        Pairings[pos].ResultEdited = true;
-                        pos++;
-                    }
-                    if (ListOfPlayers.Count % 2 == 0)
-                        bye = false;
-                    else
-                        bye = true;
-                }
-                else
-                {
-                    if (Participants.Count % 2 == 0)
-                        bye = false;
-                    else
-                        bye = true;
-                }
-                if (start)
-                {
-                    Random random = new Random();
-                    while (ListOfPlayers.Count > 0)
-                    {
-                        Pairings.Add(new Pairing());
-                        if (ListOfPlayers.Count == 1)
-                        {
-                            Pairings[pos].Player1 = ListOfPlayers[0];
-                            Pairings[pos].Player2 = Bye;
-                            Pairings[pos].Player1.Bye = true;
-                            Pairings[pos].ResultEdited = true;
-                            ListOfPlayers.Remove(Pairings[pos].Player1);
-                            pos++;
-                            break;
-                        }
-                        Pairings[pos].Player1 = ListOfPlayers[0];
+        //        if (start)
+        //        {
+        //            if (PrePaired != null)
+        //            {
+        //                foreach (Pairing p in PrePaired)
+        //                {
+        //                    Pairings.Add(p);
+        //                    ListOfPlayers.Remove(p.Player1);
+        //                    ListOfPlayers.Remove(p.Player2);
+        //                    if (p.Player1.HasBye)
+        //                        p.ResultEdited = true;
+        //                    pos++;
+        //                }
+        //            }
+        //            List<Player> wonFreeTickets = GetWonByes();
+        //            for (int i = 0; i < wonFreeTickets.Count; i++)
+        //            {
+        //                Pairings.Add(new Pairing());
+        //                Pairings[pos].Player1 = wonFreeTickets[i];
+        //                Pairings[pos].Player2 = WonBye;
+        //                Pairings[pos].ResultEdited = true;
+        //                pos++;
+        //            }
+        //            if (ListOfPlayers.Count % 2 == 0)
+        //                bye = false;
+        //            else
+        //                bye = true;
+        //        }
+        //        else
+        //        {
+        //            if (Participants.Count % 2 == 0)
+        //                bye = false;
+        //            else
+        //                bye = true;
+        //        }
+        //        if (start)
+        //        {
+        //            Random random = new Random();
+        //            while (ListOfPlayers.Count > 0)
+        //            {
+        //                Pairings.Add(new Pairing());
+        //                if (ListOfPlayers.Count == 1)
+        //                {
+        //                    Pairings[pos].Player1 = ListOfPlayers[0];
+        //                    Pairings[pos].Player2 = Bye;
+        //                    Pairings[pos].Player1.HasBye = true;
+        //                    Pairings[pos].ResultEdited = true;
+        //                    ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == Pairings[pos].Player1ID).First());
+        //                    pos++;
+        //                    break;
+        //                }
+        //                Pairings[pos].Player1 = ListOfPlayers[0];
 
-                        for (int i = 0; i < ListOfPlayers.Count; i++)
-                        {
-                            temp = random.Next(1, ListOfPlayers.Count);
-                            if (TeamProtection && (Pairings[pos].Player1.Team != ListOfPlayers[temp].Team || Pairings[pos].Player1.Team == ""))
-                            {
-                                Pairings[pos].Player2 = ListOfPlayers[temp];
-                                break;
-                            }
+        //                for (int i = 0; i < ListOfPlayers.Count; i++)
+        //                {
+        //                    temp = random.Next(1, ListOfPlayers.Count);
+        //                    if (TeamProtection && (Pairings[pos].Player1.Team != ListOfPlayers[temp].Team || Pairings[pos].Player1.Team == ""))
+        //                    {
+        //                        Pairings[pos].Player2 = ListOfPlayers[temp];
+        //                        break;
+        //                    }
 
-                        }
+        //                }
 
-                        if (Pairings[pos].Player2 == null)
-                            Pairings[pos].Player2 = ListOfPlayers[1];
+        //                if Participants.Where(x => x.ID == (Pairings[pos].Player2ID) == null)
+        //                    Pairings[pos].Player2 = ListOfPlayers[1];
 
-                        ListOfPlayers.Remove(Pairings[pos].Player1);
-                        ListOfPlayers.Remove(Pairings[pos].Player2);
-                        pos++;
-                    }
-                }
-                else
-                {
-                    while (ListOfPlayers.Count > 0)
-                    {
-                        Pairings.Add(new Pairing());
-                        if (ListOfPlayers.Count == 1)
-                        {
-                            Pairings[pos].Player1 = ListOfPlayers[0];
-                            Pairings[pos].Player2 = Bye;
-                            Pairings[pos].Player1.Bye = true;
-                            Pairings[pos].ResultEdited = true;
-                            ListOfPlayers.Remove(Pairings[pos].Player1);
-                            pos++;
-                            break;
-                        }
-                        Pairings[pos].Player1 = ListOfPlayers[0];
-                        for (int i = 1; i < ListOfPlayers.Count; i++)
-                        {
-                            if (!Pairings[pos].Player1.HasPlayedVS(ListOfPlayers[i]))
-                            {
-                                Pairings[pos].Player2 = ListOfPlayers[i];
-                                break;
-                            }
-                        }
-                        if (Pairings[pos].Player2 == null)
-                            Pairings[pos].Player2 = ListOfPlayers[1];
+        //                ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == Pairings[pos].Player1ID).First());
+        //                ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == Pairings[pos].Player2ID).First());
+        //                pos++;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            while (ListOfPlayers.Count > 0)
+        //            {
+        //                Pairings.Add(new Pairing());
+        //                if (ListOfPlayers.Count == 1)
+        //                {
+        //                    Pairings[pos].Player1 = ListOfPlayers[0];
+        //                    Pairings[pos].Player2 = Bye;
+        //                    Pairings[pos].Player1.HasBye = true;
+        //                    Pairings[pos].ResultEdited = true;
+        //                    ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == Pairings[pos].Player1ID).First());
+        //                    pos++;
+        //                    break;
+        //                }
+        //                Pairings[pos].Player1 = ListOfPlayers[0];
+        //                for (int i = 1; i < ListOfPlayers.Count; i++)
+        //                {
+        //                    if (!Pairings[pos].Player1.HasPlayedVS(ListOfPlayers[i].ID))
+        //                    {
+        //                        Pairings[pos].Player2 = ListOfPlayers[i];
+        //                        break;
+        //                    }
+        //                }
+        //                if Participants.Where(x => x.ID == (Pairings[pos].Player2ID) == null)
+        //                    Pairings[pos].Player2 = ListOfPlayers[1];
 
-                        ListOfPlayers.Remove(Pairings[pos].Player1);
-                        ListOfPlayers.Remove(Pairings[pos].Player2);
-                        pos++;
-                    }
-                }
+        //                ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == Pairings[pos].Player1ID).First());
+        //                ListOfPlayers.Remove(ListOfPlayers.Where(x => x.ID == Pairings[pos].Player2ID).First());
+        //                pos++;
+        //            }
+        //        }
 
-                //Prüfen, ob die letzten beiden schon gegeneinander gespielt haben
-                temp = Pairings.Count - 1;
+        //        //Prüfen, ob die letzten beiden schon gegeneinander gespielt haben
+        //        temp = Pairings.Count - 1;
 
-                if (Pairings[temp] == null)
-                    temp--;
+        //        if (Pairings[temp] == null)
+        //            temp--;
 
-                if (Pairings[temp].Player1.HasPlayedVS(Pairings[temp].Player2) && Pairings[temp].Player1.EnemyCount < Participants.Count)
-                {
-                    for (int i = temp - 1; i >= 0; i--)
-                    {
-                        if (!Pairings[temp].Player1.HasPlayedVS(Pairings[i].Player1) && !Pairings[temp].Player2.HasPlayedVS(Pairings[i].Player2))
-                        {
-                            ChangePairing(temp, 0, i, 0);
-                            break;
-                        }
-                        if (!Pairings[temp].Player1.HasPlayedVS(Pairings[i].Player2) && !Pairings[temp].Player2.HasPlayedVS(Pairings[i].Player1))
-                        {
-                            ChangePairing(temp, 0, i, 1);
-                            break;
-                        }
-                    }
-                }
-            }
+        //        if (Pairings[temp].Player1.HasPlayedVS(Pairings[temp].Player2.ID) && Pairings[temp].Player1.Enemies.Count < Participants.Count)
+        //        {
+        //            for (int i = temp - 1; i >= 0; i--)
+        //            {
+        //                if (!Pairings[temp].Player1.HasPlayedVS(Pairings[i].Player1.ID) && !Pairings[temp].Player2.HasPlayedVS(Pairings[i].Player2.ID))
+        //                {
+        //                    ChangePairing(temp, 0, i, 0);
+        //                    break;
+        //                }
+        //                if (!Pairings[temp].Player1.HasPlayedVS(Pairings[i].Player2.ID) && !Pairings[temp].Player2.HasPlayedVS(Pairings[i].Player1.ID))
+        //                {
+        //                    ChangePairing(temp, 0, i, 1);
+        //                    break;
+        //                }
+        //            }
+        //        }
+        //    }
 
-            if (Rounds == null)
-                Rounds = new List<Round>();
-            Rounds.Add(new Round(Rounds.Count + 1, Pairings, Participants, ChoosenScenario));
-            DisplayedRound = Rounds.Count;
+        //    if (Rounds == null)
+        //        Rounds = new List<Round>();
+        //    Rounds.Add(new Round(Rounds.Count + 1, Pairings, Participants, ChoosenScenario));
+        //    DisplayedRound = Rounds.Count;
 
-            return Pairings;
-        }
+        //    return Pairings;
+        //}
 
-        private void CheckTableNr()
-        {
-            foreach (Pairing p in Pairings)
-            {
-                if (p.Player1.TableNo != 0 && p.Player1.Bye == false && p.TableNr != p.Player1.TableNo)
-                {
-                    if ((p.Player2.TableNo != 0 && p.Player1.TableNo < p.Player2.TableNo) || p.Player2.TableNo == 0)
-                    {
-                        ChangePairings(p.Player1.TableNo, p.TableNr);
-                    }
-                    else if (p.Player2.TableNo != 0 && p.Player1.TableNo > p.Player2.TableNo && p.Player2.TableNo != p.TableNr)
-                    {
-                        ChangePairings(p.Player2.TableNo, p.TableNr);
-                    }
-                }
-                else if (p.Player2.TableNo != 0)
-                {
-                    ChangePairings(p.Player2.TableNo, p.TableNr);
-                }
-            }
-        }
+        //private void CheckTableNr()
+        //{
+        //    foreach (Pairing p in Pairings)
+        //    {
+        //        if (p.Player1.TableNo != 0 && p.Player1.HasBye == false && p.TableNo != p.Player1.TableNo)
+        //        {
+        //            if ((p.Player2.TableNo != 0 && p.Player1.TableNo < p.Player2.TableNo) || p.Player2.TableNo == 0)
+        //            {
+        //                ChangePairings(p.Player1.TableNo, p.TableNo);
+        //            }
+        //            else if (p.Player2.TableNo != 0 && p.Player1.TableNo > p.Player2.TableNo && p.Player2.TableNo != p.TableNo)
+        //            {
+        //                ChangePairings(p.Player2.TableNo, p.TableNo);
+        //            }
+        //        }
+        //        else if (p.Player2.TableNo != 0)
+        //        {
+        //            ChangePairings(p.Player2.TableNo, p.TableNo);
+        //        }
+        //    }
+        //}
 
-        private void ChangePairings(int a, int b)
-        {
-            int tablenra = a;
-            int tablenrb = b;
-            a--;
-            b--;
-            if (a >= Pairings.Count)
-            {
-                a = Pairings.Count - 1;
-            }
-            if (b >= Pairings.Count)
-            {
-                b = Pairings.Count - 1;
-            }
+        //private void ChangePairings(int a, int b)
+        //{
+        //    int tablenra = a;
+        //    int tablenrb = b;
+        //    a--;
+        //    b--;
+        //    if (a >= Pairings.Count)
+        //    {
+        //        a = Pairings.Count - 1;
+        //    }
+        //    if (b >= Pairings.Count)
+        //    {
+        //        b = Pairings.Count - 1;
+        //    }
 
-            Player a1 = Pairings[a].Player1;
-            Player a2 = Pairings[a].Player2;
-            bool result = Pairings[a].ResultEdited;
-            Pairings[a].Player1 = Pairings[b].Player1;
-            Pairings[a].Player2 = Pairings[b].Player2;
-            Pairings[a].ResultEdited = Pairings[b].ResultEdited;
-            Pairings[b].Player1 = a1;
-            Pairings[b].Player2 = a2;
-            Pairings[b].ResultEdited = result;
-            Pairings[a].TableNr = tablenra;
-            Pairings[b].TableNr = tablenrb;
-        }
+        //    Player a1 = Pairings[a].Player1;
+        //    Player a2 = Pairings[a].Player2;
+        //    bool result = Pairings[a].ResultEdited;
+        //    Pairings[a].Player1 = Pairings[b].Player1;
+        //    Pairings[a].Player2 = Pairings[b].Player2;
+        //    Pairings[a].ResultEdited = Pairings[b].ResultEdited;
+        //    Pairings[b].Player1 = a1;
+        //    Pairings[b].Player2 = a2;
+        //    Pairings[b].ResultEdited = result;
+        //    Pairings[a].TableNo = tablenra;
+        //    Pairings[b].TableNo = tablenrb;
+        //}
 
-        //TODO: Ändern auf Rules
-        public void RemoveLastRound()
-        {
-            foreach (var p in Participants)
-                p.RemoveLastResult();
-            foreach (var p in Pairings)
-            {
-                p.Player1Score = 0;
-                p.Player2Score = 0;
-                if (p.Player1.Bye || (p.Player1.WonBye && FirstRound))
-                    p.ResultEdited = true;
-                else
-                    p.ResultEdited = false;
-            }
-        }
-
-        public void GetResults(List<Pairing> results, bool update = false)
-        {
-            Result r;
-            int winnerID = 0;
-            bool winner;
-            WinnerLastRound = new List<Player>();
-            if (bonus)
-            {
-                foreach (Pairing pairing in results)
-                {
-                    r = new Result(0, 0, Bonus, MaxPoints, 1, pairing.Player1Score);
-                    Rule.AddBonus(pairing.Player1, r);
-                }
-                return;
-            }
-            if (!update)
-            {
-                foreach (Pairing pairing in results)
-                {
-                    if (pairing.Winner == "Player 1")
-                        winnerID = pairing.Player1.ID;
-                    else if (pairing.Winner == "Player 2")
-                        winnerID = pairing.Player2.ID;
-                    else
-                        winnerID = (pairing.Player1Score > pairing.Player2Score) ? pairing.Player1.ID : pairing.Player2.ID;
-                    r = new Result(pairing.Player1Score, pairing.Player2Score, pairing.Player2, MaxPoints, winnerID, pairing.Player1Points);
-                    winner = Rule.AddResult(pairing.Player1, r);
-                    if (winner)
-                        WinnerLastRound.Add(pairing.Player1);
-                    if (pairing.Player2 != WonBye && pairing.Player2 != Bye)
-                    {
-                        r = new Result(pairing.Player2Score, pairing.Player1Score, pairing.Player1, MaxPoints, winnerID, pairing.Player2Points);
-                        winner = Rule.AddResult(pairing.Player2, r);
-                        if (winner)
-                            WinnerLastRound.Add(pairing.Player2);
-                    }
-                }
-                FirstRound = false;
-            }
-            else
-            {
-                for (int i = 0; i < results.Count; i++)
-                {
-                    if (results[i].ResultEdited)
-                    {
-                        if (results[i].Winner == "Player 1")
-                            winnerID = results[i].Player1.ID;
-                        else if (results[i].Winner == "Player 2")
-                            winnerID = results[i].Player2.ID;
-                        else
-                            winnerID = (results[i].Player1Score > results[i].Player2Score) ? results[i].Player1.ID : results[i].Player2.ID;
-                        r = new Result(results[i].Player1Score, results[i].Player2Score, results[i].Player2, MaxPoints, winnerID, results[i].Player1Points);
-                        Rule.Update(results[i].Player1, r, DisplayedRound);
-                        r = new Result(results[i].Player2Score, results[i].Player1Score, results[i].Player1, MaxPoints, winnerID, results[i].Player2Points);
-                        Rule.Update(results[i].Player2, r, DisplayedRound);
-                    }
-                }
-            }
-            foreach (Player player in Participants)
-                player.SumStrengthOfSchedule();
-            foreach (Player player in Participants)
-                player.SumExtendedStrengthOfSchedule();
-            for (int i = 0; i < results.Count; i++)
-                results[i].ResultEdited = false;
-            if (update)
-                Rounds[DisplayedRound - 1].Pairings = results;
-            else
-                Rounds[Rounds.Count - 1].Pairings = results;
-            PrePaired = new List<Pairing>();
-            Sort();
-        }
+        //public void GetResults(List<Pairing> results, bool update = false)
+        //{
+        //    Result r;
+        //    int winnerID = 0;
+        //    bool winner;
+        //    WinnerLastRound = new List<Player>();
+        //    if (bonus)
+        //    {
+        //        foreach (Pairing pairing in results)
+        //        {
+        //            r = new Result(0, 0, Bonus.ID, MaxPoints, 1, pairing.Player1Score);
+        //            Rule.AddBonus(pairing.Player1, r);
+        //        }
+        //        return;
+        //    }
+        //    if (!update)
+        //    {
+        //        foreach (Pairing pairing in results)
+        //        {
+        //            if (pairing.Winner == "Player 1")
+        //                winnerID = pairing.Player1.ID;
+        //            else if (pairing.Winner == "Player 2")
+        //                winnerID = pairing.Player2.ID;
+        //            else
+        //                winnerID = (pairing.Player1Score > pairing.Player2Score) ? pairing.Player1.ID : pairing.Player2.ID;
+        //            r = new Result(pairing.Player1Score, pairing.Player2Score, pairing.Player2.ID, MaxPoints, winnerID, pairing.Player1Points);
+        //            winner = Rule.AddResult(pairing.Player1, r);
+        //            if (winner)
+        //                WinnerLastRound.Add(pairing.Player1);
+        //            if (pairing.Player2 != WonBye && pairing.Player2 != Bye)
+        //            {
+        //                r = new Result(pairing.Player2Score, pairing.Player1Score, pairing.Player1.ID, MaxPoints, winnerID, pairing.Player2Points);
+        //                winner = Rule.AddResult(pairing.Player2, r);
+        //                if (winner)
+        //                    WinnerLastRound.Add(pairing.Player2);
+        //            }
+        //        }
+        //        FirstRound = false;
+        //    }
+        //    else
+        //    {
+        //        for (int i = 0; i < results.Count; i++)
+        //        {
+        //            if (results[i].ResultEdited)
+        //            {
+        //                if (results[i].Winner == "Player 1")
+        //                    winnerID = results[i].Player1.ID;
+        //                else if (results[i].Winner == "Player 2")
+        //                    winnerID = results[i].Player2.ID;
+        //                else
+        //                    winnerID = (results[i].Player1Score > results[i].Player2Score) ? results[i].Player1.ID : results[i].Player2.ID;
+        //                r = new Result(results[i].Player1Score, results[i].Player2Score, results[i].Player2.ID, MaxPoints, winnerID, results[i].Player1Points);
+        //                Rule.Update(results[i].Player1, r, DisplayedRound);
+        //                r = new Result(results[i].Player2Score, results[i].Player1Score, results[i].Player1.ID, MaxPoints, winnerID, results[i].Player2Points);
+        //                Rule.Update(results[i].Player2, r, DisplayedRound);
+        //            }
+        //        }
+        //    }
+        //    foreach (Player player in Participants)
+        //        CalculateStrengthOfSchedule(player);
+        //    foreach (Player player in Participants)
+        //        CalculateExtendedStrengthOfSchedule(player);
+        //    for (int i = 0; i < results.Count; i++)
+        //        results[i].ResultEdited = false;
+        //    if (update)
+        //        Rounds[DisplayedRound - 1].Pairings = results;
+        //    else
+        //        Rounds[Rounds.Count - 1].Pairings = results;
+        //    PrePaired = new List<Pairing>();
+        //    Sort();
+        //}
 
         public void ChangePlayer(Player player)
         {
@@ -734,7 +714,7 @@ namespace TXM.Core.Logic
         {
             for (int i = Participants.Count - 1; i >= 0; i--)
             {
-                if (!player.HasPlayedVS(Participants[i]))
+                if (!player.HasPlayedVS(Participants[i].ID))
                     return Participants[i];
             }
             return null;
@@ -793,7 +773,7 @@ namespace TXM.Core.Logic
             for (int i = 0; i < PointGroup[groupNr].Count; i++)
             {
                 enemy = PointGroup[groupNr][i];
-                if (!Player.HasPlayedVS(enemy) && !Player.Equals(enemy))
+                if (!Player.HasPlayedVS(enemy.ID) && !Player.Equals(enemy))
                     return false;
             }
             return true;
@@ -804,7 +784,7 @@ namespace TXM.Core.Logic
             if (!Single)
             {
                 Teamplayer = Participants;
-                Participants = new List<Player>();
+                Participants = new ObservableCollection<Player>();
                 foreach (var tp in Teamplayer)
                 {
                     int a = -1;
@@ -827,7 +807,7 @@ namespace TXM.Core.Logic
             WonByes = 0;
             foreach (Player p in Participants)
             {
-                if (p.WonBye)
+                if (p.HasWonBye)
                     WonByes++;
             }
         }
@@ -837,7 +817,7 @@ namespace TXM.Core.Logic
             List<Player> result = new List<Player>();
             for (int i = 0; i < ListOfPlayers.Count; i++)
             {
-                if (ListOfPlayers[i].WonBye)
+                if (ListOfPlayers[i].HasWonBye)
                 {
                     result.Add(ListOfPlayers[i]);
                     ListOfPlayers.RemoveAt(i);
@@ -847,67 +827,67 @@ namespace TXM.Core.Logic
             return result;
         }
 
-        private void ChangePairing(int player1Game, int player1Pos, int player2Game, int player2Pos)
-        {
-            int player1EnemyPos = (player1Pos == 0) ? 1 : 0;
-            if (player1Game == player2Game)
-                return;
-            Player player2;
-            if (player2Pos == 0)
-            {
-                player2 = Pairings[player2Game].Player1;
-                if (player1EnemyPos == 0)
-                {
-                    Pairings[player2Game].Player1 = Pairings[player1Game].Player1;
-                    Pairings[player1Game].Player1 = player2;
-                }
-                else
-                {
-                    Pairings[player2Game].Player1 = Pairings[player1Game].Player2;
-                    Pairings[player1Game].Player2 = player2;
-                }
-            }
-            else
-            {
-                player2 = Pairings[player2Game].Player2;
-                if (player1EnemyPos == 0)
-                {
-                    Pairings[player2Game].Player2 = Pairings[player1Game].Player1;
-                    Pairings[player1Game].Player1 = player2;
-                }
-                else
-                {
-                    Pairings[player2Game].Player2 = Pairings[player1Game].Player2;
-                    Pairings[player1Game].Player2 = player2;
-                }
-            }
-            Pairings[player1Game].Player1.Bye = false;
-            Pairings[player1Game].Player2.Bye = false;
-            Pairings[player2Game].Player1.Bye = false;
-            Pairings[player2Game].Player2.Bye = false;
-            Pairings[player1Game].ResultEdited = false;
-            Pairings[player2Game].ResultEdited = false;
-            if (Pairings[player1Game].Player1 == Bye)
-            {
-                Pairings[player1Game].Player2.Bye = true;
-                Pairings[player1Game].ResultEdited = true;
-            }
-            else if (Pairings[player1Game].Player2 == Bye)
-            {
-                Pairings[player1Game].Player1.Bye = true;
-                Pairings[player1Game].ResultEdited = true;
-            }
-            else if (Pairings[player2Game].Player1 == Bye)
-            {
-                Pairings[player2Game].Player2.Bye = true;
-                Pairings[player2Game].ResultEdited = true;
-            }
-            else if (Pairings[player2Game].Player2 == Bye)
-            {
-                Pairings[player2Game].Player1.Bye = true;
-                Pairings[player2Game].ResultEdited = true;
-            }
-        }
+        //private void ChangePairing(int player1Game, int player1Pos, int player2Game, int player2Pos)
+        //{
+        //    int player1EnemyPos = (player1Pos == 0) ? 1 : 0;
+        //    if (player1Game == player2Game)
+        //        return;
+        //    Player player2;
+        //    if (player2Pos == 0)
+        //    {
+        //        player2 = Pairings[player2Game].Player1;
+        //        if (player1EnemyPos == 0)
+        //        {
+        //            Pairings[player2Game].Player1 = Pairings[player1Game].Player1;
+        //            Pairings[player1Game].Player1 = player2;
+        //        }
+        //        else
+        //        {
+        //            Pairings[player2Game].Player1 = Pairings[player1Game].Player2;
+        //            Pairings[player1Game].Player2 = player2;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        player2 = Pairings[player2Game].Player2;
+        //        if (player1EnemyPos == 0)
+        //        {
+        //            Pairings[player2Game].Player2 = Pairings[player1Game].Player1;
+        //            Pairings[player1Game].Player1 = player2;
+        //        }
+        //        else
+        //        {
+        //            Pairings[player2Game].Player2 = Pairings[player1Game].Player2;
+        //            Pairings[player1Game].Player2 = player2;
+        //        }
+        //    }
+        //    Pairings[player1Game].Player1.HasBye = false;
+        //    Pairings[player1Game].Player2.HasBye = false;
+        //    Pairings[player2Game].Player1.HasBye = false;
+        //    Pairings[player2Game].Player2.HasBye = false;
+        //    Pairings[player1Game].ResultEdited = false;
+        //    Pairings[player2Game].ResultEdited = false;
+        //    if (Pairings[player1Game].Player1 == Bye)
+        //    {
+        //        Pairings[player1Game].Player2.HasBye = true;
+        //        Pairings[player1Game].ResultEdited = true;
+        //    }
+        //    else if (Pairings[player1Game].Player2 == Bye)
+        //    {
+        //        Pairings[player1Game].Player1.HasBye = true;
+        //        Pairings[player1Game].ResultEdited = true;
+        //    }
+        //    else if (Pairings[player2Game].Player1 == Bye)
+        //    {
+        //        Pairings[player2Game].Player2.HasBye = true;
+        //        Pairings[player2Game].ResultEdited = true;
+        //    }
+        //    else if (Pairings[player2Game].Player2 == Bye)
+        //    {
+        //        Pairings[player2Game].Player1.HasBye = true;
+        //        Pairings[player2Game].ResultEdited = true;
+        //    }
+        //}
 
         private void ResetScenarios()
         {
@@ -928,42 +908,24 @@ namespace TXM.Core.Logic
             Participants.Remove(player);
         }
 
+        //TODO: Refactor Calculate Won Bye
         public void CalculateWonBye()
         {
             if (!WonByeCalculated)
             {
-                foreach (var player in (Participants))
+                foreach (Player player in (Participants))
                 {
-                    if (player.WonBye)
+                    if (player.HasWonBye)
                     {
-                        player.AddLastEnemy(GetStrongestUnplayedEnemy(player));
+                        int enemyID = 0;
+//             player.AddLastEnemy(GetStrongestUnplayedEnemy(player));
+                        player.Enemies.Add(new Enemy(enemyID, true));
+                        CalculateStrengthOfSchedule(player);
+                        CalculateExtendedStrengthOfSchedule(player);
                     }
                 }
             }
             WonByeCalculated = true;
-        }
-
-        public void DisqualifyPlayer(Player player)
-        {
-            for (int i = 0; i < player.Enemies.Count; i++)
-            {
-                Player enemy = player.Enemies[i];
-                Rule.Update(player, new Result(0, MaxPoints, enemy, MaxPoints, enemy.ID), i + 1);
-                Rule.Update(enemy, new Result(MaxPoints, 0, player, MaxPoints, enemy.ID), i + 1);
-            }
-            for (int i = 0; i < player.Enemies.Count; i++)
-            {
-                player.Enemies[i].SumStrengthOfSchedule();
-                player.Enemies[i].SumExtendedStrengthOfSchedule();
-            }
-            player.SumStrengthOfSchedule();
-            player.SumExtendedStrengthOfSchedule();
-            player.Disqualify();
-        }
-
-        public void DropPlayer(Player player)
-        {
-            player.Drop();
         }
 
         public int GetIndexOfPlayer(Player p)
@@ -976,9 +938,9 @@ namespace TXM.Core.Logic
             return 0;
         }
 
-        public List<Pairing> GetBonusSeed()
+        public ObservableCollection<Pairing> GetBonusSeed()
         {
-            Pairings = new List<Pairing>();
+            Pairings = new ObservableCollection<Pairing>();
 
             foreach (var p in Participants)
             {
@@ -993,213 +955,5 @@ namespace TXM.Core.Logic
             return Pairings;
         }
 
-        public Tournament(SerializationInfo info, StreamingContext context)
-        {
-            int _version = (int)info.GetValue("Tournament_Version", typeof(int));
-            WonBye = Player.GetWonBye();
-            Bye = Player.GetBye();
-            Bonus = Player.GetBonus();
-            if (_version == 0)
-            {
-                Participants = (List<Player>)info.GetValue("Tournament_Participants", typeof(List<Player>));
-                Teamplayer = (List<Player>)info.GetValue("Tournament_Teamplayer", typeof(List<Player>));
-                FirstRound = (bool)info.GetValue("Tournament_FirstRound", typeof(bool));
-                PrePaired = (List<Pairing>)info.GetValue("Tournament_PrePaired", typeof(List<Pairing>));
-                Name = (string)info.GetValue("Tournament_Name", typeof(string));
-                Nicknames = (List<string>)info.GetValue("Tournament_Nicknames", typeof(List<string>));
-                MaxPoints = (int)info.GetValue("Tournament_MaxPoints", typeof(int));
-                Rounds = (List<Round>)info.GetValue("Tournament_Rounds", typeof(List<Round>));
-                FilePath = (string)info.GetValue("Tournament_FilePath", typeof(string));
-                AutoSavePath = (string)info.GetValue("Tournament_AutoSavePath", typeof(string));
-                DisplayedRound = (int)info.GetValue("Tournament_DisplayedRound", typeof(int));
-                Cut = (TournamentCut)info.GetValue("Tournament_Cut", typeof(TournamentCut));
-                CutStarted = (bool)info.GetValue("Tournament_CutStarted", typeof(bool));
-                WonByeCalculated = (bool)info.GetValue("Tournament_WonByeCalculated", typeof(bool));
-                Pairings = (List<Pairing>)info.GetValue("Tournament_Pairings", typeof(List<Pairing>));
-                TeamProtection = (bool)info.GetValue("Tournament_TeamProtection", typeof(bool));
-                Single = (bool)info.GetValue("Tournament_Single", typeof(bool));
-                PrintDDGER = (bool)info.GetValue("Tournament_PrintDDGER", typeof(bool));
-                PrintDDENG = (bool)info.GetValue("Tournament_PrintDDENG", typeof(bool));
-                Rule = (AbstractRules)info.GetValue("Tournament_Rule", typeof(AbstractRules));
-                bool ButtonGetResultState = (bool)info.GetValue("Tournament_ButtonGetResultState", typeof(bool));
-                bool ButtonNextRoundState = (bool)info.GetValue("Tournament_ButtonNextRoundState", typeof(bool));
-                ButtonCutState = (bool)info.GetValue("Tournament_ButtonCutState", typeof(bool));
-                T3ID = (int)info.GetValue("Tournament_T3ID", typeof(int));
-                GOEPPVersion = (string)info.GetValue("Tournament_GOEPPVersion", typeof(string));
-                givenStartNo = (List<int>)info.GetValue("Tournament_givenStartNo", typeof(List<int>));
-                ListOfPlayers = (List<Player>)info.GetValue("Tournament_ListOfPlayers", typeof(List<Player>));
-                PointGroup = (List<Player>[])info.GetValue("Tournament_PointGroup", typeof(List<Player>[]));
-                WonByes = (int)info.GetValue("Tournament_WonByes", typeof(int));
-                currentCountOfPlayer = (int)info.GetValue("Tournament_currentCountOfPlayer", typeof(int));
-                WinnerLastRound = (List<Player>)info.GetValue("Tournament_WinnerLastRound", typeof(List<Player>));
-                bye = (bool)info.GetValue("Tournament_bye", typeof(bool));
-                if (ButtonNextRoundState == true)
-                {
-                    ButtonGetResultsText = "Next Round";
-                }
-                else if (ButtonGetResultState == true)
-                {
-                    ButtonGetResultsText = "Get Results";
-                }
-                else
-                {
-                    ButtonGetResultsText = "Start Tournament";
-                }
-                bonus = false;
-                ActiveScenarios = new List<string>();
-                ChoosenScenario = "";
-            }
-            else if (_version == 1)
-            {
-                Participants = (List<Player>)info.GetValue("Tournament_Participants", typeof(List<Player>));
-                Teamplayer = (List<Player>)info.GetValue("Tournament_Teamplayer", typeof(List<Player>));
-                FirstRound = (bool)info.GetValue("Tournament_FirstRound", typeof(bool));
-                PrePaired = (List<Pairing>)info.GetValue("Tournament_PrePaired", typeof(List<Pairing>));
-                Name = (string)info.GetValue("Tournament_Name", typeof(string));
-                Nicknames = (List<string>)info.GetValue("Tournament_Nicknames", typeof(List<string>));
-                MaxPoints = (int)info.GetValue("Tournament_MaxPoints", typeof(int));
-                Rounds = (List<Round>)info.GetValue("Tournament_Rounds", typeof(List<Round>));
-                FilePath = (string)info.GetValue("Tournament_FilePath", typeof(string));
-                AutoSavePath = (string)info.GetValue("Tournament_AutoSavePath", typeof(string));
-                DisplayedRound = (int)info.GetValue("Tournament_DisplayedRound", typeof(int));
-                Cut = (TournamentCut)info.GetValue("Tournament_Cut", typeof(TournamentCut));
-                CutStarted = (bool)info.GetValue("Tournament_CutStarted", typeof(bool));
-                WonByeCalculated = (bool)info.GetValue("Tournament_WonByeCalculated", typeof(bool));
-                Pairings = (List<Pairing>)info.GetValue("Tournament_Pairings", typeof(List<Pairing>));
-                TeamProtection = (bool)info.GetValue("Tournament_TeamProtection", typeof(bool));
-                Single = (bool)info.GetValue("Tournament_Single", typeof(bool));
-                PrintDDGER = (bool)info.GetValue("Tournament_PrintDDGER", typeof(bool));
-                PrintDDENG = (bool)info.GetValue("Tournament_PrintDDENG", typeof(bool));
-                Rule = (AbstractRules)info.GetValue("Tournament_Rule", typeof(AbstractRules));
-                ButtonGetResultsText = (string)info.GetValue("Tournament_ButtonGetResultsText", typeof(string));
-                ButtonCutState = (bool)info.GetValue("Tournament_ButtonCutState", typeof(bool));
-                T3ID = (int)info.GetValue("Tournament_T3ID", typeof(int));
-                GOEPPVersion = (string)info.GetValue("Tournament_GOEPPVersion", typeof(string));
-                givenStartNo = (List<int>)info.GetValue("Tournament_givenStartNo", typeof(List<int>));
-                ListOfPlayers = (List<Player>)info.GetValue("Tournament_ListOfPlayers", typeof(List<Player>));
-                PointGroup = (List<Player>[])info.GetValue("Tournament_PointGroup", typeof(List<Player>[]));
-                WonByes = (int)info.GetValue("Tournament_WonByes", typeof(int));
-                currentCountOfPlayer = (int)info.GetValue("Tournament_currentCountOfPlayer", typeof(int));
-                WinnerLastRound = (List<Player>)info.GetValue("Tournament_WinnerLastRound", typeof(List<Player>));
-                bye = (bool)info.GetValue("Tournament_bye", typeof(bool));
-                bonus = false;
-                ActiveScenarios = new List<string>();
-                ChoosenScenario = "";
-            }
-            else if (_version == 2)
-            {
-                Participants = (List<Player>)info.GetValue("Tournament_Participants", typeof(List<Player>));
-                Teamplayer = (List<Player>)info.GetValue("Tournament_Teamplayer", typeof(List<Player>));
-                FirstRound = (bool)info.GetValue("Tournament_FirstRound", typeof(bool));
-                PrePaired = (List<Pairing>)info.GetValue("Tournament_PrePaired", typeof(List<Pairing>));
-                Name = (string)info.GetValue("Tournament_Name", typeof(string));
-                Nicknames = (List<string>)info.GetValue("Tournament_Nicknames", typeof(List<string>));
-                MaxPoints = (int)info.GetValue("Tournament_MaxPoints", typeof(int));
-                Rounds = (List<Round>)info.GetValue("Tournament_Rounds", typeof(List<Round>));
-                FilePath = (string)info.GetValue("Tournament_FilePath", typeof(string));
-                AutoSavePath = (string)info.GetValue("Tournament_AutoSavePath", typeof(string));
-                DisplayedRound = (int)info.GetValue("Tournament_DisplayedRound", typeof(int));
-                Cut = (TournamentCut)info.GetValue("Tournament_Cut", typeof(TournamentCut));
-                CutStarted = (bool)info.GetValue("Tournament_CutStarted", typeof(bool));
-                WonByeCalculated = (bool)info.GetValue("Tournament_WonByeCalculated", typeof(bool));
-                Pairings = (List<Pairing>)info.GetValue("Tournament_Pairings", typeof(List<Pairing>));
-                TeamProtection = (bool)info.GetValue("Tournament_TeamProtection", typeof(bool));
-                Single = (bool)info.GetValue("Tournament_Single", typeof(bool));
-                PrintDDGER = (bool)info.GetValue("Tournament_PrintDDGER", typeof(bool));
-                PrintDDENG = (bool)info.GetValue("Tournament_PrintDDENG", typeof(bool));
-                Rule = (AbstractRules)info.GetValue("Tournament_Rule", typeof(AbstractRules));
-                ButtonGetResultsText = (string)info.GetValue("Tournament_ButtonGetResultsText", typeof(string));
-                ButtonCutState = (bool)info.GetValue("Tournament_ButtonCutState", typeof(bool));
-                T3ID = (int)info.GetValue("Tournament_T3ID", typeof(int));
-                GOEPPVersion = (string)info.GetValue("Tournament_GOEPPVersion", typeof(string));
-                givenStartNo = (List<int>)info.GetValue("Tournament_givenStartNo", typeof(List<int>));
-                ListOfPlayers = (List<Player>)info.GetValue("Tournament_ListOfPlayers", typeof(List<Player>));
-                PointGroup = (List<Player>[])info.GetValue("Tournament_PointGroup", typeof(List<Player>[]));
-                WonByes = (int)info.GetValue("Tournament_WonByes", typeof(int));
-                currentCountOfPlayer = (int)info.GetValue("Tournament_currentCountOfPlayer", typeof(int));
-                WinnerLastRound = (List<Player>)info.GetValue("Tournament_WinnerLastRound", typeof(List<Player>));
-                bye = (bool)info.GetValue("Tournament_bye", typeof(bool));
-                bonus = (bool)info.GetValue("Tournament_bonus", typeof(bool));
-                ActiveScenarios = new List<string>();
-                ChoosenScenario = "";
-            }
-            else if (_version == 3)
-            {
-                Participants = (List<Player>)info.GetValue("Tournament_Participants", typeof(List<Player>));
-                Teamplayer = (List<Player>)info.GetValue("Tournament_Teamplayer", typeof(List<Player>));
-                FirstRound = (bool)info.GetValue("Tournament_FirstRound", typeof(bool));
-                PrePaired = (List<Pairing>)info.GetValue("Tournament_PrePaired", typeof(List<Pairing>));
-                Name = (string)info.GetValue("Tournament_Name", typeof(string));
-                Nicknames = (List<string>)info.GetValue("Tournament_Nicknames", typeof(List<string>));
-                MaxPoints = (int)info.GetValue("Tournament_MaxPoints", typeof(int));
-                Rounds = (List<Round>)info.GetValue("Tournament_Rounds", typeof(List<Round>));
-                FilePath = (string)info.GetValue("Tournament_FilePath", typeof(string));
-                AutoSavePath = (string)info.GetValue("Tournament_AutoSavePath", typeof(string));
-                DisplayedRound = (int)info.GetValue("Tournament_DisplayedRound", typeof(int));
-                Cut = (TournamentCut)info.GetValue("Tournament_Cut", typeof(TournamentCut));
-                CutStarted = (bool)info.GetValue("Tournament_CutStarted", typeof(bool));
-                WonByeCalculated = (bool)info.GetValue("Tournament_WonByeCalculated", typeof(bool));
-                Pairings = (List<Pairing>)info.GetValue("Tournament_Pairings", typeof(List<Pairing>));
-                TeamProtection = (bool)info.GetValue("Tournament_TeamProtection", typeof(bool));
-                Single = (bool)info.GetValue("Tournament_Single", typeof(bool));
-                PrintDDGER = (bool)info.GetValue("Tournament_PrintDDGER", typeof(bool));
-                PrintDDENG = (bool)info.GetValue("Tournament_PrintDDENG", typeof(bool));
-                Rule = (AbstractRules)info.GetValue("Tournament_Rule", typeof(AbstractRules));
-                ButtonGetResultsText = (string)info.GetValue("Tournament_ButtonGetResultsText", typeof(string));
-                ButtonCutState = (bool)info.GetValue("Tournament_ButtonCutState", typeof(bool));
-                T3ID = (int)info.GetValue("Tournament_T3ID", typeof(int));
-                GOEPPVersion = (string)info.GetValue("Tournament_GOEPPVersion", typeof(string));
-                givenStartNo = (List<int>)info.GetValue("Tournament_givenStartNo", typeof(List<int>));
-                ListOfPlayers = (List<Player>)info.GetValue("Tournament_ListOfPlayers", typeof(List<Player>));
-                PointGroup = (List<Player>[])info.GetValue("Tournament_PointGroup", typeof(List<Player>[]));
-                WonByes = (int)info.GetValue("Tournament_WonByes", typeof(int));
-                currentCountOfPlayer = (int)info.GetValue("Tournament_currentCountOfPlayer", typeof(int));
-                WinnerLastRound = (List<Player>)info.GetValue("Tournament_WinnerLastRound", typeof(List<Player>));
-                bye = (bool)info.GetValue("Tournament_bye", typeof(bool));
-                bonus = (bool)info.GetValue("Tournament_bonus", typeof(bool));
-                ActiveScenarios = (List<string>)info.GetValue("Tournament_ActiveScenarios", typeof(List<string>));
-                ChoosenScenario = (string)info.GetValue("Tournament_ChoosenScenario", typeof(string));
-            }
-            Rule = AbstractRules.GetRule(Rule.GetName());
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("Tournament_Version", version, typeof(int));
-            info.AddValue("Tournament_Participants", Participants, typeof(List<Player>));
-            info.AddValue("Tournament_Teamplayer", Teamplayer, typeof(List<Player>));
-            info.AddValue("Tournament_FirstRound", FirstRound, typeof(bool));
-            info.AddValue("Tournament_PrePaired", PrePaired, typeof(List<Pairing>));
-            info.AddValue("Tournament_Name", Name, typeof(string));
-            info.AddValue("Tournament_Nicknames", Nicknames, typeof(List<string>));
-            info.AddValue("Tournament_MaxPoints", MaxPoints, typeof(int));
-            info.AddValue("Tournament_Rounds", Rounds, typeof(List<Round>));
-            info.AddValue("Tournament_FilePath", FilePath, typeof(string));
-            info.AddValue("Tournament_AutoSavePath", AutoSavePath, typeof(string));
-            info.AddValue("Tournament_DisplayedRound", DisplayedRound, typeof(int));
-            info.AddValue("Tournament_Cut", Cut, typeof(TournamentCut));
-            info.AddValue("Tournament_CutStarted", CutStarted, typeof(bool));
-            info.AddValue("Tournament_WonByeCalculated", WonByeCalculated, typeof(bool));
-            info.AddValue("Tournament_Pairings", Pairings, typeof(List<Pairing>));
-            info.AddValue("Tournament_TeamProtection", TeamProtection, typeof(bool));
-            info.AddValue("Tournament_Single", Single, typeof(bool));
-            info.AddValue("Tournament_PrintDDGER", PrintDDGER, typeof(bool));
-            info.AddValue("Tournament_PrintDDENG", PrintDDENG, typeof(bool));
-            info.AddValue("Tournament_Rule", Rule, typeof(AbstractRules));
-            info.AddValue("Tournament_ButtonGetResultsText", ButtonGetResultsText, typeof(string));
-            info.AddValue("Tournament_ButtonCutState", ButtonCutState, typeof(bool));
-            info.AddValue("Tournament_T3ID", T3ID, typeof(int));
-            info.AddValue("Tournament_GOEPPVersion", GOEPPVersion, typeof(string));
-            info.AddValue("Tournament_givenStartNo", givenStartNo, typeof(List<int>));
-            info.AddValue("Tournament_ListOfPlayers", ListOfPlayers, typeof(List<Player>));
-            info.AddValue("Tournament_PointGroup", PointGroup, typeof(List<Player>[]));
-            info.AddValue("Tournament_WonByes", WonByes, typeof(int));
-            info.AddValue("Tournament_currentCountOfPlayer", currentCountOfPlayer, typeof(int));
-            info.AddValue("Tournament_WinnerLastRound", WinnerLastRound, typeof(List<Player>));
-            info.AddValue("Tournament_bye", bye, typeof(bool));
-            info.AddValue("Tournament_bonus", bonus, typeof(bool));
-            info.AddValue("Tournament_ActiveScenarios", ActiveScenarios, typeof(List<string>));
-            info.AddValue("Tournament_ChoosenScenario", ChoosenScenario, typeof(string));
-        }
     }
 }

@@ -32,12 +32,12 @@ namespace TXM.GUI
 
             tournamentController = new TournamentController(new IO(new WindowsFile(), new WindowsMessage()));
 
-            if (tournamentController.ActiveIO.GetColor())
+            if (tournamentController.ActiveIO.ActiveSettings.TextColor == "Black")
                 SliderText.Value = 1.0;
             else
                 SliderText.Value = 2.0;
 
-            double size = tournamentController.ActiveIO.GetSize();
+            double size = tournamentController.ActiveIO.ActiveSettings.TextSize;
             if (size > 100.0)
                 SliderSize.Value = 100.0;
             else

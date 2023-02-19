@@ -1,6 +1,4 @@
-﻿using TXM.Core.Logic;
-
-namespace TXM.Core
+﻿namespace TXM.Core
 {
     public interface ITournamentDialog
     {

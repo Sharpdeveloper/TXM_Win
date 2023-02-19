@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace TXM.Core
@@ -32,9 +33,9 @@ namespace TXM.Core
 			Result newResult = result;
 
 			//ID == -1 => Bye
-			if (result.Enemy.ID == -1 || result.Enemy.ID == -2)
+			if (result.EnemyID == -1 || result.EnemyID == -2)
 			{
-				newResult = new Result(1, 0, result.Enemy, 1, result.WinnerID);
+				newResult = new Result(1, 0, result.EnemyID, 1, result.WinnerID);
 			}
 
 			int tP = newResult.Destroyed - newResult.Lost;
@@ -42,7 +43,7 @@ namespace TXM.Core
 			{
 				tP = 5;
 			}
-			else if (tP == 0 && newResult.WinnerID != newResult.Enemy.ID)
+			else if (tP == 0 && newResult.WinnerID != newResult.EnemyID)
 			{
 				tP = 4;
 			}
@@ -68,9 +69,9 @@ namespace TXM.Core
 			return tP == 1;
 		}
 
-		public override List<Player> SortTable(List<Player> unsorted)
+		public override ObservableCollection<Player> SortTable(ObservableCollection<Player> unsorted)
 		{
-			List<Player> t = unsorted.OrderByDescending(x => x.TournamentPoints).ThenByDescending(x => x.StrengthOfSchedule).ThenByDescending(x => x.ExtendedStrengthOfSchedule).ThenBy(x => x.Order).ToList<Player>();
+            ObservableCollection<Player> t = (ObservableCollection<Player>)unsorted.OrderByDescending(x => x.TournamentPoints).ThenByDescending(x => x.StrengthOfSchedule).ThenByDescending(x => x.ExtendedStrengthOfSchedule).ThenBy(x => x.Order);
 			for (int i = 0; i < t.Count; i++)
 				t[i].Rank = i + 1;
 			return t;

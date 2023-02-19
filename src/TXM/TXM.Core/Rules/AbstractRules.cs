@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace TXM.Core
 {
@@ -157,17 +158,18 @@ namespace TXM.Core
         #region Public Methods
         public bool AddResult(Player player, Result result)
         {
-            player.Enemies.Add(result.Enemy);
-            return ChangeResult(player, result, true);
-
+            bool hasWon = ChangeResult(player, result, true);
+            player.Enemies.Add(new Enemy(result.EnemyID, hasWon));
+            return hasWon;
         }
 
-        public bool RemoveLastResult(Player player, Result result)
+        public bool RemoveLastResult(Player player)
         {
+            //Temporary save the result whcich should be redone before it will be removed
+            Result result = player.Results[player.Results.Count - 1];
             player.Enemies.RemoveAt(player.Enemies.Count - 1);
             player.Results.RemoveAt(player.Results.Count - 1);
             return ChangeResult(player, result, false);
-
         }
 
         public bool ChangeResult(Player player, Result result, bool add)
@@ -177,11 +179,10 @@ namespace TXM.Core
             if (player.Results == null)
                 player.Results = new List<Result>();
 
-            player.Results.Add(result);
-
             bool winner;
             if (add)
             {
+                player.Results.Add(result);
                 winner = CalculateResult(result, (x, y) => { return x + y; });
             }
             else
@@ -204,7 +205,7 @@ namespace TXM.Core
 
         public void AddBonus(Player player, Result result)
         {
-            player.Enemies.Add(result.Enemy);
+            player.Enemies.Add(new Enemy(result.EnemyID, true));
             player.TournamentPoints += result.TournamentPoints;
         }
 
@@ -238,7 +239,7 @@ namespace TXM.Core
 
         #region Abstract Methods
         protected abstract bool CalculateResult(Result result, Func<int, int, int> f);
-        public abstract List<Player> SortTable(List<Player> unsorted);
+        public abstract ObservableCollection<Player> SortTable(ObservableCollection<Player> unsorted);
         #endregion
     }
 }

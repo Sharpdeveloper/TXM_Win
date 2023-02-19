@@ -1,5 +1,5 @@
 ﻿using System;
-namespace TXM.Core.Logic
+namespace TXM.Core
 {
     [Serializable]
     public enum TournamentCut
