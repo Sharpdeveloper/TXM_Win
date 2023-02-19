@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 using TXM.Core;
+using TXM.Core.Logic;
 
 namespace TXM.GUI.Dialogs
 {

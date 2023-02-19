@@ -9,6 +9,7 @@ using System.Windows.Input;
 using TXM.GUI.Dialogs;
 using TXM.GUI.Windows;
 using TXM.Core;
+using TXM.Core.Logic;
 
 namespace TXM.GUI
 {

@@ -215,30 +215,22 @@ namespace TXM.Core
 
         public void SumStrengthOfSchedule()
         {
-            int byeOppponents = 0;
             StrengthOfSchedule = 0;
             for (int i = 0; i < Enemies.Count; i++)
             {
-                if (Enemies[i].ID < 0)
-                    byeOppponents++;
-                else
-                    StrengthOfSchedule += GetEnemyTournamentPoints(i);
+                if (Enemies[i].ID >= 0)
+                    StrengthOfSchedule += (GetEnemyTournamentPoints(i) / Enemies[i].Results.Count);
             }
-            StrengthOfSchedule = StrengthOfSchedule / (Results.Count - byeOppponents);
         }
 
         public void SumExtendedStrengthOfSchedule()
         {
-            int byeOppponents = 0;
             ExtendedStrengthOfSchedule = 0;
             for (int i = 0; i < Enemies.Count; i++)
             {
-                if (Enemies[i].ID < 0)
-                    byeOppponents++;
-                else
-                 ExtendedStrengthOfSchedule += Enemies[i].StrengthOfSchedule;
+                if (Enemies[i].ID >= 0)
+                    ExtendedStrengthOfSchedule += (Enemies[i].StrengthOfSchedule / Enemies[i].Results.Count);
             }
-            ExtendedStrengthOfSchedule = ExtendedStrengthOfSchedule / (Results.Count - byeOppponents);
         }
 
         public void AddLastEnemy(Player enemy)
