@@ -5,8 +5,10 @@
 bin/
 obj/
 .vs/
+.idea/
+src/TXM/.vs/
+src/TXM.idea/
 src/TXM/.vs/TXM/xs/UserPrefs.xml
 src/TXM/.vs/TXM/xs/project-cache/TXM.Core-Debug.json
-src/TXM/.vs/TXM/xs/project-cache/TXM.Core-Debug.json
 src/TXM/.vs/TXM/xs/UserPrefs.xml
-src/TXM/.vs/TXM/xs/project-cache/TXM.Core-Debug.json
+src/TXM/.idea/.idea.TXM/.idea/workspace.xml
