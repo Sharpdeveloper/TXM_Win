@@ -1,12 +1,12 @@
-﻿using System;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace TXM.Core;
+namespace TXM.Core.Models;
 
 public partial class Pairing : ObservableObject
 {
-    #region Static Fields
-    internal static int startingTableNo = 0;
+    #region Static
+
+    private static int startingTableNo = 0;
 
     public static void ResetTableNo(int startNo = 0)
     {
@@ -63,7 +63,7 @@ public partial class Pairing : ObservableObject
             return (Player1Score != 0 && Player2Score != 0 && (Player1Score != Player2Score || Winner != "Automatic")) || IsResultEdited || IsLocked;
         }
     }
-    public Player? Player1
+    public Models.Player? Player1
     {
         private get
         {
@@ -78,7 +78,7 @@ public partial class Pairing : ObservableObject
             }
         }
     }
-    public Player? Player2
+    public Models.Player? Player2
     {
         private get
         {

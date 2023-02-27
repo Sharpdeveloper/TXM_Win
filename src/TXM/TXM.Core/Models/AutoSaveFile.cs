@@ -1,12 +1,11 @@
-﻿using System;
-using System.IO;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace TXM.Core;
+namespace TXM.Core.Models;
 
-public partial class AutosaveFile : ObservableObject
+public partial class AutoSaveFile : ObservableObject
 {
-    //Autosave_131430321409284710_Das Erwachen der Nacht - Episode III_Pairings_Round2
+    // ReSharper disable twice CommentTypo
+    //AutoSave_131430321409284710_Das Erwachen der Nacht - Episode III_Pairings_Round2
     [ObservableProperty]
     public string date;
 
@@ -24,7 +23,7 @@ public partial class AutosaveFile : ObservableObject
 
     public string Filename { get; set; }
 
-    public AutosaveFile(string filename)
+    public AutoSaveFile(string filename)
     {
         Filename = filename;
         filename = filename.Substring(filename.LastIndexOf(Path.DirectorySeparatorChar)+1);

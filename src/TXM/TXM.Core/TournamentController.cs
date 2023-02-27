@@ -6,11 +6,13 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
+using TXM.Core.Models;
+
 namespace TXM.Core
 {
     public class TournamentController
     {
-        public Tournament ActiveTournament { get; private set; }
+        public Logic.Tournament ActiveTournament { get; private set; }
         private bool firststart = false;
         private ITimerWindow timerWindow;
         public TournamentTimer ActiveTimer { get; private set; }
@@ -18,10 +20,10 @@ namespace TXM.Core
         public bool Started { get; private set; }
         private IProjectorWindow projectorWindow;
 
-        public TournamentController(IO _io)
+        public TournamentController(IO io)
         {
             ActiveTimer = new TournamentTimer();
-            ActiveIO = _io;
+            ActiveIO = io;
             Started = false;
         }
 
@@ -69,7 +71,7 @@ namespace TXM.Core
 
         public void EditPlayer(IPlayerDialog ipd, int index)
         {
-            Player xwp = ActiveTournament.Participants[index];
+            Models.Player xwp = ActiveTournament.Participants[index];
             ipd.SetPlayer(xwp);
             ipd.SetTitle("Player " + xwp.Nickname + " change");
             ipd.SetButtonOKText("Accept changes.");
@@ -80,9 +82,9 @@ namespace TXM.Core
             }
         }
 
-        private void ChangePlayer(int index, Player player)
+        private void ChangePlayer(int index, Models.Player player)
         {
-            Player p = ActiveTournament.Participants[index];
+            Models.Player p = ActiveTournament.Participants[index];
             p.Team = player.Team;
             p.Name = player.Name;
             p.Firstname = player.Firstname;
@@ -93,15 +95,12 @@ namespace TXM.Core
             p.IsPresent = player.IsPresent;
         }
 
-        private void ChangeTournament(Tournament tournament)
+        private void ChangeTournament(Logic.Tournament tournament)
         {
             ActiveTournament.Name = tournament.Name;
-            ActiveTournament.Cut = tournament.Cut;
+            ActiveTournament.CutSize = tournament.CutSize;
             ActiveTournament.MaxPoints = tournament.MaxPoints;
             ActiveTournament.TeamProtection = tournament.TeamProtection;
-            ActiveTournament.PrintDDGER = tournament.PrintDDGER;
-            ActiveTournament.PrintDDENG = tournament.PrintDDENG;
-            ActiveTournament.Single = tournament.Single;
             ActiveTournament.Rule = tournament.Rule;
             ActiveTimer.DefaultTime = ActiveTournament.Rule.DefaultTime;
         }
@@ -139,24 +138,34 @@ namespace TXM.Core
             ActiveIO.Save(ActiveTournament, autosave, GetResultsText, CutIsEnabled, text + ActiveTournament.Rounds.Count);
         }
 
-        public List<Pairing> GetSeed(bool cut)
+        public void GetSeed(bool cut)
         {
-            List<Pairing> temp = ActiveTournament.GetSeed(firststart, cut);
-            firststart = false;
-            return temp;
+            if (firststart)
+            {
+                ActiveTournament.StartTournament();
+                firststart = false;
+            }
+            else if (cut)
+            {
+                ActiveTournament.OperateCut();
+            }
+            else
+            {
+                ActiveTournament.NextRound();
+            }
         }
 
         public bool GetResults(List<Pairing> pairings, string buttonGetResultsText, bool CutIsEnabled, bool update = false, bool end = false)
         {
             if (update)
             {
-                //ActiveTournament.GetResults(pairings, true);
+                ActiveTournament.GetResults();
                 return true;
             }
             if (pairings.Count == 1)
                 end = true;
             bool allResultsEdited = true;
-            if (ActiveTournament.Rule.IsDrawPossible || ActiveTournament.bonus)
+            if (ActiveTournament.Rule.IsDrawPossible)
             {
                 foreach (Pairing p in pairings)
                 {
@@ -169,15 +178,15 @@ namespace TXM.Core
             }
             if (allResultsEdited)
             {
-                //if (CheckResults(pairings) || ActiveTournament.bonus)
-                //{
-                //    //ActiveTournament.GetResults(pairings);
-                //}
-                //else
-                //{
-                //    ActiveIO.ShowMessage("One ore more results are invalid.");
-                //    return false;
-                //}
+                if (CheckResults(pairings))
+                {
+                    ActiveTournament.GetResults();
+                }
+                else
+                {
+                    ActiveIO.ShowMessage("One ore more results are invalid.");
+                    return false;
+                }
             }
             else
             {
@@ -187,10 +196,11 @@ namespace TXM.Core
 
             if (end)
             {
-                if (!ActiveTournament.CutStarted)
+                if (!true /*ActiveTournament.CutStarted*/)
                 {
                     ActiveTournament.CalculateWonBye();
                 }
+                
                 //DataGridPairing.Visibility = System.Windows.Visibility.Hidden;
                 //ChangeGUIState(false, true);
             }
@@ -223,10 +233,10 @@ namespace TXM.Core
             if (autosave)
             {
                 string[] filenames = ActiveIO.GetAutosaveFiles();
-                List<AutosaveFile> files = new List<AutosaveFile>();
+                List<AutoSaveFile> files = new List<AutoSaveFile>();
                 for (int i = filenames.Length - 1; i >= 0; i--)
                 {
-                    files.Add(new AutosaveFile(filenames[i]));
+                    files.Add(new AutoSaveFile(filenames[i]));
                 }
                 iad.Init(files);
                 iad.ShowDialog();
@@ -247,23 +257,19 @@ namespace TXM.Core
             }
         }
 
-        //private bool CheckResults(List<Pairing> pairings)
-        //{
-        //    //Todo in Rules auslagern
-        //    foreach (Pairing p in pairings)
-        //    {
-        //        //if (p.Player1Score != 0 && p.Player1Score < 12)
-        //        //    return false;
-        //        //if (p.Player2Score != 0 && p.Player2Score < 12)
-        //        //    return false;
-        //        if (!ActiveTournament.Rule.IsDrawPossible)
-        //        {
-        //            if (p.Player1Score == p.Player2Score && p.Winner == "Automatic" && p.Player2 != ActiveTournament.Bye && p.Player2 != ActiveTournament.WonBye)
-        //                return false;
-        //        }
-        //    }
-        //    return true;
-        //}
+        private bool CheckResults(List<Pairing> pairings)
+        {
+            //Todo in Rules auslagern
+            foreach (Pairing p in pairings)
+            {
+                if (!ActiveTournament.Rule.IsDrawPossible)
+                {
+                    if (p.Player1Score == p.Player2Score && p.Winner == "Automatic" && p.Player2ID != ActiveTournament.Bye.ID && p.Player2ID != ActiveTournament.WonBye.ID)
+                        return false;
+                }
+            }
+            return true;
+        }
 
         public void EditTournament(ITournamentDialog itd)
         {
@@ -278,7 +284,7 @@ namespace TXM.Core
 
         public void RemovePlayer(int index, bool disqualify = false)
         {
-            Player player = ActiveTournament.Participants[index];
+            Models.Player player = ActiveTournament.Participants[index];
             string text = "remove";
             if (Started)
             {
@@ -305,7 +311,7 @@ namespace TXM.Core
             }
         }
 
-        public void RemovePlayer(Player p, bool disqualify = false)
+        public void RemovePlayer(Models.Player p, bool disqualify = false)
         {
             RemovePlayer(ActiveTournament.GetIndexOfPlayer(p));
         }
@@ -314,11 +320,13 @@ namespace TXM.Core
         {
 
             ipd.SetParticipants(ActiveTournament.Participants);
-            ipd.SetPairings(ActiveTournament.Pairings);
+            //TODO Pairings
+            ipd.SetPairings(new ObservableCollection<Pairing>());
             ipd.ShowDialog();
             if (ipd.GetDialogResult())
             {
-                ActiveTournament.Pairings = ipd.GetPairings();
+                //TODO
+                var pairings /*ActiveTournament.Pairings*/ = ipd.GetPairings();
 
                 ActiveIO.Save(ActiveTournament, true, buttonGetResultsText, CutIsEnabled, "ChangePairings");
             }
@@ -611,9 +619,9 @@ namespace TXM.Core
             Process.Start(psi);
         }
 
-        public ObservableCollection<Pairing> AwardBonusPoints()
+        public void AwardBonusPoints()
         {
-            return ActiveTournament.GetBonusSeed();
+            ActiveTournament.GetBonusSeed();
         }
 
         public void AddCSV()

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
+using TXM.Core.Models;
+
 namespace TXM.Core
 {
     [Serializable]
@@ -63,9 +65,9 @@ namespace TXM.Core
             return newResult.WinnerID != newResult.EnemyID;
         }
 
-        public override ObservableCollection<Player> SortTable(ObservableCollection<Player> unsorted)
+        public override ObservableCollection<Models.Player> SortTable(ObservableCollection<Models.Player> unsorted)
         {
-            ObservableCollection<Player> t = (ObservableCollection<Player>)unsorted.OrderByDescending(x => x.Wins).ThenByDescending(x => x.StrengthOfSchedule).ThenByDescending(x => x.TournamentPoints).ThenBy(x => x.Order);
+            ObservableCollection<Models.Player> t = (ObservableCollection<Models.Player>)unsorted.OrderByDescending(x => x.Wins).ThenByDescending(x => x.StrengthOfSchedule).ThenByDescending(x => x.TournamentPoints).ThenBy(x => x.Order);
             for (int i = 0; i < t.Count; i++)
                 t[i].Rank = i + 1;
             return t;

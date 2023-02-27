@@ -1,22 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.Collections;
+﻿using System.Collections.ObjectModel;
 
-namespace TXM.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 
-public class Round
+namespace TXM.Core.Models;
+
+public partial class Round: ObservableObject
 {
-    public int RoundNo { get; set; }
-    public ObservableCollection<Pairing> Pairings { get; set; }
-    public ObservableCollection<Player> Participants { get; set; }
-    public string Scenario { get; set; }
+    [ObservableProperty]
+    public string roundText;
 
-    public Round(int roundNo, ObservableCollection<Pairing> pairings, ObservableCollection<Player> participants, string scenario = "")
+    private int roundNo;
+    public int RoundNo
+    {
+        get => roundNo;
+        set
+        {
+            roundText = $"Round {value}";
+            roundNo = value;
+        }
+    }
+    public ObservableCollection<Pairing> Pairings { get; set; }
+
+    [ObservableProperty]
+    public string scenario;
+
+    public Round(int roundNo, ObservableCollection<Pairing> pairings, string scenario = "")
     {
         RoundNo = roundNo;
         Pairings = pairings;
-        Participants = participants;
+        Scenario = scenario;
+    }
+
+    public Round(int roundNo)
+    {
+        RoundNo = roundNo;
+    }
+
+    public Round(string roundText, ObservableCollection<Pairing> pairings, string scenario)
+    {
+        RoundText = roundText;
+        roundNo = -1;
+        Pairings = pairings;
         Scenario = scenario;
     }
 }

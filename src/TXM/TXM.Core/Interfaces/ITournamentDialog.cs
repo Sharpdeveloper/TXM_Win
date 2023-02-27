@@ -2,12 +2,12 @@
 {
     public interface ITournamentDialog
     {
-        Tournament GetTournament();
+        Logic.Tournament GetTournament();
         bool GetDialogResult();
         bool IsChanged();
         void ShowDialog();
         void SetIO(IO io);
-        void SetTournament(Tournament tournament);
+        void SetTournament(Logic.Tournament tournament);
         void SetGameSystemIsChangeable(bool isGametypeChangeable);
     }
 }

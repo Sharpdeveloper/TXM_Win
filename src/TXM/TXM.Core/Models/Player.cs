@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace TXM.Core;
+namespace TXM.Core.Models;
 
 public partial class Player : ObservableObject
 {
@@ -187,10 +186,14 @@ public partial class Player : ObservableObject
     {
         get
         {
-            if (Nickname != null && Nickname != "")
+            if (Nickname != "")
+            {
                 return Firstname + " \"" + Nickname + "\"";
+            }
             else
+            {
                 return Firstname + " " + Name.ToCharArray()[0] + ".";
+            }
         }
     }
     #endregion
@@ -228,9 +231,14 @@ public partial class Player : ObservableObject
         HasPaid = hasPaid;
         HasListGiven = hasListGiven;
         if (nr == -1)
+        {
             ID = ++currentID;
+        }
         else
+        {
             ID = nr;
+        }
+
         Enemies = new List<Enemy>();
         Results = new List<Result>();
     }

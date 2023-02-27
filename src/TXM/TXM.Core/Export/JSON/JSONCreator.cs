@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Text.Json;
+﻿using System.Text.Json;
 
-using TXM.Core;
+using TXM.Core.Logic;
 
 namespace TXM.Core.Export.JSON
 {
@@ -15,7 +13,7 @@ namespace TXM.Core.Export.JSON
 		public static string TournamentToListFortress(Tournament t)
 		{
 			JSONPlayer[] players = t.Participants
-                .Select(x => new JSONPlayer(x.DisplayName, "", x.SquadList, x.MarginOfVictory, x.TournamentPoints, x.StrengthOfSchedule, x.HasDropped ? 0 : t.DisplayedRound, new Dictionary<string, int>() { { "swiss", x.Rank } })).ToArray();
+                .Select(x => new JSONPlayer(x.DisplayName, "", x.SquadList, x.MarginOfVictory, x.TournamentPoints, x.StrengthOfSchedule, x.HasDropped ? 0 : t.Rounds.Count - 1, new Dictionary<string, int>() { { "swiss", x.Rank } })).ToArray();
 			JSONRound[] rounds = t.Rounds
                 .Where(x => x.RoundNo >= 1)
                 .Select(x =>

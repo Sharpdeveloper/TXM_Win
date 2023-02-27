@@ -5,6 +5,8 @@ using System.IO;
 using System.Diagnostics;
 using System.Text.Json;
 using TXM.Core.Export.JSON;
+using TXM.Core.Models;
+using TXM.Core.Text;
 
 namespace TXM.Core;
 
@@ -44,7 +46,7 @@ public class IO
     /// GOEPP Import File from tabletoptournaments.net (T3)
     /// </summary>
     /// <returns>A Tournament Object from the Date in the file or null if the file is invalid or the file chooser is canceled</returns>
-    internal Tournament? GOEPPImport()
+    internal Logic.Tournament? GOEPPImport()
     {
         fileManager.AddFilter("*.gip", $"GÖPP {Texts.ImportFile}");
         if (fileManager.Open())
@@ -74,7 +76,7 @@ public class IO
                 //C: Paid 1 = Yes, 0 = No
                 //D: Actual T3 Rank
                 //x = End
-                Tournament tournament = new Tournament(Int32.Parse(gipFile[2]), gipFile[1], null, gipFile[0]);
+                Logic.Tournament tournament = new Logic.Tournament(Int32.Parse(gipFile[2]), gipFile[1], null, gipFile[0]);
                 for (int i = 4; i < gipFile.Count; i++)
                 {
                     tournament.AddPlayer(ConvertGOEPPLineToPlayer(gipFile[i]));
@@ -97,7 +99,7 @@ public class IO
     /// Imports a tournament from a csv file
     /// </summary>
     /// <returns>A tournamnet or null if the file is invalid or the file chooser was canceld</returns>
-    internal Tournament? CSVImport()
+    internal Logic.Tournament? CSVImport()
     {
         fileManager.AddFilter("*.csv", $"{Texts.ExcelFile} (CSV)");
         if (fileManager.Open())
@@ -117,8 +119,8 @@ public class IO
                 //Fileformat:
                 //0          1         2        3    4       5    6          7       8  
                 //First Name;Last Name;Nickname;Team;Faction;Paid;List given;Won Bye;Squadlist
-                Tournament tournament =
-                    new Tournament(
+                Logic.Tournament tournament =
+                    new Logic.Tournament(
                         fileManager.FileName.Split(Path.DirectorySeparatorChar)[
                             fileManager.FileName.Split(Path.DirectorySeparatorChar).Length - 1].Split('.')[0], null);
                 for (int i = 1; i < csvFile.Count; i++)
@@ -143,7 +145,7 @@ public class IO
     /// Adds Data from a csv file to an already imported / created tournament
     /// </summary>
     /// <param name="tournament">The tournament where the new data should be added</param>
-    internal void CSVImportAdd(Tournament tournament)
+    internal void CSVImportAdd(Logic.Tournament tournament)
     {
         fileManager.AddFilter("*.csv", $"{Texts.ExcelFile} (CSV)");
         if (fileManager.Open())
@@ -166,11 +168,11 @@ public class IO
                 for (int i = 1; i < csvFile.Count; i++)
                 {
                     var player = ConvertCSVToPlayer(csvFile[i]);
-                    var p = (Player)tournament.Participants.Where(x => x.Nickname == player.Nickname).First();
+                    var p = (Models.Player)tournament.Participants.Where(x => x.Nickname == player.Nickname).First();
                     ;
                     if (p == null)
                     {
-                        p = (Player)tournament.Participants.Where(x => x.Name == player.Name)
+                        p = (Models.Player)tournament.Participants.Where(x => x.Name == player.Name)
                             .Where(x => x.Firstname == player.Firstname).First();
                     }
 
@@ -203,7 +205,7 @@ public class IO
     /// </summary>
     /// <param name="filename">Optional filename</param>
     /// <returns>A tournament object or null</returns>
-    public Tournament? Load(string filename = "")
+    public Logic.Tournament? Load(string filename = "")
     {
         string file;
         if (filename != "")
@@ -231,7 +233,7 @@ public class IO
                 sb.Append(sr.ReadLine());
             }
 
-            return JsonSerializer.Deserialize<Tournament>(sb.ToString());
+            return JsonSerializer.Deserialize<Logic.Tournament>(sb.ToString());
         }
         catch (Exception)
         {
@@ -286,13 +288,9 @@ public class IO
     /// Saves the current tournement in a GOEPP Export file for upload on tabletoptournaments.net (T3)
     /// </summary>
     /// <param name="tournament">The tournament that should be exported</param>
-    internal void GOEPPExport(Tournament tournament)
+    internal void GOEPPExport(Logic.Tournament tournament)
     {
         fileManager.AddFilter("*.gep", $"GÖPP {Texts.ExportFile}");
-        if (!tournament.Single)
-        {
-            tournament.SplitTeams();
-        }
 
         if (fileManager.Save())
         {
@@ -325,7 +323,7 @@ public class IO
 
             line = "#TID-" + tournament.T3ID;
             WriteGOEPPLine(file, line);
-            foreach (Player p in tournament.Participants)
+            foreach (Models.Player p in tournament.Participants)
             {
                 if (temp.Contains(p.Nickname))
                 {
@@ -361,7 +359,7 @@ public class IO
     /// <param name="tournament">The Tournament which should be prepared for output</param>
     /// <param name="bbcode">True for BBCODE, false for HTML</param>
     /// <returns>A string with the whole html/bbcode</returns>
-    internal string CreateOutputForTable(Tournament tournament, bool bbcode)
+    internal string CreateOutputForTable(Logic.Tournament tournament, bool bbcode)
     {
         StringBuilder sb = new StringBuilder();
         string title = tournament.Name + $" - {Texts.Table} - {Texts.Round} {tournament.DisplayedRound}";
@@ -451,7 +449,7 @@ public class IO
         sb.Append(db);
         sb.Append(Texts.StrengthOfScheduleShort); //Strength of Schedule
         sb.Append(de);
-        if (tournament.Rule.OptionalFields.Contains(Literals.eSoS))
+        if (tournament.Rule.OptionalFields.Contains(Literals.ESoS))
         {
             sb.Append(db);
             sb.Append(Texts.ExtendedStrengthOfScheduleShort); //extended Strength of Schedule
@@ -461,11 +459,9 @@ public class IO
         sb.Append(re);
         sb.Append(nl);
 
-        var participants = tournament.Rounds.Count >= 1
-            ? tournament.Rounds[tournament.Rounds.Count - 1].Participants
-            : tournament.Participants;
+        var participants = tournament.Participants;
 
-        foreach (Player p in participants)
+        foreach (Models.Player p in participants)
         {
             sb.Append(rb);
             sb.Append(db);
@@ -523,7 +519,7 @@ public class IO
             sb.Append(db);
             sb.Append(p.StrengthOfSchedule); //Strength of Schedule
             sb.Append(de);
-            if (tournament.Rule.OptionalFields.Contains(Literals.eSoS))
+            if (tournament.Rule.OptionalFields.Contains(Literals.ESoS))
             {
                 sb.Append(db);
                 sb.Append(p.ExtendedStrengthOfSchedule); //extended Strength of Schedule
@@ -547,7 +543,7 @@ public class IO
     /// <param name="bbcode">True for BBCODE, false for HTML</param>
     /// <param name="result">True if the results of the last round should be printed. </param>
     /// <returns>A string with the whole html/bbcode</returns>
-    internal string CreateOutputForPairings(Tournament tournament, bool bbcode, bool result)
+    internal string CreateOutputForPairings(Logic.Tournament tournament, bool bbcode, bool result)
     {
         if (tournament.Rounds.Count == 0)
         {
@@ -562,23 +558,16 @@ public class IO
         }
 
         StringBuilder sb = new StringBuilder();
-        string title = "", head, tb, te, rb, re, db, de, end, nl = Environment.NewLine;
+        string head, tb, te, rb, re, db, de, end, nl = Environment.NewLine;
+        string title = tournament.Name + $" - {(result ? Texts.Results : Texts.Pairings)} - {Texts.Round} {tournament.DisplayedRound}";
 
-        if (result)
-        {
-            title = tournament.Name + $" - {Texts.Results} - {Texts.Round} {(tournament.DisplayedRound - 1)}";
-        }
-        else
-        {
-            title = tournament.Name + $" - {Texts.Pairings} - {Texts.Round} {tournament.DisplayedRound}";
-        }
 
-        if (bbcode)
+            if (bbcode)
         {
             head = $"[b]{title}[/b]";
             if (tournament.Rule.UsesScenarios)
             {
-                head += $" [u]Scenario: {tournament.ActiveScenario}[/u]";
+                head += $" [u]Scenario: {tournament.ChosenScenario}[/u]";
             }
 
             tb = "[table]";
@@ -595,7 +584,7 @@ public class IO
                    title + "</h2> <br />";
             if (tournament.Rule.UsesScenarios)
             {
-                head += $"<h3>Scenario: {tournament.ActiveScenario}</h3><br />";
+                head += $"<h3>Scenario: {tournament.ChosenScenario}</h3><br />";
             }
 
             tb = "<table>";
@@ -689,7 +678,7 @@ public class IO
     /// </summary>
     /// <param name="tournament">The tournament which should be exported</param>
     /// <returns>(the JSON for the export, the file name)</returns>
-    internal (string, string) GetJsonForListfortress(Tournament tournament)
+    internal (string, string) GetJsonForListfortress(Logic.Tournament tournament)
     {
         (string json, string file) r = ("", "");
         r.json = JSONCreator.TournamentToListFortress(tournament);
@@ -712,7 +701,7 @@ public class IO
     /// </summary>
     /// <param name="tournament">The tournament which players should be printed</param>
     /// <returns>The file name which contains the HTML</returns>
-    internal string PrintPlayerList(Tournament tournament)
+    internal string PrintPlayerList(Logic.Tournament tournament)
     {
         string print = CreateOutputForTable(tournament, false);
         if (!Directory.Exists(TempPath))
@@ -734,7 +723,7 @@ public class IO
     /// <param name="tournament">The tournament which contains the pairings</param>
     /// <param name="result">True if the results should be printed.</param>
     /// <returns>The file name which contains the HTML</returns>
-    internal string PrintPairings(Tournament tournament, bool result)
+    internal string PrintPairings(Logic.Tournament tournament, bool result)
     {
         string print = CreateOutputForPairings(tournament, false, result);
         if (!Directory.Exists(TempPath))
@@ -758,7 +747,7 @@ public class IO
     /// <param name="getResultsText">Text of the getResultsButton</param>
     /// <param name="buttonCut">State of the Cut Button</param>
     /// <param name="Autosavetype">Type of autosave, default ""</param>
-    internal void Save(Tournament tournament, bool autosave, string getResultsText, bool? buttonCut,
+    internal void Save(Logic.Tournament tournament, bool autosave, string getResultsText, bool? buttonCut,
         string Autosavetype = "")
     {
         StringBuilder sb = new StringBuilder();
@@ -779,7 +768,7 @@ public class IO
             name = name.Replace('/', ' ');
             name = name.Replace('_', ' ');
             file = Path.Combine(file,
-                $"{Literals.Autosave}_{DateTime.Now.ToFileTime()}_{name}_{Autosavetype}.{Settings.FILEEXTENSION}");
+                $"{Literals.AutoSave}_{DateTime.Now.ToFileTime()}_{name}_{Autosavetype}.{Settings.FILEEXTENSION}");
         }
         else
         {
@@ -814,7 +803,7 @@ public class IO
             sb.Clear();
             sb.Append(AutosavePath);
             sb.Append(
-                $"{Path.PathSeparator}{Literals.Autosave}_{DateTime.Now.ToFileTime()}_{Literals.ATournament}_{Autosavetype}.{Settings.FILEEXTENSION}");
+                $"{Path.PathSeparator}{Literals.AutoSave}_{DateTime.Now.ToFileTime()}_{Literals.ATournament}_{Autosavetype}.{Settings.FILEEXTENSION}");
             file = sb.ToString();
             using (StreamWriter stream = new StreamWriter(file,
                        new FileStreamOptions()
@@ -830,7 +819,7 @@ public class IO
     /// </summary>
     /// <param name="tournament">The tournament for what a score sheet should be printed</param>
     /// <returns>A string to the Path of the file with the Scoresheets</returns>
-    internal string PrintScoreSheet(Tournament tournament)
+    internal string PrintScoreSheet(Logic.Tournament tournament)
     {
         string title = $"{tournament.Name} - {Texts.Pairings} - {Texts.Round} {tournament.DisplayedRound}";
         List<string> print = new List<string>();
@@ -925,7 +914,7 @@ public class IO
         }
         else
         {
-            messageManager.Show(Texts.NoAutosaveFolder);
+            messageManager.Show(Texts.NoAutoSaveFolder);
         }
     }
 
@@ -941,7 +930,7 @@ public class IO
         }
         else
         {
-            messageManager.Show(Texts.NoAutosaveFolder);
+            messageManager.Show(Texts.NoAutoSaveFolder);
         }
     }
 
@@ -954,7 +943,7 @@ public class IO
     /// </summary>
     /// <param name="line">The line which should be converted</param>
     /// <returns>A player object with the data from the line</returns>
-    private Player ConvertGOEPPLineToPlayer(string line)
+    private Models.Player ConvertGOEPPLineToPlayer(string line)
     {
         string[] splitedLine = new string[11];
         int sepBegin = 0, sepEnd;
@@ -965,7 +954,7 @@ public class IO
             sepBegin = sepEnd + 2;
         }
 
-        return new Player(Int32.Parse(splitedLine[0]), splitedLine[1], splitedLine[2], splitedLine[3], splitedLine[4],
+        return new Models.Player(Int32.Parse(splitedLine[0]), splitedLine[1], splitedLine[2], splitedLine[3], splitedLine[4],
             splitedLine[5], splitedLine[6], Int32.Parse(splitedLine[9]) == 1, Int32.Parse(splitedLine[7]) == 3);
     }
 
@@ -974,7 +963,7 @@ public class IO
     /// </summary>
     /// <param name="line">The line which should be converted</param>
     /// <returns>A player object with the data from the line</returns>
-    private Player ConvertCSVToPlayer(string line)
+    private Models.Player ConvertCSVToPlayer(string line)
     {
         string[] splitedLine = line.Split(';');
         try
@@ -986,7 +975,7 @@ public class IO
             splitedLine = line.Split(',');
         }
 
-        return new Player(0, splitedLine[0], splitedLine[1], splitedLine[2], splitedLine[4], "", splitedLine[3],
+        return new Models.Player(0, splitedLine[0], splitedLine[1], splitedLine[2], splitedLine[4], "", splitedLine[3],
                 splitedLine[5].ToUpper() == "X", splitedLine[6].ToUpper() == "X")
             { HasWonBye = splitedLine[7].ToUpper() == "X", SquadList = splitedLine[8] };
     }

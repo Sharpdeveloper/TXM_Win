@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using TXM.Core.Models;
+
 namespace TXM.Core
 {
     [Serializable]
@@ -156,39 +158,27 @@ namespace TXM.Core
         #endregion
 
         #region Public Methods
-        public bool AddResult(Player player, Result result)
+        public bool AddResult(Models.Player player, Result result)
         {
             bool hasWon = ChangeResult(player, result, true);
             player.Enemies.Add(new Enemy(result.EnemyID, hasWon));
+            player.Results.Add(result);
             return hasWon;
         }
 
-        public bool RemoveLastResult(Player player)
+        public bool RemoveLastResult(Models.Player player)
         {
-            //Temporary save the result whcich should be redone before it will be removed
-            Result result = player.Results[player.Results.Count - 1];
+            var result = player.Results[^1];
             player.Enemies.RemoveAt(player.Enemies.Count - 1);
-            player.Results.RemoveAt(player.Results.Count - 1);
+            player.Results.Add(new Result());
             return ChangeResult(player, result, false);
         }
 
-        public bool ChangeResult(Player player, Result result, bool add)
+        public bool ChangeResult(Models.Player player, Result result, bool add)
         {
             Init();
-
-            if (player.Results == null)
-                player.Results = new List<Result>();
-
             bool winner;
-            if (add)
-            {
-                player.Results.Add(result);
-                winner = CalculateResult(result, (x, y) => { return x + y; });
-            }
-            else
-            {
-                winner = CalculateResult(result, (x, y) => { return x - y; });
-            }
+            winner = add ? CalculateResult(result, (x, y) => x + y) : CalculateResult(result, (x, y) => x - y);
 
             player.Wins += Twins;
             player.ModifiedWins += TmodifiedWins;
@@ -203,17 +193,24 @@ namespace TXM.Core
             return winner;
         }
 
-        public void AddBonus(Player player, Result result)
+        public void AddBonus(Models.Player player, Result result)
         {
             player.Enemies.Add(new Enemy(result.EnemyID, true));
+            player.Results.Add(result);
             player.TournamentPoints += result.TournamentPoints;
         }
 
-        public void Update(Player player, Result result, int round)
+        public void Update(Models.Player player, Result newResult, int round)
         {
-            ChangeResult(player, player.Results[round - 1], false);
-            ChangeResult(player, result, true);
-            player.Results[round - 1] = result;
+            var oldResult = player.Results[round];
+            player.Results[round] = newResult;
+            ChangeResult(player, oldResult, false);
+            ChangeResult(player, newResult, true);
+        }
+
+        public void UpdateNextRound(Models.Player player, Result diff)
+        {
+            ChangeResult(player, diff, true);
         }
 
         public string GetName()
@@ -239,7 +236,7 @@ namespace TXM.Core
 
         #region Abstract Methods
         protected abstract bool CalculateResult(Result result, Func<int, int, int> f);
-        public abstract ObservableCollection<Player> SortTable(ObservableCollection<Player> unsorted);
+        public abstract ObservableCollection<Models.Player> SortTable(ObservableCollection<Models.Player> unsorted);
         #endregion
     }
 }

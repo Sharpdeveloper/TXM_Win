@@ -1,7 +1,6 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace TXM.Core;
+namespace TXM.Core.Models;
 
 public struct Enemy
 {
