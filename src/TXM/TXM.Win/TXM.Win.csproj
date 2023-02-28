@@ -2,21 +2,16 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <StartupObject>TXM.Win.App</StartupObject>
     <ApplicationIcon>TXM_Logo.ico</ApplicationIcon>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="TXM_Logo.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\TXM.Core\TXM.Core.csproj">
-      <ReferenceSourceTarget></ReferenceSourceTarget>
-    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -41,6 +36,10 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TXM.Core\TXM.Core.csproj" />
   </ItemGroup>
 
 </Project>

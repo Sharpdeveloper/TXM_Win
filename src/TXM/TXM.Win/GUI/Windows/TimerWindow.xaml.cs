@@ -54,9 +54,9 @@ namespace TXM.GUI.Windows
             timer.ResetTimer();
         }
 
-        public void SetLabelColor(bool white)
+        public void SetLabelColor(string color)
         {
-            if (white)
+            if (color == "White")
             {
                 LabelTime.Foreground = new SolidColorBrush(Colors.White);
             }

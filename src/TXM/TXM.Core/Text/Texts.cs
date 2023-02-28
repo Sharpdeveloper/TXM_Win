@@ -6,7 +6,7 @@
 /// Static class which contains all texts which can be outputted.
 /// These enables translation files
 /// </summary>
-public static class Texts
+public class Texts
 {
     public static string AutoSaveFolderDeleted { get; private set; } = "Auto save folder was deleted.";
     public static string Disqualified { get; private set; } = "disqualified";
@@ -36,6 +36,8 @@ public static class Texts
     public static string NoRoundStarted { get; private set; } = "No Round started";
     public static string Pairings { get; private set; } = "Pairings";
     public static string Player { get; private set; } = "Player";
+    public static string Rank { get; private set; } = "Rank";
+    public static string RankShort { get; private set; } = "#";
     public static string Results { get; private set; } = "Results";
     public static string Round { get; private set; } = "Round";
     public static string Score { get; private set; } = "Score";

@@ -9,6 +9,7 @@ using System.Windows.Input;
 using TXM.GUI.Dialogs;
 using TXM.GUI.Windows;
 using TXM.Core;
+using TXM.Core.Models;
 
 namespace TXM.GUI
 {
@@ -32,24 +33,24 @@ namespace TXM.GUI
 
             tournamentController = new TournamentController(new IO(new WindowsFile(), new WindowsMessage()));
 
-            if (tournamentController.ActiveIO.ActiveSettings.TextColor == "Black")
-                SliderText.Value = 1.0;
-            else
-                SliderText.Value = 2.0;
+            // if (tournamentController.ActiveIO.ActiveSettings.TextColor == "Black")
+            //     SliderText.Value = 1.0;
+            // else
+            //     SliderText.Value = 2.0;
 
-            double size = tournamentController.ActiveIO.ActiveSettings.TextSize;
-            if (size > 100.0)
-                SliderSize.Value = 100.0;
-            else
-                SliderSize.Value = size;
+            // double size = tournamentController.ActiveIO.ActiveSettings.TextSize;
+            // if (size > 100.0)
+            //     SliderSize.Value = 100.0;
+            // else
+            //     SliderSize.Value = size;
 
             tournamentController.ActiveTimer.Changed += Time_Changed;
 
-            DataGridPlayer.SelectionMode = DataGridSelectionMode.Extended;
-            DataGridPairing.SelectionMode = DataGridSelectionMode.Single;
-
-            InitDataGridPlayer();
-            InitDataGridPairing();
+            // DataGridPlayer.SelectionMode = DataGridSelectionMode.Extended;
+            // DataGridPairing.SelectionMode = DataGridSelectionMode.Single;
+            //
+            // InitDataGridPlayer();
+            // InitDataGridPairing();
         }
 
         private void InitDataGridPlayer()
@@ -342,9 +343,9 @@ namespace TXM.GUI
 
         private void Refresh()
         {
-            currentPairingList = tournamentController.ActiveTournament.Pairings;
+            //currentPairingList = tournamentController.ActiveTournament.Rounds[^1].Pairings.ToList();
             RefreshDataGridPairings();
-            RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+            //RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants.ToList());
             if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule != null && tournamentController.ActiveTournament.Rule.UsesScenarios)
             {
                 this.LabelScenario.Visibility = Visibility.Visible;
@@ -405,7 +406,7 @@ namespace TXM.GUI
             if (DataGridPlayer.SelectedIndex >= 0)
             {
                 tournamentController.EditPlayer(new NewPlayerDialog(tournamentController.ActiveTournament.Rule), DataGridPlayer.SelectedIndex);
-                RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+                //RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants.ToList());
             }
         }
 
@@ -420,7 +421,7 @@ namespace TXM.GUI
                 SetGUIState(true);
                 Refresh();
                 DataGridPlayer.ItemsSource = tournamentController.ActiveTournament.Participants;
-                RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+                //RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants.ToList());
                 SetRandomTime();
             }
         }
@@ -452,34 +453,34 @@ namespace TXM.GUI
                         AddRoundButton(i);
                     if (tournamentController.ActiveTournament.Rounds != null && tournamentController.ActiveTournament.Rounds.Count > 0)
                         DataGridPairing.ItemsSource = tournamentController.ActiveTournament.Rounds[tournamentController.ActiveTournament.Rounds.Count - 1].Pairings;
-                    if (tournamentController.ActiveTournament.FirstRound && (tournamentController.ActiveTournament.Rounds == null || tournamentController.ActiveTournament.Rounds.Count == 0))
-                    {
-                        SetGUIState(true);
-                    }
-                    else
-                    {
-                        SetGUIState(false, true);
-                    }
+                    // if (tournamentController.ActiveTournament.FirstRound && (tournamentController.ActiveTournament.Rounds == null || tournamentController.ActiveTournament.Rounds.Count == 0))
+                    // {
+                    //     SetGUIState(true);
+                    // }
+                    // else
+                    // {
+                    //     SetGUIState(false, true);
+                    // }
                     ButtonGetResults.Content = tournamentController.ActiveTournament.ButtonGetResultsText;
                     ButtonGetResults.IsEnabled = true;
                     ButtonCut.IsEnabled = tournamentController.ActiveTournament.ButtonCutState == true;
                     tournamentController.ActiveTournament.Sort();
-                    RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
-                    if (tournamentController.ActiveTournament.Pairings != null)
-                    {
-                        currentPairingList = tournamentController.ActiveTournament.Pairings;
-                        RefreshDataGridPairings();
-                    }
+                    //RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+                    // if (tournamentController.ActiveTournament.Pairings != null)
+                    // {
+                    //     currentPairingList = tournamentController.ActiveTournament.Pairings;
+                    //     RefreshDataGridPairings();
+                    // }
 
                     InitDataGridPlayer();
-                    if (tournamentController.ActiveTournament.bonus)
-                    {
-                        InitDataGridPairing(false, true);
-                    }
-                    else
-                    {
-                        InitDataGridPairing();
-                    }
+                    // if (tournamentController.ActiveTournament.bonus)
+                    // {
+                    //     InitDataGridPairing(false, true);
+                    // }
+                    // else
+                    // {
+                    //     InitDataGridPairing();
+                    // }
                     ButtonGetResults.ToolTip = ButtonGetResults.Content.ToString();
                 }
                 SetRandomTime();
@@ -504,15 +505,15 @@ namespace TXM.GUI
 
         private void GetSeed(bool cut = false)
         {
-            List<Pairing> pairings = tournamentController.GetSeed(cut);
-            currentPairingList = pairings;
+            // List<Pairing> pairings = tournamentController.GetSeed(cut);
+            // currentPairingList = pairings;
             RefreshDataGridPairings();
             AddRoundButton();
             ChangeGUIState(true);
             tournamentController.Save(ButtonGetResults.Content.ToString(), ButtonCut.IsEnabled, true);
             if (tournamentController.ActiveTournament.Rule.UsesScenarios)
             {
-                LabelScenarios.Content = "Selected Scenario: " + tournamentController.ActiveTournament.ChoosenScenario;
+                LabelScenarios.Content = "Selected Scenario: " + tournamentController.ActiveTournament.ChosenScenario;
                 SetScenarios();
             }
         }
@@ -551,7 +552,7 @@ namespace TXM.GUI
             {
                 foreach (var pa in currentPairingList)
                 {
-                    if (!pa.Hidden)
+                    if (!pa.IsHidden)
                         p.Add(pa);
                 }
             }
@@ -663,13 +664,13 @@ namespace TXM.GUI
             {
                 if (tournamentController.GetResults((List<Pairing>)DataGridPairing.ItemsSource, ButtonGetResults.Content.ToString(), false, true))
                 {
-                    RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+                    //RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants.ToList());
                     tournamentController.ActiveIO.ShowMessage("Update done!");
                     ButtonGetResults.IsEnabled = true;
                     ButtonGetResults.Content = tournamentController.ActiveTournament.ButtonGetResultsText;
                     ButtonCut.IsEnabled = tournamentController.ActiveTournament.ButtonCutState;
                     ComboBoxRounds.SelectedIndex = ComboBoxRounds.Items.Count - 1;
-                    currentPairingList = tournamentController.ActiveTournament.Pairings;
+                   // currentPairingList = tournamentController.ActiveTournament.Rounds[^1].Pairings;
                     RefreshDataGridPairings();
                     ButtonGetResults.ToolTip = ButtonGetResults.Content.ToString();
                     tournamentController.Save(ButtonGetResults.Content.ToString(), false, true, "Update_Round");
@@ -680,7 +681,7 @@ namespace TXM.GUI
             {
                 if (tournamentController.GetResults((List<Pairing>)DataGridPairing.ItemsSource, ButtonGetResults.Content.ToString(), ButtonCut.IsEnabled))
                 {
-                    RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+                   // RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants.ToList());
                     ChangeGUIState(false);
                     tournamentController.Save(ButtonGetResults.Content.ToString(), false, true, "Result_Round");
                     LabelScenarios.Content = "";
@@ -695,9 +696,9 @@ namespace TXM.GUI
             header = header.Remove(0, header.IndexOf(" "));
             int round = Int32.Parse(header);
             Round activeRound = tournamentController.ActiveTournament.Rounds[round - 1];
-            currentPairingList = activeRound.Pairings;
+            //currentPairingList = activeRound.Pairings.ToList();
             RefreshDataGridPairings();
-            RefreshDataGridPlayer(activeRound.Participants);
+            //RefreshDataGridPlayer(activeRound.Participants);
             if (tournamentController.ActiveTournament.Rounds.Count == round)
             {
                 ButtonGetResults.IsEnabled = true;
@@ -719,16 +720,16 @@ namespace TXM.GUI
                 currentScenario = LabelScenarios.Content.ToString();
                 LabelScenarios.Content = "Chosen Scenario: " + activeRound.Scenario;
             }
-            tournamentController.ActiveTournament.DisplayedRound = round;
+            //tournamentController.ActiveTournament.DisplayedRound = round;
             ButtonGetResults.ToolTip = ButtonGetResults.Content.ToString();
         }
 
         private void ButtonAutosave_Click(object sender, RoutedEventArgs e)
         {
-            if (tournamentController.ActiveIO.AutosavePathExists)
-                Load(true);
-            else
-                tournamentController.ActiveIO.ShowMessage("No Autosavefolder");
+            // if (tournamentController.ActiveIO.AutosavePathExists)
+            //     Load(true);
+            // else
+            //     tournamentController.ActiveIO.ShowMessage("No Autosavefolder");
         }
 
         private void MenuItemOpenAutoSaveFolder_Click(object sender, RoutedEventArgs e)
@@ -768,13 +769,13 @@ namespace TXM.GUI
             {
                 tournamentController.RemovePlayer(DataGridPlayer.SelectedIndex);
             }
-            RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+           // RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants.ToList());
         }
 
         private void ButtonChangePairing_Click(object sender, RoutedEventArgs e)
         {
             tournamentController.EditPairings(new SetPairingDialog(), ButtonGetResults.Content.ToString(), ButtonCut.IsEnabled);
-            currentPairingList = tournamentController.ActiveTournament.Pairings;
+            //currentPairingList = tournamentController.ActiveTournament.Rounds[^1].Pairings;
             RefreshDataGridPairings();
         }
 
@@ -784,7 +785,7 @@ namespace TXM.GUI
             ChangeGUIState(true);
             currentPairingList = pl;
             RefreshDataGridPairings();
-            RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+           // RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants.ToList());
         }
 
         private void SetGUIState(bool start, bool tournamentStart = false)
@@ -800,7 +801,7 @@ namespace TXM.GUI
                 MenuItemListFortressExport.IsEnabled = true;
                 EditPlayerIsEnabled = tournamentController.ActiveTournament != null;
                 RemovePlayerIsEnabled = tournamentController.ActiveTournament != null;
-                ChangePairingIsEnabled = tournamentController.ActiveTournament.Pairings != null;
+                ChangePairingIsEnabled = tournamentController.ActiveTournament.Rounds[^1].Pairings != null;
                 SaveIsEnabled = tournamentController.ActiveTournament != null;
                 ResetLastResultsIsEnabled = false;
                 ButtonGetResults.IsEnabled = true;
@@ -847,10 +848,10 @@ namespace TXM.GUI
                 ButtonGetResults.Content = "Next Round";
                 MenuItemResetLastResults.IsEnabled = !end;
                 ButtonGetResults.IsEnabled = !end;
-                if (tournamentController.ActiveTournament.Cut == TournamentCut.NoCut || tournamentController.ActiveTournament.CutStarted)
-                    ButtonCut.IsEnabled = false;
-                else
-                    ButtonCut.IsEnabled = true;
+                // if (tournamentController.ActiveTournament.Cut == TournamentCut.NoCut || tournamentController.ActiveTournament.CutStarted)
+                //     ButtonCut.IsEnabled = false;
+                // else
+                //     ButtonCut.IsEnabled = true;
             }
             ButtonGetResults.ToolTip = ButtonGetResults.Content.ToString();
         }
@@ -972,7 +973,7 @@ namespace TXM.GUI
             {
                 tournamentController.RemovePlayer(DataGridPlayer.SelectedIndex, true);
             }
-            RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+            //RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
         }
 
         private void MenuItemShowPairings_Click(object sender, RoutedEventArgs e)
@@ -1017,12 +1018,12 @@ namespace TXM.GUI
 
         private void RefreshPlayerList(object sender, RoutedEventArgs e)
         {
-            RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+            //RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
         }
 
         private void RefreshPairingsList(object sender, RoutedEventArgs e)
         {
-            currentPairingList = tournamentController.ActiveTournament.Pairings;
+            //currentPairingList = tournamentController.ActiveTournament.Pairings;
             RefreshDataGridPairings();
         }
 
@@ -1066,7 +1067,7 @@ namespace TXM.GUI
                 if (DataGridPlayer.SelectedItems.Count > 1)
                     return;
                 Player player = tournamentController.ActiveTournament.Participants[DataGridPlayer.SelectedIndex];
-                player.Present = !player.Present;
+                player.IsPresent = !player.IsPresent;
                 //activeTournament.ChangePlayer(player);
             }
         }
@@ -1091,7 +1092,7 @@ namespace TXM.GUI
                 InitDataGridPairing();
                 SetGUIState(true);
                 DataGridPlayer.ItemsSource = tournamentController.ActiveTournament.Participants;
-                RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+                //RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
                 SetRandomTime();
             }
         }
@@ -1110,7 +1111,7 @@ namespace TXM.GUI
         {
             if (tournamentController != null)
             { 
-                tournamentController.SetTimerLabelColor(SliderText.Value == 1.0);
+                tournamentController.SetTimerLabelColor(SliderText.Value == 1.0 ? "Black" : "White");
             }
         }
 
@@ -1134,9 +1135,9 @@ namespace TXM.GUI
 
         private void MenuItemBonusPoints_Click(object sender, RoutedEventArgs e)
         {
-            List<Pairing> pairings = tournamentController.AwardBonusPoints();
+            //List<Pairing> pairings = tournamentController.AwardBonusPoints();
             InitDataGridPairing(false, true);
-            currentPairingList = pairings;
+            //currentPairingList = pairings;
             RefreshDataGridPairings();
             AddRoundButton();
             ChangeGUIState(true);
@@ -1148,10 +1149,10 @@ namespace TXM.GUI
             if (e.Column.DisplayIndex != 0)
             {
                 int t = e.Row.GetIndex();
-                if (tournamentController.ActiveTournament.Pairings[e.Row.GetIndex()].Locked)
-                {
-                    e.Cancel = true;
-                }
+                // if (tournamentController.ActiveTournament.Pairings[e.Row.GetIndex()].Locked)
+                // {
+                //     e.Cancel = true;
+                // }
             }
         }
 
@@ -1164,7 +1165,7 @@ namespace TXM.GUI
         private void ComboboxScenarios_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (((ComboBox)sender).SelectedValue != null)
-                tournamentController.ActiveTournament.ChoosenScenario = ((ComboBoxItem)((ComboBox)sender).SelectedItem).Content.ToString();
+                tournamentController.ActiveTournament.ChosenScenario = ((ComboBoxItem)((ComboBox)sender).SelectedItem).Content.ToString();
         }
 
         private void CheckboxRandomTime_Click(object sender, RoutedEventArgs e)
@@ -1188,7 +1189,7 @@ namespace TXM.GUI
         private void MenuItemCSVAdd_Click(object sender, RoutedEventArgs e)
         {
             tournamentController.AddCSV();
-            RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
+            //RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
         }
 
         private void MenuItemListFortressExport_Click(object sender, RoutedEventArgs e)

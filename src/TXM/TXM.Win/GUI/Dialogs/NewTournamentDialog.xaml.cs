@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 using TXM.Core;
+using TXM.Core.Models;
+using TXM.Core.Logic;
 
 namespace TXM.GUI.Dialogs
 {
@@ -54,11 +56,11 @@ namespace TXM.GUI.Dialogs
                 ComboBoxGameSystem.Items.Add(s);
 
             TextboxName.Text = tournament.Name;
-            if (tournament.Cut == TournamentCut.Top4)
+            if (tournament.CutSize == 4)
                 RadioButtonTop4.IsChecked = true;
-            else if (tournament.Cut == TournamentCut.Top8)
+            else if (tournament.CutSize == 8)
                 RadioButtonTop8.IsChecked = true;
-            else if (tournament.Cut == TournamentCut.Top16)
+            else if (tournament.CutSize == 16)
                 RadioButtonTop16.IsChecked = true;
             else
                 RadioButtonNoCut.IsChecked = true;
@@ -103,9 +105,6 @@ namespace TXM.GUI.Dialogs
             Tournament tournament = new Tournament(TextboxName.Text, GetMaxSquadSize(), GetCut(), GetRule())
             {
                 TeamProtection = radioButtonTPYes.IsChecked == true,
-                Single = radioButtonTypeSingle.IsChecked == true,
-                PrintDDGER = PrintDDGER(),
-                PrintDDENG = PrintDDENG()
             };
             return tournament;
         }
@@ -151,16 +150,16 @@ namespace TXM.GUI.Dialogs
             return t;
         }
 
-        private TournamentCut GetCut()
+        private int GetCut()
         {
             if (RadioButtonTop4.IsChecked == true)
-                return TournamentCut.Top4;
+                return 4;
             else if (RadioButtonTop8.IsChecked == true)
-                return TournamentCut.Top8;
+                return 8;
             else if (RadioButtonTop16.IsChecked == true)
-                return TournamentCut.Top16;
+                return 16;
             else
-                return TournamentCut.NoCut;
+                return 0;
         }
 
         private bool PrintDDGER()

@@ -873,13 +873,13 @@ public class IO
 
     #endregion
 
-    #region internal methods
+    #region public methods
 
     /// <summary>
     /// Gets all save files in the auto save folder
     /// </summary>
     /// <returns>Returns all save files as string</returns>
-    internal string[] GetAutosaveFiles()
+    public string[] GetAutosaveFiles()
     {
         return Directory.GetFiles(AutosavePath, "*" + Settings.FILEEXTENSION);
     }
@@ -889,7 +889,7 @@ public class IO
     /// </summary>
     /// <param name="text">The text that should be shown</param>
     /// <returns>True if the User clicked OK and false if not.</returns>
-    internal bool ShowMessageWithOKCancel(string text)
+    public bool ShowMessageWithOKCancel(string text)
     {
         return messageManager.ShowWithOKCancel(text);
     }
@@ -898,7 +898,7 @@ public class IO
     /// Shows a Message Box
     /// </summary>
     /// <param name="text">The Text that should be shown</param>
-    internal void ShowMessage(string text)
+    public void ShowMessage(string text)
     {
         messageManager.Show(text);
     }
@@ -906,7 +906,7 @@ public class IO
     /// <summary>
     /// Opens the autosave folder in the default file manager
     /// </summary>
-    internal void OpenAutosaveFolder()
+    public void OpenAutosaveFolder()
     {
         if (AutosavePathExists)
         {
@@ -921,7 +921,7 @@ public class IO
     /// <summary>
     /// deletes the autosave folder
     /// </summary>
-    internal void DeleteAutosaveFolder()
+    public void DeleteAutosaveFolder()
     {
         if (AutosavePathExists)
         {

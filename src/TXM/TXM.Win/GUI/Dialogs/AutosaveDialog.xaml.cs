@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 
 using TXM.Core;
+using TXM.Core.Models;
 
 namespace TXM.GUI.Dialogs
 {
@@ -22,7 +23,7 @@ namespace TXM.GUI.Dialogs
             InitializeComponent();
         }
 
-        public void Init(List<AutosaveFile> files)
+        public void Init(List<AutoSaveFile> files)
         {
             DataGridAutosave.Columns.Clear();
 
@@ -91,7 +92,7 @@ namespace TXM.GUI.Dialogs
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             dialogReturn = true;
-            filename = ((AutosaveFile)DataGridAutosave.SelectedItem).Filename;
+            filename = ((AutoSaveFile)DataGridAutosave.SelectedItem).Filename;
             Close();
         }
 
@@ -107,7 +108,7 @@ namespace TXM.GUI.Dialogs
                 return;
             }
             dialogReturn = true;
-            filename = ((AutosaveFile)DataGridAutosave.SelectedItem).Filename;
+            filename = ((AutoSaveFile)DataGridAutosave.SelectedItem).Filename;
             Close();
         }
     }

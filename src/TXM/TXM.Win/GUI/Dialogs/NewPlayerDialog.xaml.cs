@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 
 using TXM.Core;
+using TXM.Core.Models;
 
 namespace TXM.GUI.Dialogs
 {
@@ -40,27 +41,28 @@ namespace TXM.GUI.Dialogs
                 ComboBoxFaction.Items.Add(CurrentPlayer.Faction);
                 ComboBoxFaction.SelectedValue = CurrentPlayer.Faction;
             }
-            CheckboxFreeticket.IsChecked = ((Player)CurrentPlayer).WonBye;
-            CheckboxPayed.IsChecked = CurrentPlayer.Paid;
-            CheckboxSquadListGiven.IsChecked = CurrentPlayer.ListGiven;
+            //CheckboxFreeticket.IsChecked = ((Player)CurrentPlayer).WonBye;
+            CheckboxPayed.IsChecked = CurrentPlayer.HasPaid;
+            CheckboxSquadListGiven.IsChecked = CurrentPlayer.HasListGiven;
             TextBoxNickname.IsEnabled = false;
             nicknameRequiered = false;
             TextBoxTableNR.Text = player.TableNo.ToString();
-            CheckboxPresent.IsChecked = CurrentPlayer.Present;
+            CheckboxPresent.IsChecked = CurrentPlayer.IsPresent;
             TextBoxSquadList.Text = player.SquadList;
         }
 
         public Player GetPlayer()
         {
-            Player player = new Player(TextBoxNickname.Text, ComboBoxFaction.SelectedValue.ToString());
+            Player player = new Player(TextBoxNickname.Text);
+            player.Faction = ComboBoxFaction.SelectedValue.ToString();
             player.Team = TextBoxTeam.Text;
             player.Name = TextBoxName.Text;
             player.Firstname = TextBoxFirstname.Text;
-            player.WonBye = CheckboxFreeticket.IsChecked == true;
-            player.ListGiven = CheckboxSquadListGiven.IsChecked == true;
-            player.Paid = CheckboxPayed.IsChecked == true;
+            player.HasWonBye = CheckboxFreeticket.IsChecked == true;
+            player.HasListGiven = CheckboxSquadListGiven.IsChecked == true;
+            player.HasPaid = CheckboxPayed.IsChecked == true;
             player.TableNo = TableNr;
-            player.Present = CheckboxPresent.IsChecked == true;
+            player.IsPresent = CheckboxPresent.IsChecked == true;
             player.SquadList = TextBoxSquadList.Text;
             return player;
         }

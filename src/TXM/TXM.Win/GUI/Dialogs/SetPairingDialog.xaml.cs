@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
 using TXM.Core;
+using TXM.Core.Models;
 
 namespace TXM.GUI.Dialogs
 {
@@ -13,9 +15,9 @@ namespace TXM.GUI.Dialogs
     /// </summary>
     public partial class SetPairingDialog : Window, IPairingDialog
     {
-        private List<Player> Players;
-        private List<Player> PlayerWithoutPairing;
-        private List<Pairing> PremadePairing;
+        private ObservableCollection<Player> Players;
+        private ObservableCollection<Player> PlayerWithoutPairing;
+        private ObservableCollection<Pairing> PremadePairing;
         private List<string> tempList;
         private string Nick1;
         private string Nick2;
@@ -28,7 +30,7 @@ namespace TXM.GUI.Dialogs
 
             unusedTables = new List<int>();
 
-            PlayerWithoutPairing = new List<Player>();
+            PlayerWithoutPairing = new ObservableCollection<Player>();
 
             SetComboboxPlayer1();
             ComboboxPlayer2.Items.Add("Player  2");
@@ -36,41 +38,41 @@ namespace TXM.GUI.Dialogs
             ButtonAdd.IsEnabled = false;
         }
 
-        public void SetParticipants(List<Player> participants)
+        public void SetParticipants(ObservableCollection<Player> participants)
         {
             Players = participants;
         }
 
-        public void SetPairings(List<Pairing> pairings)
+        public void SetPairings(ObservableCollection<Pairing> pairings)
         {
 
             PremadePairing = pairings;
 
             if (PremadePairing == null)
-                PremadePairing = new List<Pairing>();
+                PremadePairing = new ObservableCollection<Pairing>();
             else
             {
                 foreach (Pairing p in PremadePairing)
                 {
-                    ListboxPairings.Items.Add(p.Player1.DisplayName + " VS " + p.Player2.DisplayName);
-                    Players[Players.IndexOf(p.Player1)].Paired = true;
-                    try
-                    {
-                        Players[Players.IndexOf(p.Player2)].Paired = true;
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    { }
+                    ListboxPairings.Items.Add(p.Player1Name + " VS " + p.Player2Name);
+                    // Players[Players.IndexOf(p.Player1)].Paired = true;
+                    // try
+                    // {
+                    //     Players[Players.IndexOf(p.Player2)].Paired = true;
+                    // }
+                    // catch (ArgumentOutOfRangeException)
+                    // { }
                 }
 
                 foreach (Player player in Players)
                 {
-                    if (!player.Paired)
-                        PlayerWithoutPairing.Add(player);
+                    // if (!player.Paired)
+                    //     PlayerWithoutPairing.Add(player);
                 }
             }
         }
 
-        public List<Pairing> GetPairings()
+        public ObservableCollection<Pairing> GetPairings()
         {
             return PremadePairing;
         }
@@ -96,24 +98,24 @@ namespace TXM.GUI.Dialogs
                 if (player.DisplayName == Nick1)
                 {
                     p.Player1 = player;
-                    player.Paired = true;
+                   // player.Paired = true;
                     PlayerWithoutPairing.Remove(player);
                     i--;
                 }
                 else if (player.DisplayName == Nick2)
                 {
                     p.Player2 = player;
-                    player.Paired = true;
+                   // player.Paired = true;
                     PlayerWithoutPairing.Remove(player);
                     i--;
                 }
-                if (p.Player1 != null && (p.Player2 != null || Nick2 == "Bye"))
-                    break;
+                // if (p.Player1 != null && (p.Player2 != null || Nick2 == "Bye"))
+                //     break;
             }
             if (Nick2 == "Bye")
             {
-                p.Player1.Bye = true;
-                p.Player2 = new Player("Bye");
+                // p.Player1.Bye = true;
+                // p.Player2 = new Player("Bye");
             }
             PremadePairing.Add(p);
             ListboxPairings.Items.Add(Nick1 + " VS " + Nick2);
@@ -126,7 +128,7 @@ namespace TXM.GUI.Dialogs
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
         {
             OK = true;
-            PremadePairing = PremadePairing.OrderBy(x => x.TableNr).ToList<Pairing>();
+            //PremadePairing = PremadePairing.OrderBy(x => x.TableNo).ToList<Pairing>();
             this.Close();
         }
 
@@ -199,11 +201,11 @@ namespace TXM.GUI.Dialogs
         private void ButtonSub_Click(object sender, RoutedEventArgs e)
         {
             int at = ListboxPairings.SelectedIndex;
-            if (PremadePairing[at].Player1.Nickname != "Bye")
-                PlayerWithoutPairing.Add(PremadePairing[at].Player1);
-            if (PremadePairing[at].Player2.Nickname != "Bye")
-                PlayerWithoutPairing.Add(PremadePairing[at].Player2);
-            unusedTables.Add(PremadePairing[at].TableNr);
+            // if (PremadePairing[at].Player1Name != "Bye")
+            //     PlayerWithoutPairing.Add(PremadePairing[at].Player1);
+            // if (PremadePairing[at].Player2Name != "Bye")
+            //     PlayerWithoutPairing.Add(PremadePairing[at].Player2);
+            unusedTables.Add(PremadePairing[at].TableNo);
             PremadePairing.RemoveAt(at);
             ListboxPairings.Items.RemoveAt(at);
             string value = (string)ComboboxPlayer1.SelectedValue;
