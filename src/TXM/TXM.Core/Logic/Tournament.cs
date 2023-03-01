@@ -34,7 +34,7 @@ public partial class Tournament : ObservableObject
     public bool TeamProtection { get; set; }
 
     [JsonConverter(typeof(RuleConverter))]
-    public AbstractRules Rule
+    public AbstractRules? Rule
     {
         get { return rule; }
         set
@@ -48,6 +48,13 @@ public partial class Tournament : ObservableObject
     }
 
     public List<string> ActiveScenarios { get; private set; }
+
+    public List<string> Winners { get; } = new()
+    {
+        Texts.Automatic,
+        $"{Texts.Player} 1",
+        $"{Texts.Player} 2"
+    };
 
     #endregion
 

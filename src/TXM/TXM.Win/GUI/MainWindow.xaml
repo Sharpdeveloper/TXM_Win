@@ -22,7 +22,8 @@
             <ColumnDefinition Width="3*" />
             <ColumnDefinition Width="150px" />
         </Grid.ColumnDefinitions>
-        <Menu Height="18" VerticalAlignment="Top" Grid.Row="0" Grid.ColumnSpan="4">
+        <Grid Grid.Row="0" Grid.ColumnSpan="4">
+            <Menu Height="18" VerticalAlignment="Top">
             <MenuItem x:Name="MenuItemFile" Header="File">
                 <MenuItem x:Name="ButtonNewTournament" Header="New Tournament" Click="NewTournament_Click" />
                 <MenuItem x:Name="ButtonLoad" Header="Load" Click="Load_Click" />
@@ -94,7 +95,9 @@
                 <MenuItem x:Name="MenuItemAbout" Header="About TXM" Click="MenuItemAbout_Click" />
             </MenuItem>
         </Menu>
-        <ToolBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
+            <ToolBar >
             <Button IsEnabled="False" x:Name="ButtonGetResults" Content="Start Tournament" ToolTip="Start Tournament"
                     Click="ButtonGetResults_Click" />
             <Button IsEnabled="False" x:Name="ButtonCut" Content="Start Cut" ToolTip="Start Cut"
@@ -139,11 +142,12 @@
                       SelectionChanged="ComboboxScenarios_SelectionChanged" />
             <Label x:Name="LabelScenarios" ToolTip="Choosen Scenario" Visibility="Hidden" />
         </ToolBar>
+        </Grid>
         <Grid Grid.Row="2" Grid.Column="0">
             <DataGrid x:Name="DataGridPlayer"
                       AutoGenerateColumns="False"
                       SelectionChanged="DataGridPlayer_SelectionChanged"
-                      ScrollViewer.CanContentScroll="True"
+                      SelectionMode = "DataGridSelectionMode.Extended"
                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
                       MouseDoubleClick="DataGridPlayer_DoubleClicked"
@@ -180,16 +184,172 @@
                             </Style>
                         </DataGridTextColumn.HeaderStyle>
                     </DataGridTextColumn>
+                    <DataGridCheckBoxColumn 
+                        Header="{Binding Source={StaticResource texts}, Path=PaidShort}"
+                        Binding="{Binding HasPaid}"
+                        IsReadOnly="False">
+                        <DataGridCheckBoxColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ToolTip" Value="{Binding Source={StaticResource texts}, Path=Paid}" />
+                            </Style>
+                        </DataGridCheckBoxColumn.HeaderStyle>
+                    </DataGridCheckBoxColumn>
+                    <DataGridCheckBoxColumn 
+                        Header="{Binding Source={StaticResource texts}, Path=ListGivenShort}"
+                        Binding="{Binding HasListGiven}"
+                        IsReadOnly="False">
+                        <DataGridCheckBoxColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ToolTip" Value="{Binding Source={StaticResource texts}, Path=ListGiven}" />
+                            </Style>
+                        </DataGridCheckBoxColumn.HeaderStyle>
+                    </DataGridCheckBoxColumn>
+                    <DataGridCheckBoxColumn 
+                        Header="{Binding Source={StaticResource texts}, Path=PresentShort}"
+                        Binding="{Binding IsPresent}"
+                        IsReadOnly="False">
+                        <DataGridCheckBoxColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ToolTip" Value="{Binding Source={StaticResource texts}, Path=Present}" />
+                            </Style>
+                        </DataGridCheckBoxColumn.HeaderStyle>
+                    </DataGridCheckBoxColumn>
+                    <DataGridTextColumn 
+                        Header="{Binding Source={StaticResource texts}, Path=Team}"
+                        Binding="{Binding Team}"
+                        IsReadOnly="True">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ToolTip" Value="{Binding Source={StaticResource texts}, Path=Team}" />
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="{Binding Source={StaticResource texts}, Path=Faction}"
+                        Binding="{Binding Faction}"
+                        IsReadOnly="True">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ToolTip" Value="{Binding Source={StaticResource texts}, Path=Faction}" />
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="{Binding Source={StaticResource texts}, Path=TournamentPointsShort}"
+                        Binding="{Binding TournamentPoints}"
+                        IsReadOnly="True">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ToolTip" Value="{Binding Source={StaticResource texts}, Path=TournamentPoints}" />
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="{Binding Source={StaticResource texts}, Path=WinsShort}"
+                        Binding="{Binding Wins}"
+                        IsReadOnly="True">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ToolTip" Value="{Binding Source={StaticResource texts}, Path=Wins}" />
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="{Binding Source={StaticResource texts}, Path=ModifiedWinsShort}"
+                        Binding="{Binding ModifiedWins}"
+                        IsReadOnly="True"
+                        Visibility="{Binding ModifiedWinsVisibility}">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ToolTip" Value="{Binding Source={StaticResource texts}, Path=ModifiedWins}" />
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="{Binding Source={StaticResource texts}, Path=DrawsShort}"
+                        Binding="{Binding Draws}"
+                        IsReadOnly="True"
+                        Visibility="{Binding DrawsVisibility}">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ToolTip" Value="{Binding Source={StaticResource texts}, Path=Draws}" />
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="{Binding Source={StaticResource texts}, Path=ModifiedLossesShort}"
+                        Binding="{Binding ModifiedLosses}"
+                        IsReadOnly="True"
+                        Visibility="{Binding ModifiedLossesVisibility}">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ToolTip" Value="{Binding Source={StaticResource texts}, Path=ModifiedLosses}" />
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="{Binding Source={StaticResource texts}, Path=LossesShort}"
+                        Binding="{Binding Losses}"
+                        IsReadOnly="True">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ToolTip" Value="{Binding Source={StaticResource texts}, Path=Losses}" />
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="{Binding Source={StaticResource texts}, Path=MarginOfVictoryShort}"
+                        Binding="{Binding MarginOfVictory}"
+                        IsReadOnly="True"
+                        Visibility="{Binding MarginOfVictoryVisibility}">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ToolTip" Value="{Binding Source={StaticResource texts}, Path=MarginOfVictory}" />
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="{Binding Source={StaticResource texts}, Path=StrengthOfScheduleShort}"
+                        Binding="{Binding StrengthOfSchedule}"
+                        IsReadOnly="True">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ToolTip" Value="{Binding Source={StaticResource texts}, Path=StrengthOfSchedule}" />
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="{Binding Source={StaticResource texts}, Path=ExtendedStrengthOfScheduleShort}"
+                        Binding="{Binding ExtendedStrengthOfSchedule}"
+                        IsReadOnly="True"
+                        Visibility="{Binding ExtendedStrengthOfScheduleVisibility}">
+                        <DataGridTextColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="ToolTip" Value="{Binding Source={StaticResource texts}, Path=ExtendedStrengthOfSchedule}" />
+                            </Style>
+                        </DataGridTextColumn.HeaderStyle>
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
         <GridSplitter Grid.Column="1" Grid.Row="2" Width="5" HorizontalAlignment="Stretch" />
         <Grid Grid.Row="2" Grid.Column="2">
-            <DataGrid x:Name="DataGridPairing" DataGridCell.Selected="DataGrid_GotFocus" SelectionUnit="Cell"
-                      AutoGenerateColumns="False" CurrentCellChanged="PariringCurrentCellChanged"
-                      ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                      ScrollViewer.HorizontalScrollBarVisibility="Auto" MouseLeftButtonUp="GridMouseLeftButtonUp"
-                      CanUserAddRows="False" BeginningEdit="DataGridPairing_BeginningEdit" />
+            <DataGrid x:Name="DataGridPairing" 
+                      DataGridCell.Selected="DataGrid_GotFocus" 
+                      SelectionUnit="Cell"
+                      SelectionMode="DataGridSelectionMode.Single"
+                      AutoGenerateColumns="False" 
+                      CurrentCellChanged="PariringCurrentCellChanged"
+                      ScrollViewer.CanContentScroll="True" 
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                      MouseLeftButtonUp="GridMouseLeftButtonUp"
+                      CanUserAddRows="False" 
+                      BeginningEdit="DataGridPairing_BeginningEdit">
+                <DataGrid.Columns>
+                    
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
         <Grid Grid.Column="3" Grid.Row="2">
             <Label x:Name="LabelTime" Content="MM:SS" VerticalAlignment="Top" Height="40" FontSize="20"

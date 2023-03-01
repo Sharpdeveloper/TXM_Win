@@ -8,6 +8,7 @@
 /// </summary>
 public class Texts
 {
+    public static string Automatic { get; private set; } = "Automatic";
     public static string AutoSaveFolderDeleted { get; private set; } = "Auto save folder was deleted.";
     public static string Disqualified { get; private set; } = "disqualified";
     public static string Draws { get; private set; } = "Draws";
@@ -22,6 +23,8 @@ public class Texts
     public static string ImageFiles { get; private set; } = "Image Files";
     public static string ImportFile { get; private set; } = "Import File";
     public static string InvalidFile { get; private set; } = "Please choose a valid <filetype>-file.";
+    public static string ListGiven { get; private set; } = "Has List given";
+    public static string ListGivenShort { get; private set; } = "L";
     public static string Losses { get; private set; } = "Losses";
     public static string LossesShort { get; private set; } = "L";
     public static string MarginOfVictory { get; private set; } = "Margin of Victory";
@@ -34,8 +37,12 @@ public class Texts
     public static string NoAutoSaveFolder { get; private set; } = "There is no auto save folder.";
     public static string NoPairingsYet { get; private set; } = "No Pairings yet";
     public static string NoRoundStarted { get; private set; } = "No Round started";
+    public static string Paid { get; private set; } = "Paid";
+    public static string PaidShort { get; private set; } = "$";
     public static string Pairings { get; private set; } = "Pairings";
     public static string Player { get; private set; } = "Player";
+    public static string Present { get; private set; } = "Is Present";
+    public static string PresentShort { get; private set; } = "!";
     public static string Rank { get; private set; } = "Rank";
     public static string RankShort { get; private set; } = "#";
     public static string Results { get; private set; } = "Results";
