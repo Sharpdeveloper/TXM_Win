@@ -10,6 +10,7 @@ using TXM.GUI.Dialogs;
 using TXM.GUI.Windows;
 using TXM.Core;
 using TXM.Core.Models;
+using TXM.Core.ViewModels;
 
 namespace TXM.GUI
 {
@@ -50,124 +51,7 @@ namespace TXM.GUI
 
         private void InitDataGridPairing(bool update = false, bool bonus = false)
         {
-
-            DataGridPairing.Columns.Clear();
-
-            DataGridTextColumn dgc;
-            DataGridCheckBoxColumn dgcb;
-            DataGridComboBoxColumn dgcbc;
-
-            dgcb = new DataGridCheckBoxColumn()
-            {
-                Header = "Lock"
-            };
-            Binding b = new Binding("Locked")
-            {
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            };
-            dgcb.Binding = b;
-            DataGridPairing.Columns.Add(dgcb);
-            if (!bonus)
-            {
-                dgc = new DataGridTextColumn()
-                {
-                    Header = "T#",
-                    Binding = new Binding("TableNr"),
-                    IsReadOnly = true
-                };
-                DataGridPairing.Columns.Add(dgc);
-            }
-            dgc = new DataGridTextColumn()
-            {
-                Header = "Player 1",
-                Binding = new Binding("Player1Name"),
-                IsReadOnly = true
-            };
-            DataGridPairing.Columns.Add(dgc);
-            if (!bonus)
-            {
-                dgc = new DataGridTextColumn()
-                {
-                    Header = "Player 2",
-                    Binding = new Binding("Player2Name"),
-                    IsReadOnly = true
-                };
-                DataGridPairing.Columns.Add(dgc);
-            }
-            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsTournamentPointsInputNeeded && !bonus)
-            {
-                dgc = new DataGridTextColumn()
-                {
-                    Header = "TP (P1)",
-                    Binding = new Binding("Player1Points"),
-                    IsReadOnly = false
-                };
-                DataGridPairing.Columns.Add(dgc);
-            }
-            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsTournamentPointsInputNeeded && !bonus)
-            {
-                dgc = new DataGridTextColumn()
-                {
-                    Header = "TP (P2)",
-                    Binding = new Binding("Player2Points"),
-                    IsReadOnly = false
-                };
-                DataGridPairing.Columns.Add(dgc);
-            }
-            dgc = new DataGridTextColumn()
-            {
-                Header = "Score (P1)",
-                Binding = new Binding("Player1Score"),
-                IsReadOnly = false
-            };
-            DataGridPairing.Columns.Add(dgc);
-            if (!bonus)
-            {
-                dgc = new DataGridTextColumn()
-                {
-                    Header = "Score (P2)",
-                    Binding = new Binding("Player2Score"),
-                    IsReadOnly = false
-                };
-                DataGridPairing.Columns.Add(dgc);
-            }
-            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsWinnerDropDownNeeded && !bonus)
-            {
-                dgcbc = new DataGridComboBoxColumn()
-                {
-                    Header = "Winner",
-                    ItemsSource = winners,
-                    TextBinding = new Binding("Winner"),
-                    IsReadOnly = false
-                };
-                DataGridPairing.Columns.Add(dgcbc);
-            }
-            if (bonus || (!update && (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule.IsDrawPossible)))
-            {
-                dgcb = new DataGridCheckBoxColumn()
-                {
-                    Header = "OK?"
-                };
-                b = new Binding("ResultEdited")
-                {
-                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                };
-                dgcb.Binding = b;
-                DataGridPairing.Columns.Add(dgcb);
-            }
-            if ((update))
-            {
-                dgcb = new DataGridCheckBoxColumn()
-                {
-                    Header = "Changed?"
-                };
-                b = new Binding("ResultEdited")
-                {
-                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                };
-                dgcb.Binding = b;
-                DataGridPairing.Columns.Add(dgcb);
-            }
+//TODO Binding Readonly to Locked
         }
   
 
@@ -221,7 +105,6 @@ namespace TXM.GUI
             {
                 SetGUIState(true);
                 Refresh();
-                InitDataGridPlayer();
                 InitDataGridPairing();
             }
             e.Handled = true;
@@ -263,8 +146,7 @@ namespace TXM.GUI
             if (tournamentController.ActiveTournament != null)
             {
                 ComboBoxRounds.Items.Clear();
-                InitDataGridPlayer();
-                InitDataGridPairing();
+
                 SetGUIState(true);
                 Refresh();
                 DataGridPlayer.ItemsSource = tournamentController.ActiveTournament.Participants;
@@ -319,7 +201,6 @@ namespace TXM.GUI
                     //     RefreshDataGridPairings();
                     // }
 
-                    InitDataGridPlayer();
                     // if (tournamentController.ActiveTournament.bonus)
                     // {
                     //     InitDataGridPairing(false, true);
@@ -935,10 +816,7 @@ namespace TXM.GUI
             if (tournamentController.ActiveTournament != null)
             {
                 ComboBoxRounds.Items.Clear();
-                InitDataGridPlayer();
-                InitDataGridPairing();
                 SetGUIState(true);
-                DataGridPlayer.ItemsSource = tournamentController.ActiveTournament.Participants;
                 //RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
                 SetRandomTime();
             }

@@ -601,13 +601,13 @@ public class IO
         sb.Append(tb);
         sb.Append(rb);
         sb.Append(db);
-        sb.Append($"{Texts.TableShort}#"); //Table Number
+        sb.Append(Texts.TableNoShort); //Table Number
         sb.Append(de);
         sb.Append(db);
-        sb.Append($"{Texts.Player} 1"); //Player 1
+        sb.Append(Texts.Player1); //Player 1
         sb.Append(de);
         sb.Append(db);
-        sb.Append($"{Texts.Player}  2"); //Player 2
+        sb.Append(Texts.Player2  ); //Player 2
         sb.Append(de);
         if (result)
         {

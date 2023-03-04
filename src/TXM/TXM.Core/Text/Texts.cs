@@ -25,6 +25,8 @@ public class Texts
     public static string InvalidFile { get; private set; } = "Please choose a valid <filetype>-file.";
     public static string ListGiven { get; private set; } = "Has List given";
     public static string ListGivenShort { get; private set; } = "L";
+    public static string Lock { get; private set; } = "Locks the Pairing, so it can't be accidentally changed.";
+    public static string LockShort { get; private set; } = "L";
     public static string Losses { get; private set; } = "Losses";
     public static string LossesShort { get; private set; } = "L";
     public static string MarginOfVictory { get; private set; } = "Margin of Victory";
@@ -41,10 +43,14 @@ public class Texts
     public static string PaidShort { get; private set; } = "$";
     public static string Pairings { get; private set; } = "Pairings";
     public static string Player { get; private set; } = "Player";
+    public static string PlayerShort { get; private set; } = "P";
+    public static string Points { get; private set; } = "Points";
     public static string Present { get; private set; } = "Is Present";
     public static string PresentShort { get; private set; } = "!";
     public static string Rank { get; private set; } = "Rank";
     public static string RankShort { get; private set; } = "#";
+    public static string ResultEdited { get; private set; } = "Is the result edited?";
+    public static string ResultEditedShort { get; private set; } = "OK?";
     public static string Results { get; private set; } = "Results";
     public static string Round { get; private set; } = "Round";
     public static string Score { get; private set; } = "Score";
@@ -52,6 +58,8 @@ public class Texts
     public static string StrengthOfScheduleShort { get; private set; } = "SoS";
     public static string Table { get; private set; } = "Table";
     public static string TableShort { get; private set; } = "T";
+    public static string TableNo { get; private set; } = "Table Number";
+    public static string TableNoShort { get; private set; } = "T#";
     public static string Team { get; private set; } = "Team";
     public static string TournamentPoints { get; private set; } = "Tournament Points";
     public static string TournamentPointsShort { get; private set; } = "TP";
@@ -80,7 +88,21 @@ public class Texts
     //public static string Disqualified { get; private set; } = "disqualified";
     //public static string Disqualified { get; private set; } = "disqualified";
     //public static string Disqualified { get; private set; } = "disqualified";
-    
+
+    public static string Player1 => $"{Player} 1";
+    public static string Player2 => $"{Player} 2";
+    public static string Player1Points => $"{Player} 1 {Points}";
+    public static string Player1PointsShort => $"{PlayerShort}1 {Points}";
+    public static string Player2Points => $"{Player} 2 {Points}";
+    public static string Player2PointsShort => $"{PlayerShort}2 {Points}";
+    public static string Player1Score => $"{Player} 1 {Score}";
+    public static string Player1ScoreShort => $"{PlayerShort}1 {Score}";
+    public static string Player2Score => $"{Player} 2 {Score}";
+    public static string Player2ScoreShort => $"{PlayerShort}2 {Score}";
+
+
+
+
     //TODO JSON Import (export)
 }
 

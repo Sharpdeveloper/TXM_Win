@@ -52,8 +52,8 @@ public partial class Tournament : ObservableObject
     public List<string> Winners { get; } = new()
     {
         Texts.Automatic,
-        $"{Texts.Player} 1",
-        $"{Texts.Player} 2"
+        Texts.Player1,
+        Texts.Player2
     };
 
     #endregion
@@ -357,11 +357,11 @@ public partial class Tournament : ObservableObject
             var player1 = Enumerable.First<Player>(Participants, x => x.ID == pairing.Player1ID);
             var player2 = Enumerable.First<Player>(Participants, x => x.ID == pairing.Player2ID);
             Result diffResult;
-            if (pairing.Winner == $"{Texts.Player} 1")
+            if (pairing.Winner == Texts.Player1)
             {
                 winnerID = pairing.Player1ID;
             }
-            else if (pairing.Winner == $"{Texts.Player} 2")
+            else if (pairing.Winner == Texts.Player2)
             {
                 winnerID = pairing.Player2ID;
             }
