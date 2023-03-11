@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TXM.Core", "TXM.Core\TXM.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TXM.Win", "TXM.Win\TXM.Win.csproj", "{AA0BD803-F02A-4492-9EAF-827E90003389}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TXM.Test", "TXM.Test\TXM.Test.csproj", "{51654F8F-23D8-4C94-A46A-32A840BB5AE8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TXM.TestingGround", "TXM.TestingGround\TXM.TestingGround.csproj", "{51654F8F-23D8-4C94-A46A-32A840BB5AE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TXM.Test", "TXM.Test\TXM.Test.csproj", "{EDB0DA40-9B39-4EBA-8D82-C1D7A1512E9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{51654F8F-23D8-4C94-A46A-32A840BB5AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51654F8F-23D8-4C94-A46A-32A840BB5AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51654F8F-23D8-4C94-A46A-32A840BB5AE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDB0DA40-9B39-4EBA-8D82-C1D7A1512E9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDB0DA40-9B39-4EBA-8D82-C1D7A1512E9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDB0DA40-9B39-4EBA-8D82-C1D7A1512E9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDB0DA40-9B39-4EBA-8D82-C1D7A1512E9B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
