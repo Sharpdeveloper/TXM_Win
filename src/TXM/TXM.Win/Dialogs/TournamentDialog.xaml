@@ -1,0 +1,75 @@
+﻿<Window x:Class="TXM.Win.Dialogs.TournamentDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:TXM.Core.ViewModels;assembly=TXM.Core"
+        Title="{Binding Title}" Height="310" Width="550" ResizeMode="NoResize">
+    <Window.DataContext>
+        <vm:TournamentViewModel />
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="230"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="30"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+        
+        <Label x:Name="LabelTournamentName" Cursor="Help" Content="{Binding Path=Text.TournamentName}"  Grid.Column="0" Grid.Row="0" ToolTip="{Binding Text.TournamentNameInfo}"/>
+        <TextBox x:Name="TextboxName" Text="{Binding ActiveTournament.Name}" Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="0"  />
+
+        <Label x:Name="LabelGameSystem" Cursor="Help" Content="{Binding Text.ChooseGame}" Grid.Column="0" Grid.Row="2" ToolTip="{Binding Text.ChooseGameInfo}"/>
+        <ComboBox x:Name="ComboBoxGameSystem" ItemsSource="{Binding TournamentSystems}" SelectedItem="{Binding GameSystem}" IsEnabled="{Binding IsGameSystemChangeable}" Grid.Column="2" Grid.ColumnSpan="3"  Grid.Row="2"/>
+        
+        <Label x:Name="LabelTournamentForm" Content="{Binding Text.ChooseTournamentType}" ToolTip="{Binding Text.ChooseTournamentTypeInfo}" Cursor="Help" Grid.Column="0" Grid.Row="4"/>
+        <ComboBox x:Name="ComboBoxTournamentType" ItemsSource="{Binding ActiveTournament.TournamentPairingTypes}" SelectedItem="{Binding PairingType}" Grid.Column="2" Grid.ColumnSpan="3"  Grid.Row="4"/>
+        
+        <Label x:Name="LabelListsize" Content="{Binding Text.MaxPoints}" ToolTip="{Binding Text.MaxPointsInfo}" Cursor="Help" Grid.Column="0" Grid.Row="6"/>
+        <TextBox x:Name="TextBoxMaxSquad" Text="{Binding ActiveTournament.MaxPoints}" Grid.Column="2" Grid.ColumnSpan="3"  Grid.Row="6"/>
+        
+        <Label x:Name="LabelCut" Content="{Binding Text.CutSize}" ToolTip="{Binding Text.CutSizeInfo}" Cursor="Help" Grid.Column="0" Grid.Row="8"/>
+        <TextBox x:Name="TextBoxCut" Text="{Binding ActiveTournament.CutSize}" Grid.Column="2" Grid.ColumnSpan="3"  Grid.Row="8"/>
+
+        <Label x:Name="labelTeamProtection" Content="{Binding Text.Protection}" ToolTip="{Binding Text.ProtectionInfo}" Cursor="Help" Grid.Column="0" Grid.Row="10"/>
+        <ComboBox x:Name="ComboBoxTeamProtection" ItemsSource="{Binding ActiveTournament.ProtectionTypes}" SelectedItem="{Binding Protection}" Grid.Column="2" Grid.ColumnSpan="3"  Grid.Row="10"/>
+
+        <Label x:Name="labelType" Content="{Binding Text.TournamentType}" ToolTip="{Binding Text.TournamentTypeInfo}" Cursor="Help" Grid.Column="0" Grid.Row="12"/>
+        <ComboBox x:Name="ComboBoxType" ItemsSource="{Binding ActiveTournament.TournamentTypes}" SelectedItem="{Binding Type}" Grid.Column="2" Grid.ColumnSpan="3"  Grid.Row="12"/>
+
+        <Button x:Name="ButtonOK" Content="{Binding Text.Ok}" Click="NewTournament_Click" Grid.Column="2" Grid.Row="16"/>
+        <Button x:Name="ButtonCancel" Content="{Binding Text.Cancel}" Click="Cancel_Click" Grid.Column="4" Grid.Row="16"/>
+    </Grid>
+</Window>

@@ -16,6 +16,21 @@
 
   <ItemGroup>
     <Resource Include="Resources\*" />
+    <Resource Include="Resources\Icons\Add User-100.png" />
+    <Resource Include="Resources\Icons\Clover-100.png" />
+    <Resource Include="Resources\Icons\Edit User-100.png" />
+    <Resource Include="Resources\Icons\icons8-pause-96.png" />
+    <Resource Include="Resources\Icons\icons8-play-96.png" />
+    <Resource Include="Resources\Icons\icons8-stop-96.png" />
+    <Resource Include="Resources\Icons\Remove User-100.png" />
+    <Resource Include="Resources\Icons\Rotate Left-100.png" />
+    <Resource Include="Resources\Icons\Save-100.png" />
+    <Resource Include="Resources\Icons\TXM_Logo.png" />
+    <Resource Include="Resources\Icons\Unfriend Male-100.png" />
+    <Resource Include="Resources\Icons\User Group-100.png" />
+    <Resource Include="Resources\Icons\Watch-100.png" />
+    <None Remove="Resources\Icons\icons8-menü-abgerundet-100.png" />
+    <Resource Include="Resources\Icons\icons8-menü-abgerundet-100.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +38,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="GUI\Dialogs\ThanksDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MainWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -34,6 +52,44 @@
     </Page>
     <Page Update="GUI\Dialogs\ThanksDialog.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Dialogs\AboutDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Dialogs\AutoSaveDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Dialogs\PlayerDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Dialogs\TournamentDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Dialogs\OutputDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Dialogs\ReportBugDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Dialogs\PairingsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Dialogs\SupportDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Dialogs\ThanksDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Windows\ProjectorWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Windows\TimerWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

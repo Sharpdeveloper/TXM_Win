@@ -4,14 +4,12 @@ using System.Text;
 using System.Windows;
 using System.Windows.Threading;
 
+using TXM.Core.Global;
+
 namespace TXM.Win
 {
-    /// <summary>
-    /// Interaktionslogik für "App.xaml"
-    /// </summary>
     public partial class App : Application
     {
-
         void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             // Process unhandled exception
@@ -35,7 +33,7 @@ namespace TXM.Win
             {
                 string line = "System:\n" + StringBuilder1.ToString();
                 sw.WriteLine(line);
-                line = "TXM Version: " + TXM.Core.Settings.TXMVERSION;
+                line = "TXM Version: " + Settings.TxmVersion;
                 sw.WriteLine(line);
             }
 

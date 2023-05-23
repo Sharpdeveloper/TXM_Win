@@ -1,0 +1,17 @@
+﻿<Window x:Class="TXM.Win.Windows.TimerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:TXM.Core.ViewModels;assembly=TXM.Core"
+        xmlns:vc="clr-namespace:TXM.Win.Converter"
+        Title="{Binding Title}" Height="456.472" Width="751.537" WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <vm:TimerViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <vc:ColorConverter x:Key="StringToColorConverter" />
+    </Window.Resources>
+    <Grid Height="Auto" Width="Auto">
+        <Image ScrollViewer.VerticalScrollBarVisibility="Disabled" Stretch="UniformToFill" Source="{Binding Setting.BgImagePath}"/>
+        <Label Content="{Binding Timer.CurrentTime}" FontSize="{Binding Setting.TextSize}" FontWeight="Bold" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" Foreground="{Binding Setting.TextColor, Converter={StaticResource StringToColorConverter}}"/>
+    </Grid>
+</Window>

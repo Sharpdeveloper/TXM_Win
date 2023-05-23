@@ -36,7 +36,7 @@ public partial class Round: ObservableObject
         RoundNo = roundNo;
     }
 
-    public Round(string roundText, ObservableCollection<Pairing> pairings, string scenario)
+    public Round(string roundText, ObservableCollection<Pairing> pairings, string scenario = "")
     {
         RoundText = roundText;
         roundNo = -1;

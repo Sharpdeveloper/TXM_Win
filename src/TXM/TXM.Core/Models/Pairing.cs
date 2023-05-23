@@ -1,4 +1,8 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+
+using CommunityToolkit.Mvvm.ComponentModel;
+
+using TXM.Core.Global;
 
 namespace TXM.Core.Models;
 
@@ -13,6 +17,9 @@ public partial class Pairing : ObservableObject
         startingTableNo = startNo;
     }
     #endregion
+
+    [ObservableProperty]
+    public List<string> winners = new List<string>();
 
     #region Properties
     [ObservableProperty]
@@ -63,7 +70,7 @@ public partial class Pairing : ObservableObject
             return (Player1Score != 0 && Player2Score != 0 && (Player1Score != Player2Score || Winner != "Automatic")) || IsResultEdited || IsLocked;
         }
     }
-    public Models.Player? Player1
+    public Player? Player1
     {
         private get
         {
@@ -78,7 +85,7 @@ public partial class Pairing : ObservableObject
             }
         }
     }
-    public Models.Player? Player2
+    public Player? Player2
     {
         private get
         {
@@ -98,6 +105,12 @@ public partial class Pairing : ObservableObject
     #region Constructor
     public Pairing(int tableNo = -1)
     {
+        Winners = new()
+        {
+            State.Text.Automatic,
+            State.Text.Player1,
+            State.Text.Player2
+        };
         Winner = "Automatic";
         if (tableNo == -1)
         {

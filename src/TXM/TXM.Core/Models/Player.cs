@@ -7,7 +7,7 @@ namespace TXM.Core.Models;
 public partial class Player : ObservableObject
 {
     #region static
-    internal static int currentID = 0;
+    internal static int currentID = 1;
 
     private static Player? bye = null;
     public static Player Bye
@@ -50,7 +50,7 @@ public partial class Player : ObservableObject
             {
                 bonus = new Player("Bonus")
                 {
-                    ID = -2
+                    ID = -3
                 };
             }
             return bonus;
@@ -324,4 +324,13 @@ public partial class Player : ObservableObject
         return base.GetHashCode();
     }
     #endregion
+
+    public static Player GetBye(int byeId)
+    {
+        if (byeId == Bonus.ID)
+        {
+            return Bonus;
+        }
+        return byeId == WonBye.ID ? WonBye : Bye;
+    }
 }

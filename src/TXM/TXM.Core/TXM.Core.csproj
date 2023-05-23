@@ -17,15 +17,47 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
+    <PackageReference Include="Octokit" Version="5.0.4" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Export\" />
     <Folder Include="Export\JSON\" />
-    <Folder Include="Models\" />
-    <Folder Include="ViewModels\" />
+    <Folder Include="Resources\Icons" />
     <Folder Include="Logic\" />
   </ItemGroup>
   <ItemGroup>
     <ReferencePathWithRefAssemblies Update="\Users\martin\.nuget\packages\communitytoolkit.mvvm\8.1.0\lib\net6.0\CommunityToolkit.Mvvm.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Resources\Icons\Add User-100.png" />
+    <Resource Include="Resources\Icons\Add User-100.png" />
+    <None Remove="Resources\Icons\icons8-play-96.png" />
+    <Resource Include="Resources\Icons\icons8-play-96.png" />
+    <None Remove="Resources\Icons\icons8-stop-96.png" />
+    <Resource Include="Resources\Icons\icons8-stop-96.png" />
+    <None Remove="Resources\Icons\Clover-100.png" />
+    <Resource Include="Resources\Icons\Clover-100.png" />
+    <None Remove="Resources\Icons\Edit User-100.png" />
+    <Resource Include="Resources\Icons\Edit User-100.png" />
+    <None Remove="Resources\Icons\Remove User-100.png" />
+    <Resource Include="Resources\Icons\Remove User-100.png" />
+    <None Remove="Resources\Icons\Rotate Left-100.png" />
+    <Resource Include="Resources\Icons\Rotate Left-100.png" />
+    <None Remove="Resources\Icons\Save-100.png" />
+    <Resource Include="Resources\Icons\Save-100.png" />
+    <None Remove="Resources\Icons\TXM_Logo.png" />
+    <Resource Include="Resources\Icons\TXM_Logo.png" />
+    <None Remove="Resources\Icons\Unfriend Male-100.png" />
+    <Resource Include="Resources\Icons\Unfriend Male-100.png" />
+    <None Remove="Resources\Icons\User Group-100.png" />
+    <Resource Include="Resources\Icons\User Group-100.png" />
+    <None Remove="Resources\Icons\Watch-100.png" />
+    <Resource Include="Resources\Icons\Watch-100.png" />
+    <None Remove="Resources\Icons\icons8-menü-abgerundet-100.png" />
+    <Resource Include="Resources\Icons\icons8-menü-abgerundet-100.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Resources\Icons\icons8-pause-96.png" />
+    <Resource Include="Resources\Icons\icons8-pause-96.png" />
   </ItemGroup>
 </Project>

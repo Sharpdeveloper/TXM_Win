@@ -21,33 +21,41 @@ public partial class AutoSaveFile : ObservableObject
     [ObservableProperty]
     public string round;
 
-    public string Filename { get; set; }
-
-    public AutoSaveFile(string filename)
+    private string _fileName;
+    public string FileName
     {
-        Filename = filename;
-        filename = filename.Substring(filename.LastIndexOf(Path.DirectorySeparatorChar)+1);
-        string[] parts = filename.Split('_');
-        DateTime dt = new DateTime(long.Parse(parts[1]));
-        dt = dt.AddYears(1600);
-        Date = dt.ToShortDateString();
-        Time = dt.ToShortTimeString();
-        Tournament = parts[2];
-        try
+        get => _fileName;
+        set
         {
-            State = parts[3].Split('.')[0];
+            _fileName = value;
+            _fileName = _fileName.Substring(_fileName.LastIndexOf(Path.DirectorySeparatorChar)+1);
+            string[] parts = _fileName.Split('_');
+            DateTime dt = new DateTime(long.Parse(parts[1]));
+            dt = dt.AddYears(1600);
+            Date = dt.ToShortDateString();
+            Time = dt.ToShortTimeString();
+            Tournament = parts[2];
+            try
+            {
+                State = parts[3].Split('.')[0];
+            }
+            catch (Exception)
+            {
+                State = parts[3];
+            }
+            try
+            {
+                Round = parts[4].Split('.')[0];
+            }
+            catch(Exception)
+            {
+                Round = "";
+            }
         }
-        catch (Exception)
-        {
-            State = parts[3];
-        }
-        try
-        {
-            Round = parts[4].Split('.')[0];
-        }
-        catch(Exception)
-        {
-            Round = "";
-        }
+    }
+
+    public AutoSaveFile(string fileName)
+    {
+        FileName = fileName;
     }
 }

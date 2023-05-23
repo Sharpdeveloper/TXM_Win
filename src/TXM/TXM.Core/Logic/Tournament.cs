@@ -4,8 +4,8 @@ using System.Text.Json.Serialization;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 using TXM.Core.Export;
+using TXM.Core.Global;
 using TXM.Core.Models;
-using TXM.Core.Text;
 
 namespace TXM.Core.Logic;
 
@@ -13,6 +13,17 @@ public partial class Tournament : ObservableObject
 {
     #region Tournament Information
 
+    [ObservableProperty]
+    private bool _isStarted = false;
+
+    [ObservableProperty]
+    public List<string> tournamentPairingTypes = new();
+
+    [ObservableProperty]
+    public List<string> protectionTypes = new();
+
+    [ObservableProperty]
+    public List<string> tournamentTypes = new();
     public List<Pairing>? PrePaired { get; set; }
 
     [ObservableProperty]
@@ -21,17 +32,21 @@ public partial class Tournament : ObservableObject
     [ObservableProperty]
     public string chosenScenario;
 
+    public bool IsSeeded = false;
+
     private List<Player> winnerLastRound;
     public string Name { get; set; }
     public List<string> Nicknames { get; internal set; }
-    public int MaxPoints { get; set; }
+
+    [ObservableProperty]
+    public int maxPoints;
     public ObservableCollection<Round> Rounds { get; internal set; }
     public string FilePath { get; internal set; }
-    public string AutoSavePath { get; internal set; }
-    public string DisplayedRound { get; set; }
     public int CutSize { get; set; }
     public bool WonByeCalculated { get; internal set; }
     public bool TeamProtection { get; set; }
+
+    public string DisplayedRound => SelectedRound + 1 <= Rounds.Count ? Rounds[SelectedRound].RoundText : "";
 
     [JsonConverter(typeof(RuleConverter))]
     public AbstractRules? Rule
@@ -48,20 +63,13 @@ public partial class Tournament : ObservableObject
     }
 
     public List<string> ActiveScenarios { get; private set; }
+    public TournamentPairingType PairingType { get; set; }
+    public TeamProtection Protection { get; set; }
+    public TournamentType Type { get; set; }
 
-    public List<string> Winners { get; } = new()
-    {
-        Texts.Automatic,
-        Texts.Player1,
-        Texts.Player2
-    };
-
-    #endregion
-
-    #region GUI_State
-
-    public string ButtonGetResultsText { get; set; }
-    public bool ButtonCutState { get; set; }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(DisplayedRound))]
+    private int _selectedRound = 0;
 
     #endregion
 
@@ -89,12 +97,15 @@ public partial class Tournament : ObservableObject
 
     #region Constructors
 
+    public Tournament(string name): this(name, null )
+    {
+    }
     public Tournament(string name
         , int t3ID
         , string GOEPPversion
         , AbstractRules rules
         , bool firstround = true
-        , int maxPoints = 100
+        , int maxPoints = 0
         , int cut = 0)
     {
         Player.ResetID();
@@ -109,6 +120,10 @@ public partial class Tournament : ObservableObject
         WonByeCalculated = false;
         Rounds = new ObservableCollection<Round>();
         Rule = rules;
+        tournamentPairingTypes.Add(State.Text.Swiss);
+        protectionTypes.Add(State.Text.None);
+        protectionTypes.Add(State.Text.FirstRound);
+        tournamentTypes.Add(State.Text.Single);
     }
 
     public Tournament(int t3ID, string name, AbstractRules rules, string GOEPPversion = "")
@@ -178,6 +193,7 @@ public partial class Tournament : ObservableObject
             }
         }
 
+        IsStarted = true;
         SeedPlayers(new Random());
     }
 
@@ -241,11 +257,11 @@ public partial class Tournament : ObservableObject
         player.IsDisqualified = true;
         if (player.Nickname != null)
         {
-            player.Nickname += $" <{Texts.Disqualified}>";
+            player.Nickname += $" <{State.Text.Disqualified}>";
         }
         else
         {
-            player.Name += $" <{Texts.Disqualified}>";
+            player.Name += $" <{State.Text.Disqualified}>";
         }
     }
 
@@ -258,11 +274,11 @@ public partial class Tournament : ObservableObject
         player.HasDropped = true;
         if (player.Nickname != null)
         {
-            player.Nickname += $" <{Texts.Dropped}>";
+            player.Nickname += $" <{State.Text.Dropped}>";
         }
         else
         {
-            player.Name += $" <{Texts.Dropped}>";
+            player.Name += $" <{State.Text.Dropped}>";
         }
     }
 
@@ -323,8 +339,6 @@ public partial class Tournament : ObservableObject
         }
 
         Rounds.Add(new Round($"Top {currentCutSize}", Pairings, scenario));
-
-        DisplayedRound = Rounds[^1].RoundText;
     }
 
     /// <summary>
@@ -357,11 +371,11 @@ public partial class Tournament : ObservableObject
             var player1 = Enumerable.First<Player>(Participants, x => x.ID == pairing.Player1ID);
             var player2 = Enumerable.First<Player>(Participants, x => x.ID == pairing.Player2ID);
             Result diffResult;
-            if (pairing.Winner == Texts.Player1)
+            if (pairing.Winner == State.Text.Player1)
             {
                 winnerID = pairing.Player1ID;
             }
-            else if (pairing.Winner == Texts.Player2)
+            else if (pairing.Winner == State.Text.Player2)
             {
                 winnerID = pairing.Player2ID;
             }
@@ -427,6 +441,7 @@ public partial class Tournament : ObservableObject
         Sort();
 
         PrePaired = new List<Pairing>();
+        IsSeeded = false;
     }
 
     /// <summary>
@@ -477,7 +492,7 @@ public partial class Tournament : ObservableObject
         Round round = new Round(Rounds.Count);
         var Pairings = new ObservableCollection<Pairing>();
 
-        var ListOfPlayers = Enumerable.Where<Player>(Participants, p => !(p.IsDisqualified || p.HasDropped)).ToList();
+        var ListOfPlayers = Enumerable.Where(Participants, p => !(p.IsDisqualified || p.HasDropped)).ToList();
 
         foreach (var p in ListOfPlayers)
         {
@@ -487,8 +502,7 @@ public partial class Tournament : ObservableObject
         round.RoundText = Literals.Bonus;
         round.Pairings = Pairings;
         Rounds.Add(round);
-
-        DisplayedRound = round.RoundText;
+        IsSeeded = true;
     }
 
     /// <summary>
@@ -576,7 +590,7 @@ public partial class Tournament : ObservableObject
     private void SeedPlayers(Random? random)
     {
         Pairing.ResetTableNo();
-        Round round = new Round(Rounds.Count);
+        Round round = new Round(Rounds.Count + 1);
         List<Pairing> Pairings = new List<Pairing>();
         int temp, group = 0;
         bool swappedGroup = false;
@@ -612,7 +626,7 @@ public partial class Tournament : ObservableObject
             {
                 Pairings.Add(new Pairing());
 
-                //If a pointGroup has an uneven number of player the last player in that group
+                //If a pointGroup has an odd number of player the last player in that group
                 //has to swap in the next group and has to be paired first
                 if (swappedGroup)
                 {
@@ -719,14 +733,14 @@ public partial class Tournament : ObservableObject
         }
 
         CheckTableNo(Pairings);
-
+        round.Pairings = new ();
         foreach (var pairing in Pairings.OrderBy(x => x.TableNo).ToList())
         {
             round.Pairings.Add(pairing);
         }
 
         Rounds.Add(round);
-        DisplayedRound = Rounds[^1].RoundText;
+        IsSeeded = true;
     }
 
     /// <summary>
@@ -738,7 +752,9 @@ public partial class Tournament : ObservableObject
         foreach (Pairing p in Pairings)
         {
             var p1 = Enumerable.First<Player>(Participants, x => x.ID == p.Player1ID);
-            var p2 = Enumerable.First<Player>(Participants, x => x.ID == p.Player2ID);
+            var p2 = p.Player2ID >= 0
+                ? Enumerable.First<Player>(Participants, x => x.ID == p.Player2ID)
+                : Player.GetBye(p.Player2ID);
             if (p1.TableNo != 0 && p1.HasBye == false && p.TableNo != p1.TableNo)
             {
                 if ((p2.TableNo != 0 && p1.TableNo < p2.TableNo) || p2.TableNo == 0)

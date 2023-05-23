@@ -10,7 +10,7 @@ namespace TXM.Core
     public abstract class AbstractRules
     {
         #region static
-        private static string[] RuleNames =
+        private static List<string> RuleNames = new()
         {
             GameOfThrones2ndRules.GetRuleName(),
             AndroidNetrunnerRules.GetRuleName(),
@@ -32,7 +32,7 @@ namespace TXM.Core
             W40KWLRules.GetRuleName(),
             WarmachineRules.GetRuleName()
         };
-        private static string[] RuleNamesT3Able =
+        private static List<string> RuleNamesT3Able = new()
         {
             InfinityRules.GetRuleName(),
             RuneWarsRules.GetRuleName(),
@@ -92,16 +92,9 @@ namespace TXM.Core
             return null;
         }
 
-        public static string[] GetAllRuleNames(bool T3Able = false)
+        public static List<string> GetAllRuleNames(bool T3Able = false)
         {
-            if (T3Able)
-            {
-                return RuleNamesT3Able;
-            }
-            else
-            {
-                return RuleNames;
-            }
+            return T3Able ? RuleNamesT3Able : RuleNames;
         }
         #endregion
 

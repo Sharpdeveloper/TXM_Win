@@ -1,0 +1,91 @@
+﻿<Window x:Class="TXM.Win.Dialogs.SettingsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:vm="clr-namespace:TXM.Core.ViewModels;assembly=TXM.Core"
+        mc:Ignorable="d"
+        Title="{Binding Title}" Height="395" Width="500" ResizeMode="NoResize">
+    <Window.DataContext>
+        <vm:SettingsViewModel />
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="230" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="120" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="120" />
+            <ColumnDefinition Width="5" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="25" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="25" />
+        </Grid.RowDefinitions>
+        <Label Grid.Row="1" Grid.Column="0" Content="{Binding Text.ChooseLanguage}"
+               ToolTip="{Binding Text.ChooseLanguageInfo}" Cursor="Help" />
+        <ComboBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3" ItemsSource="{Binding Languages}"
+                  SelectedValue="{Binding Language}"/>
+
+        <Label Grid.Row="3" Grid.Column="0" Content="{Binding Text.TimerSettingsPermanent}" />
+
+        <Label Grid.Row="5" Grid.Column="0" Content="{Binding Text.ChooseTextColor}"
+               ToolTip="{Binding Text.ChooseTextColorInfo}" Cursor="Help" />
+        <ComboBox Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="3" ItemsSource="{Binding TextColors}"
+                  SelectedValue="{Binding TextColor}"/>
+
+        <Label Grid.Row="7" Grid.Column="0" Content="{Binding Text.TextSize}"
+               ToolTip="{Binding Text.TextSizeInfo}" Cursor="Help" />
+        <TextBox Grid.Row="7" Grid.Column="2" Text="{Binding TextSize}" VerticalAlignment="Center"/>
+
+        <Label Grid.Row="9" Grid.Column="0" Content="{Binding Text.BackgroundImage}"
+               ToolTip="{Binding Text.BackgroundImageInfo}" Cursor="Help" />
+        <Label Grid.Row="9" Grid.Column="2" Content="{Binding ImageName}" VerticalAlignment="Center"/>
+        <Button Grid.Row="9" Grid.Column="4" Content="{Binding Text.Select}" Command="{Binding SelectImageFileCommand}"/>
+        
+        <Label Grid.Row="11" Grid.Column="0" Content="{Binding Text.TimerSettingsTemporary}" />
+        
+        <Label Grid.Row="13" Grid.Column="0" Content="{Binding Text.TimerMinutes}"
+               ToolTip="{Binding Text.TimerMinutesInfo}" Cursor="Help" />
+        <TextBox Grid.Row="13" Grid.Column="2" Text="{Binding Time}" VerticalAlignment="Center" />
+        <Label Grid.Row="13" Grid.Column="4" Content="{Binding Text.Minutes}" />
+        
+        <Label Grid.Row="15" Grid.Column="0" Content="{Binding Text.StartTime}"
+               ToolTip="{Binding Text.StartTimeInfo}" Cursor="Help" />
+        <TextBox Grid.Row="15" Grid.Column="2" Text="{Binding StartTime}" VerticalAlignment="Center"/>
+        <Label Grid.Row="15" Grid.Column="4" Content="{Binding Text.TimeFormat}" />
+
+        <Label Grid.Row="17" Grid.Column="0" Content="{Binding Text.RandomTime}"
+               ToolTip="{Binding Text.RandomTimeInfo}" Cursor="Help" />
+        <CheckBox Grid.Row="17" Grid.Column="2" VerticalAlignment="Center" IsChecked="{Binding IsTimerRandom}"></CheckBox>
+        
+        <Label Grid.Row="19" Grid.Column="0" Content="{Binding Text.RandomMinutes}"
+               ToolTip="{Binding Text.RandomMinutesInfo}" Cursor="Help" />
+        <TextBox Grid.Row="19" Grid.Column="2" Text="{Binding RandomMinutes}" IsEnabled="{Binding IsTimerRandom}" VerticalAlignment="Center"/>
+        <Label Grid.Row="19" Grid.Column="4" Content="{Binding Text.Minutes}" />
+        
+        <Button Content="Save" Grid.Column="2" Grid.Row="21" Click="Ok_Click" IsDefault="True" />
+        <Button Content="Cancel" Grid.Column="4" Grid.Row="21" Click="Cancel_Click" IsCancel="True" />
+
+    </Grid>
+</Window>
