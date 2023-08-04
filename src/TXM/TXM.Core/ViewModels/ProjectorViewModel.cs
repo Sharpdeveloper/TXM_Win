@@ -12,7 +12,4 @@ public partial class ProjectorViewModel : ObservableObject
 
     [ObservableProperty]
     private string _title;
-    
-    //Todo: TIme Changed event?
-
 }

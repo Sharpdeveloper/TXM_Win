@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -35,19 +36,19 @@ public partial class SettingsViewModel : ObservableValidator
     [NotifyDataErrorInfo]
     [CustomValidation(typeof(SettingsViewModel), nameof(ValidateStartTime))]
     private string _startTime = "00:00";
-    
+
     public int StartingHour { get; set; }
     public int StartingMinute { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ImageName))]
     private string? _bgImagePath;
-    
+
     public char PathSeparator { get; set; }
 
     public string ImageName => _bgImagePath?[(_bgImagePath.LastIndexOf(PathSeparator) + 1)..] ?? "";
 
-        [ObservableProperty]
+    [ObservableProperty]
     private int _randomMinutes;
 
     public List<string> Languages
@@ -55,9 +56,14 @@ public partial class SettingsViewModel : ObservableValidator
         get => LanguageData?.Select(x => x.FileName).ToList() ?? Enumerable.Empty<string>().ToList();
     }
 
-    public List<LocalFile>? LanguageData { get; set; }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(Languages))]
+    private List<LocalFile>? _languageData;
 
     public List<string> TextColors { get; set; }
+
+    [ObservableProperty]
+    private string _checkLanguageText;
 
     [RelayCommand]
     private void SelectImageFile()
@@ -67,6 +73,23 @@ public partial class SettingsViewModel : ObservableValidator
         {
             BgImagePath = image.Path;
         }
+    }
+
+    [RelayCommand]
+    private void CheckLanguages()
+    {
+        var lang = State.Io.CheckLanguages();
+        var ld = new List<LocalFile>();
+        ld.Add(
+            new LocalFile()
+            {
+                FileName = Literals.LanguageDefault
+            }
+        );
+        lang.Files.ForEach(x => ld.Add(x));
+        LanguageData = ld;
+        PathSeparator = lang.Separator;
+        Language = State.Setting.Language;
     }
 
     public static ValidationResult ValidateStartTime(string sTime, ValidationContext context)

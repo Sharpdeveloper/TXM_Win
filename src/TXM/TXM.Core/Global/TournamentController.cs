@@ -62,17 +62,6 @@ public class TournamentController
 
         if (ActiveTournament != null)
         {
-            //TODO Set UI
-            // if (tournamentController.ActiveTournament.Rounds != null)
-            // {
-            //     ButtonGetResults.Content = tournamentController.ActiveTournament.ButtonGetResultsText;
-            //     ButtonGetResults.IsEnabled = true;
-            //     ButtonCut.IsEnabled = tournamentController.ActiveTournament.ButtonCutState == true;
-            //     tournamentController.ActiveTournament.Sort();
-            //
-            //     ButtonGetResults.ToolTip = ButtonGetResults.Content.ToString();
-            //}
-
             SetRandomTime();
         }
     }
@@ -107,6 +96,7 @@ public class TournamentController
                 return;
             }
         }
+
         string title;
         if (csv)
         {
@@ -195,8 +185,7 @@ public class TournamentController
     }
 
     public void EditPairings(string buttonGetResultsText, bool CutIsEnabled)
-    {
-        //TODO: Correct Pairings needs to be set
+    { 
         var pvm = new PairingsViewModel
         {
             Pairings = ActiveTournament.Rounds[^1].Pairings
@@ -261,8 +250,7 @@ public class TournamentController
             text = State.Text.Disqualify;
         }
 
-        if (State.Io.ShowMessageWithOKCancel(State.Text.RemoveWarning + " " +
-                                             State.Text.PlayerAction(player.DisplayName, text) + " ?"))
+        if (State.Io.ShowMessageWithOKCancel(State.Text.PlayerAction(player.DisplayName, text)))
         {
             if (text == State.Text.Remove)
             {
@@ -375,6 +363,7 @@ public class TournamentController
             , StartingHour = State.Timer.StartHour, StartingMinute = State.Timer.StartMinute
             , StartTime = $"{State.Timer.StartHour:D2}:{State.Timer.StartMinute:D2}"
             , BgImagePath = State.Setting.BgImagePath
+            , CheckLanguageText = State.Text.CheckLanguages
         };
         var lang = State.Io.GetLanguages();
         lang.Files.ForEach(x => svm.LanguageData.Add(x));
@@ -386,6 +375,7 @@ public class TournamentController
         {
             State.Setting.TextColor = svm.TextColor;
             State.Setting.TextSize = svm.TextSize;
+            var oldLang = State.Setting.Language;
             State.Setting.Language = svm.Language;
             State.Setting.BgImagePath = svm.BgImagePath;
             State.Timer.IsTimerRandom = svm.IsTimerRandom;
@@ -394,6 +384,10 @@ public class TournamentController
             State.Timer.StartHour = svm.StartingHour;
             State.Timer.StartMinute = svm.StartingHour;
             State.Io.SaveSettings();
+            if (oldLang != State.Setting.Language)
+            {
+                State.Io.ShowMessage(State.Text.NewLanguageInfo);
+            }
         }
     }
 

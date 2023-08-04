@@ -117,33 +117,33 @@
                 <Button Content="{Binding GetResultsText}"
                         ToolTip="{Binding GetResultsInfo}"
                         Command="{Binding GetResultsCommand}" />
-                <Button IsEnabled="False" x:Name="ButtonCut" Content="Start Cut" ToolTip="Start Cut"
-                        Click="ButtonCut_Click" />
+                <Button IsEnabled="False" Content="{Binding Text.StartCut}" ToolTip="{Binding Text.StartCutInfo}"
+                        Command="{Binding StartCutCommand}" />
                 <Separator />
-                <Button x:Name="ButtonSave" ToolTip="{Binding Text.MenuSave}" Command="{Binding SaveCommand}">
+                <Button ToolTip="{Binding Text.MenuSave}" Command="{Binding SaveCommand}">
                     <Image Source="pack://application:,,,/Resources/Icons/Save-100.png" Width="25" Height="25" />
                 </Button>
-                <Button x:Name="ButtonNewPlayer" ToolTip="{Binding Text.MenuNewPlayer}"
+                <Button ToolTip="{Binding Text.MenuNewPlayer}"
                         Command="{Binding NewPlayerCommand}">
                     <Image Source="pack://application:,,,/Resources/Icons/Add User-100.png" Width="25" Height="25" />
                 </Button>
-                <Button x:Name="ButtonEditPlayer" ToolTip="{Binding Text.MenuEditPlayer}"
+                <Button ToolTip="{Binding Text.MenuEditPlayer}"
                         Command="{Binding EditPlayerCommand}">
                     <Image Source="pack://application:,,,/Resources/Icons/Edit User-100.png" Width="25" Height="25" />
                 </Button>
-                <Button x:Name="ButtonRemovePlayer" ToolTip="{Binding Text.MenuDeleteDropPlayer}"
+                <Button ToolTip="{Binding Text.MenuDeleteDropPlayer}"
                         Command="{Binding RemovePlayerCommand}">
                     <Image Source="pack://application:,,,/Resources/Icons/Remove User-100.png" Width="25" Height="25" />
                 </Button>
-                <Button x:Name="ButtonDisqualifyPlayer" ToolTip="{Binding Text.MenuDisqualifyPlayer}"
+                <Button ToolTip="{Binding Text.MenuDisqualifyPlayer}"
                         Command="{Binding DisqualifyPlayerCommand}">
                     <Image Source="pack://application:,,,/Resources/Icons/Unfriend Male-100.png" Width="25" Height="25" />
                 </Button>
-                <Button x:Name="ButtonChangePairing" ToolTip="{Binding Text.MenuChangePairings}"
+                <Button ToolTip="{Binding Text.MenuChangePairings}"
                         Command="{Binding ChangePairingCommand}">
                     <Image Source="pack://application:,,,/Resources/Icons/User Group-100.png" Width="25" Height="25" />
                 </Button>
-                <Button x:Name="ButtonResetLastResults" ToolTip="{Binding Text.MenuResetLastResults}"
+                <Button ToolTip="{Binding Text.MenuResetLastResults}"
                         Command="{Binding ResetLastResultsCommand}">
                     <Image Source="pack://application:,,,/Resources/Icons/Rotate Left-100.png" Width="25" Height="25" />
                 </Button>
@@ -151,10 +151,14 @@
                     <Image Source="pack://application:,,,/Resources/Icons/Watch-100.png" Width="25" Height="25" />
                 </Button>
                 <Separator />
-                <Label x:Name="LabelScenario" Visibility="Hidden" Content="Select Scenario:" />
-                <ComboBox x:Name="ComboboxScenarios" ToolTip="Scenarios" Visibility="Hidden"
-                          SelectionChanged="ComboboxScenarios_SelectionChanged" />
-                <Label x:Name="LabelScenarios" ToolTip="Chosen Scenario" Visibility="Hidden" />
+                <Label Content="{Binding Text.SelectScenario}"
+                       Visibility="{Binding Path=DataContext.ScenarioVisibility, Source={StaticResource ProxyElement},  Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <ComboBox ToolTip="{Binding Text.SelectScenarioInfo}"
+                          ItemsSource="{Binding Scenarios}" SelectedItem="{Binding ChosenScenario}"
+                          Visibility="{Binding Path=DataContext.ScenarioVisibility, Source={StaticResource ProxyElement},  Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <Label ToolTip="{Binding Text.ChosenScenario}"
+                       Content="{Binding ChosenScenarioLabel}"
+                       Visibility="{Binding Path=DataContext.ScenarioVisibility, Source={StaticResource ProxyElement},  Converter={StaticResource BooleanToVisibilityConverter}}" />
             </ToolBar>
             <ToolBar HorizontalAlignment="Right" Background="LightGray">
                 <Button ToolTip="Start" Command="{Binding StartTimerCommand}">
@@ -172,14 +176,11 @@
             </ToolBar>
         </Grid>
         <Grid Grid.Row="2" Grid.Column="0">
-            <DataGrid x:Name="DataGridPlayer"
-                      AutoGenerateColumns="False"
-                      SelectionChanged="DataGridPlayer_SelectionChanged"
+            <DataGrid AutoGenerateColumns="False"
                       SelectionMode="Single"
                       ScrollViewer.CanContentScroll="True"
                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                      CellEditEnding="DataGridPlayer_CellEditEnding"
                       ItemsSource="{Binding ActiveTournament.Participants}"
                       SelectedItem="{Binding SelectedPlayer}">
                 <DataGrid.Columns>
@@ -503,9 +504,7 @@
                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             CanUserAddRows="False"
                             DataGridCell.Selected="DataGrid_GotFocus"
-                            CurrentCellChanged="PariringCurrentCellChanged"
-                            MouseLeftButtonUp="GridMouseLeftButtonUp"
-                            BeginningEdit="DataGridPairing_BeginningEdit">
+                            MouseLeftButtonUp="GridMouseLeftButtonUp">
                             <DataGrid.Columns>
                                 <DataGridCheckBoxColumn
                                     Binding="{Binding IsLocked}"

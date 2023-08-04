@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -39,8 +38,6 @@ public sealed class InputOutput
     private string imgending;
     private JsonSerializerOptions options;
     public Settings ActiveSettings { get; set; }
-
-    private bool _hasLanguageChecked = false;
 
     public bool AutosavePathExists => Directory.Exists(AutosavePath);
 
@@ -268,6 +265,31 @@ public sealed class InputOutput
             }
         }
         return JsonSerializer.Deserialize<Settings>(sb.ToString(), options);
+    }
+    
+    /// <summary>
+    /// Load the language from the filesystem
+    /// </summary>
+    public Texts LoadLanguage(string language)
+    {
+        var file = Path.Combine(LanguagePath, $"{language}.json");
+        //var file = Path.Combine(LanguagePath, $"{language}.json");
+        if (!File.Exists(file))
+        {
+            return Texts.GetInstance();
+        }
+        var sb = new StringBuilder();
+        using (StreamReader sr = new StreamReader(file))
+        {
+            while (sr.ReadLine() is { } line)
+            {
+                sb.Append(line);
+            }
+        }
+
+        return (Texts) JsonSerializer.Deserialize<Texts>(sb.ToString(), options);
+        //Texts.SetInstance(JsonSerializer.Deserialize<Texts>(sb.ToString(), options));
+        //State.Text = Texts.GetInstance();
     }
 
     /// <summary>
@@ -870,6 +892,24 @@ public sealed class InputOutput
             sw.Write(JsonSerializer.Serialize(State.Setting, options));
         }
     }
+    
+    /// <summary>
+    /// Saves the current language
+    /// </summary>
+    public void SaveLanguage()
+    {
+        var dir = Path.Combine(SavePath, "LangExport");
+        var file = Path.Combine(dir, $"{State.Setting.Language}.json");
+        if (!Directory.Exists(dir))
+        {
+            Directory.CreateDirectory(dir);
+        }
+
+        using (var sw = new StreamWriter(file, false))
+        {
+            sw.Write(JsonSerializer.Serialize(State.Text, options));
+        }
+    }
 
     #endregion
 
@@ -938,14 +978,13 @@ public sealed class InputOutput
         }
     }
 
-    public (List<LocalFile> Files, char Separator) GetLanguages()
+    public (List<LocalFile> Files, char Separator) GetLanguages() =>
+        (GetLocalLanguages(), Path.DirectorySeparatorChar);
+    
+
+    public (List<LocalFile> Files, char Separator) CheckLanguages()
     {
         var localFiles = GetLocalLanguages();
-        if (_hasLanguageChecked)
-        {
-            return (localFiles, Path.DirectorySeparatorChar );
-        }
-
         var onlineFiles = GetOnlineLanguages();
 
         var newOrUpdatedFiles = new List<LocalFile>();
@@ -977,9 +1016,7 @@ public sealed class InputOutput
 
             localFiles = GetLocalLanguages();
         }
-
-        _hasLanguageChecked = true;
-
+        
         return (localFiles, Path.DirectorySeparatorChar );
     }
 

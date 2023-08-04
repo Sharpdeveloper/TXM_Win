@@ -36,6 +36,7 @@ public partial class MainViewModel : ObservableObject
     private bool IsShowTableExecutable => ActiveTournament?.Participants.Count > 0;
     private bool IsGetBBCodeExecutable => ActiveTournament?.Participants.Count > 0;
     private bool IsNextRoundExecutable => ActiveTournament?.IsStarted == true && ActiveTournament?.IsSeeded == false;
+    private bool IsStartCutExecutable => ActiveTournament?.IsStarted == true && ActiveTournament?.IsSeeded == false;
     private bool IsGetResultsExecutable => ActiveTournament?.IsStarted == true && ActiveTournament?.IsSeeded == true;
 
 
@@ -48,14 +49,17 @@ public partial class MainViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(ExtendedStrengthOfScheduleVisibility))]
     [NotifyPropertyChangedFor(nameof(PointsVisibility))]
     [NotifyPropertyChangedFor(nameof(WinnerVisibility))]
-    [NotifyPropertyChangedFor(nameof(GetResultsText))]
+    [NotifyPropertyChangedFor(nameof(ScenarioVisibility))]
     public Tournament? activeTournament;
 
     [ObservableProperty]
     public Texts text = State.Text;
-    
-    public string GetResultsText => ActiveTournament?.Rounds.Count > 0 ? (ActiveTournament?.DisplayedRound == ActiveTournament?.Rounds[^1].RoundText ? Text.GetResults : Text.Update) : "";
-    public string GetResultsInfo =>  ActiveTournament?.Rounds.Count > 0 ? (ActiveTournament?.DisplayedRound == ActiveTournament?.Rounds[^1].RoundText ? Text.GetResultsInfo : Text.UpdateInfo) : "";
+
+    [ObservableProperty]
+    private string _getResultsText;
+
+    [ObservableProperty]
+    private string _getResultsInfo;
 
     [ObservableProperty]
     private Player? _selectedPlayer;
@@ -90,23 +94,33 @@ public partial class MainViewModel : ObservableObject
     public bool WinnerVisibility =>
         ActiveTournament?.Rule != null &&
         ActiveTournament.Rule.IsWinnerDropDownNeeded;
+    
+    public bool ScenarioVisibility =>
+        ActiveTournament?.Rule != null &&
+        ActiveTournament.Rule.UsesScenarios;
 
     public string Title => ActiveTournament == null
         ? "TXM - The Tournament App"
         : $"{ActiveTournament.Name} - TXM - The Tournament App";
+    
+    [ObservableProperty]
+    private List<string> _scenarios;
+
+    [ObservableProperty]
+    private string _chosenScenarioLabel;
+    
+    public string ChosenScenario
+    {
+        get => ActiveTournament?.ChosenScenario ?? "";
+        set
+        {
+            ActiveTournament!.ChosenScenario = value;
+            ChosenScenarioLabel = value;
+        } 
+    }
 
     public MainViewModel()
     {
-        ActiveTournament = new Tournament("Schlacht", 12345, "2.0", new XWing2Rules());
-        ActiveTournament.AddPlayer(new Player("TKundNobody"));
-        ActiveTournament.AddPlayer(new Player("Tesdeor"));
-        ActiveTournament.Rounds.Add(new Round("Start", new()));
-        ActiveTournament.Rounds[0].Pairings.Add(new Pairing()
-            { Player1 = ActiveTournament.Participants[0], Player2 = ActiveTournament.Participants[1] });
-        ActiveTournament.Rounds.Add(new Round(1, new()));
-        ActiveTournament.Rounds[1].Pairings.Add(new Pairing()
-            { Player1 = ActiveTournament.Participants[1], Player2 = ActiveTournament.Participants[0] });
-        State.Controller.ActiveTournament = ActiveTournament;
     }
 
     [RelayCommand]
@@ -114,6 +128,7 @@ public partial class MainViewModel : ObservableObject
     {
         State.Controller.NewTournament();
         ActiveTournament = State.Controller.ActiveTournament;
+        SetScenarios();
         CheckNotifyCanExecuteChanged();
     }
 
@@ -122,13 +137,13 @@ public partial class MainViewModel : ObservableObject
     {
         State.Controller.LoadTournament();
         ActiveTournament = State.Controller.ActiveTournament;
+        SetScenarios();
         CheckNotifyCanExecuteChanged();
     }
 
     [RelayCommand(CanExecute = nameof(IsSaveExecutable))]
     private void Save()
-    {
-        //TODO Anpassen => ggf. ins Tournament verlagern
+    { 
         State.Controller.SaveTournament();
     }
 
@@ -139,6 +154,7 @@ public partial class MainViewModel : ObservableObject
         {
             State.Controller.LoadTournament(true);
             ActiveTournament = State.Controller.ActiveTournament;
+            Scenarios = ActiveTournament?.ActiveScenarios;
             CheckNotifyCanExecuteChanged();
         }
         else
@@ -190,7 +206,7 @@ public partial class MainViewModel : ObservableObject
     {
         (string json, string file) result = State.Io.GetJsonForListfortress();
         State.Clipboard.SetText(result.json);
-        State.Io.ShowMessage($"{Text.ClipboardInfo} listfortress.com.\n{Text.ExportInfo} {result.file}");
+        State.Io.ShowMessage($"{Text.ClipboardInfo.Replace("<site>", "listfortress.com")}\n{Text.ExportInfo} {result.file}");
     }
 
     [RelayCommand(CanExecute = nameof(IsPrintExecutable))]
@@ -200,7 +216,7 @@ public partial class MainViewModel : ObservableObject
     private void PrintPairingWithout() => State.Controller.Print(true, true);
 
     [RelayCommand(CanExecute = nameof(IsPrintExecutable))]
-    private void PrintPairingWithResult() =>     State.Controller.Print(true, true, true);
+    private void PrintPairingWithResult() => State.Controller.Print(true, true, true);
 
     [RelayCommand(CanExecute = nameof(IsPrintExecutable))]
     private void PrintScoreSheet() => State.Controller.PrintScoreSheet();
@@ -209,10 +225,18 @@ public partial class MainViewModel : ObservableObject
     private void ChangePairing() => State.Controller.EditPairings("" /*ButtonGetResults.Content.ToString()*/, false /*ButtonCut.IsEnabled*/);
 
     [RelayCommand(CanExecute = nameof(IsResultResetable))]
-    private void ResetLastResults() => ActiveTournament.RemoveLastRound();
+    private void ResetLastResults()
+    {
+        ActiveTournament.RemoveLastRound();
+        CheckNotifyCanExecuteChanged();
+    }
 
     [RelayCommand(CanExecute = nameof(IsEditTournamentExecutable))]
-    private void EditTournament() => State.Controller.EditTournament();
+    private void EditTournament()
+    {
+        State.Controller.EditTournament();
+        SetScenarios();
+    }
 
     [RelayCommand(CanExecute = nameof(IsCalculateWonByesExecutable))]
     private void CalculateWonByes() => ActiveTournament.CalculateWonBye();
@@ -283,15 +307,40 @@ public partial class MainViewModel : ObservableObject
 
     [RelayCommand]
     private void ShowSupport() => State.Controller.ShowSupport();
-    
+
     [RelayCommand(CanExecute = nameof(IsStartExecuteable))]
-    private void Start() => State.Controller.StartTournament();
+    private void Start()
+    {
+        State.Controller.StartTournament();
+        SetGetResultsText();
+        CheckNotifyCanExecuteChanged();
+    }
 
     [RelayCommand(CanExecute = nameof(IsNextRoundExecutable))]
-    private void NextRound() => State.Controller.GetSeed(false);
-    
+    private void NextRound()
+    {
+        State.Controller.GetSeed(false);
+        SetGetResultsText();
+        CheckNotifyCanExecuteChanged();
+    }
+
     [RelayCommand(CanExecute = nameof(IsGetResultsExecutable))]
-    private void GetResults() => State.Controller.GetSeed(false);
+    private void GetResults()
+    {
+        State.Controller.GetResults();
+        SetScenarios();
+        SetGetResultsText();
+        CheckNotifyCanExecuteChanged();
+    }
+
+    [RelayCommand(CanExecute = nameof(IsStartCutExecutable))]
+    private void StartCut()
+    {
+        State.Controller.GetSeed(true);
+        SetScenarios();
+        SetGetResultsText();
+        CheckNotifyCanExecuteChanged();
+    } 
 
     private void CheckNotifyCanExecuteChanged()
     {
@@ -318,5 +367,18 @@ public partial class MainViewModel : ObservableObject
         StartCommand.NotifyCanExecuteChanged();
         NextRoundCommand.NotifyCanExecuteChanged();
         GetResultsCommand.NotifyCanExecuteChanged();
+        StartCutCommand.NotifyCanExecuteChanged();
+    }
+
+    private void SetScenarios()
+    {
+        Scenarios = ActiveTournament?.ActiveScenarios;
+        ChosenScenario = Scenarios.Count > 0 ? Scenarios[0] : "";
+    }
+
+    private void SetGetResultsText()
+    {
+        GetResultsText = ActiveTournament?.Rounds.Count > 0 ? (ActiveTournament?.DisplayedRound == ActiveTournament?.Rounds[^1].RoundText ? Text.GetResults : Text.Update) : Text.GetResults;
+        GetResultsInfo =  ActiveTournament?.Rounds.Count > 0 ? (ActiveTournament?.DisplayedRound == ActiveTournament?.Rounds[^1].RoundText ? Text.GetResultsInfo : Text.UpdateInfo) : Text.GetResultsInfo;
     }
 }
