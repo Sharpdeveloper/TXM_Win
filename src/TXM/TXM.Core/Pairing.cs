@@ -8,7 +8,7 @@ namespace TXM.Core
     {
         #region Static Fields
         private static int tableNr = 0;
-        private int version = 2;
+        private int version = 3;
         #endregion
 
         #region Properties
@@ -22,6 +22,7 @@ namespace TXM.Core
         public int Player1Points { get; set; }
         public int Player2Points { get; set; }
         public bool Locked { get; set; }
+        public bool DoubleLoss { get; set; }
         public bool Hidden
         {
             get
@@ -60,6 +61,7 @@ namespace TXM.Core
             Player1Points = p.Player1Points;
             Player2Points = p.Player2Points;
             Locked = p.Locked;
+            DoubleLoss = p.DoubleLoss;
         }
         #endregion
 
@@ -110,7 +112,8 @@ namespace TXM.Core
                 Player1Points = 0;
                 Player2Points = 0;
                 Locked = false;
-			}
+                DoubleLoss = false;
+            }
             else if (_version == 1)
             {
                 tableNr = (int)info.GetValue("Pairing_tableNr", typeof(int));
@@ -124,6 +127,7 @@ namespace TXM.Core
                 Player1Points = (int)info.GetValue("Pairing_Player1Points", typeof(int));
                 Player2Points = (int)info.GetValue("Pairing_Player2Points", typeof(int));
                 Locked = false;
+                DoubleLoss = false;
             }
             else if (version == 2)
             {
@@ -138,6 +142,22 @@ namespace TXM.Core
                 Player1Points = (int)info.GetValue("Pairing_Player1Points", typeof(int));
                 Player2Points = (int)info.GetValue("Pairing_Player2Points", typeof(int));
                 Locked = (bool)info.GetValue("Pairing_Locked", typeof(bool));
+                DoubleLoss = false;
+            }
+            else if (version == 3)
+            {
+                tableNr = (int)info.GetValue("Pairing_tableNr", typeof(int));
+                TableNr = (int)info.GetValue("Pairing_TableNr", typeof(int));
+                Player1 = (Player)info.GetValue("Pairing_Player1", typeof(Player));
+                Player2 = (Player)info.GetValue("Pairing_Player2", typeof(Player));
+                Player1Score = (int)info.GetValue("Pairing_Player1Score", typeof(int));
+                Player2Score = (int)info.GetValue("Pairing_Player2Score", typeof(int));
+                Winner = (string)info.GetValue("Pairing_Winner", typeof(string));
+                ResultEdited = (bool)info.GetValue("Pairing_ResultEdited", typeof(bool));
+                Player1Points = (int)info.GetValue("Pairing_Player1Points", typeof(int));
+                Player2Points = (int)info.GetValue("Pairing_Player2Points", typeof(int));
+                Locked = (bool)info.GetValue("Pairing_Locked", typeof(bool));
+                DoubleLoss = (bool)info.GetValue("Pairing_DoubleLoss", typeof(bool));
             }
         }
 
@@ -155,6 +175,7 @@ namespace TXM.Core
             info.AddValue("Pairing_Player1Points", Player1Points, typeof(int));
             info.AddValue("Pairing_Player2Points", Player2Points, typeof(int));
             info.AddValue("Pairing_Locked", ResultEdited, typeof(bool));
+            info.AddValue("Pairing_DoubleLoss", DoubleLoss, typeof(bool));
         }
     }
 }

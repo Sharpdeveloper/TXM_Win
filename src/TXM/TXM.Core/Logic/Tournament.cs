@@ -676,6 +676,8 @@ namespace TXM.Core.Logic
                         winnerID = pairing.Player1.ID;
                     else if (pairing.Winner == "Player 2")
                         winnerID = pairing.Player2.ID;
+                    else if (pairing.DoubleLoss == true)
+                        winnerID = -99;
                     else
                         winnerID = (pairing.Player1Score > pairing.Player2Score) ? pairing.Player1.ID : pairing.Player2.ID;
                     r = new Result(pairing.Player1Score, pairing.Player2Score, pairing.Player2, MaxPoints, winnerID, pairing.Player1Points);

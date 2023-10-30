@@ -447,7 +447,7 @@ namespace TXM.Core
             iad.ShowDialog();
         }
 
-        public void ShowProjector(IProjectorWindow ipw, bool table)
+        public void ShowProjector(IProjectorWindow ipw, bool table, bool timerVisible, bool bestInFaction = false)
         {
             if (ActiveTournament != null && ActiveTournament.Rounds.Count > 0)
             {
@@ -455,7 +455,12 @@ namespace TXM.Core
                     projectorWindow = ipw;
                 string file = "";
                 string title = "";
-                if (table)
+                if (bestInFaction)
+                {
+                    file = PrintBestInFaction(false);
+                    title = ActiveTournament.Name + " - Best in Factions";
+                }
+                else if (table)
                 {
                     file = Print(false);
                     title = ActiveTournament.Name + " - Standing";
@@ -469,6 +474,7 @@ namespace TXM.Core
                 projectorWindow.SetURL(file);
                 projectorWindow.SetTitle(title);
                 projectorWindow.SetTimer(ActiveTimer);
+                projectorWindow.SetTimerVisibility(timerVisible);
                 projectorWindow.Show();
             }
         }
@@ -613,6 +619,22 @@ namespace TXM.Core
         public void AddCSV()
         {
             ActiveIO.CSVImportAdd(ActiveTournament);
+        }
+
+        public string PrintBestInFaction(bool print)
+        {
+            string file = ActiveIO.PrintBestInFaction(ActiveTournament);
+
+            if (print)
+            {
+                var uri = "file://" + file;
+                var psi = new ProcessStartInfo();
+                psi.UseShellExecute = true;
+                psi.FileName = uri;
+                Process.Start(psi);
+            }
+
+            return file;
         }
     }
 }

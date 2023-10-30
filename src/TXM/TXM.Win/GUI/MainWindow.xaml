@@ -36,6 +36,7 @@
                     <MenuItem x:Name="MenuItemPrintPairing" Header="Print Pairings (without Results)" Click="MenuItemPrintPairing_Click"/>
                     <MenuItem x:Name="MenuItemPrintResult" Header="Print Pairings (with Results)" Click="MenuItemPrintResult_Click"/>
                     <MenuItem x:Name="MenuItemPrintPairingScoreSheet" Header="Print Pairing with Score Sheet" Click="MenuItemPrintParingScore_Click"/>
+                    <MenuItem x:Name="MenuItemPrintBestInFaction" Header="Print Best in Faction" Click="MenuItemPrintBestInFaction_Click"/>
                 </MenuItem>
                 <MenuItem x:Name="MenuItemExit" Header="Quit" Click="Close_Click"/>
             </MenuItem>
@@ -55,6 +56,7 @@
             <MenuItem x:Name="MenuItemView" Header="View">
                 <MenuItem x:Name="MenuItemShowPairings" Header="Show Pairings" Click="MenuItemShowPairings_Click"/>
                 <MenuItem x:Name="MenuItemShowTable" Header="Show Table"  Click="MenuItemShowTable_Click"/>
+                <MenuItem x:Name="MenuItemShowBestInFaction" Header="Show Best in Faction"  Click="MenuItemShowBestInFaction_Click"/>
                 <MenuItem x:Name="MenuItemBBCode" Header="Get BBCode for Forum" Click="MenuItemBBCode_Click"/>
                 <MenuItem x:Name="MenuItemRefreshPlayerList" Header="Refresh Player List" Click="RefreshPlayerList"/>
                 <MenuItem x:Name="MenuItemRefreshPairingsList" Header="Refresh Pairings List" Click="RefreshPairingsList"/>
@@ -165,6 +167,8 @@
             <Slider x:Name="SliderHide" HorizontalAlignment="Center" Margin="0,405,0,22" Height="20" VerticalAlignment="Top" Maximum="2" Minimum="1" SmallChange="1" Width="50" ValueChanged="SliderHide_ValueChanged"/>
             <Label x:Name="LabelShow" Content="Show" HorizontalAlignment="Left" Margin="0,402,0,0" Height="25" VerticalAlignment="Top"/>
             <Label x:Name="LabelHide" Content="Hide" HorizontalAlignment="Right" Margin="0,402,0,0" Height="25" VerticalAlignment="Top"/>
+            
+            <CheckBox x:Name="CheckBoxShowProjectorTimer" IsChecked="True" Content="Show Timer on projector" HorizontalAlignment="Left" Margin="0, 450, 0, 0" VerticalAlignment="Top" />
             
             <Image x:Name="ImageLogo" VerticalAlignment="Bottom" Source="pack://application:,,,/Resources/TXM_Logo.png"/>
         </Grid>

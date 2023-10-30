@@ -64,5 +64,17 @@ namespace TXM.GUI.Windows
         {
             this.Close();
         }
+
+        public void SetTimerVisibility(bool isVisible)
+        {
+            if(isVisible)
+            {
+                LabelTime.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                LabelTime.Visibility = Visibility.Hidden;
+            }
+        }
     }
 }

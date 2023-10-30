@@ -321,6 +321,17 @@ namespace TXM.GUI
                 dgcb.Binding = b;
                 DataGridPairing.Columns.Add(dgcb);
             }
+
+            dgcb = new DataGridCheckBoxColumn()
+            {
+                Header = "Both Loose?"
+            };
+            b = new Binding("DoubleLoss")
+            {
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+            dgcb.Binding = b;
+            DataGridPairing.Columns.Add(dgcb);
         }
   
 
@@ -978,12 +989,12 @@ namespace TXM.GUI
 
         private void MenuItemShowPairings_Click(object sender, RoutedEventArgs e)
         {
-            tournamentController.ShowProjector(new ProjectorWindow(), false);
+            tournamentController.ShowProjector(new ProjectorWindow(), false, CheckBoxShowProjectorTimer.IsChecked == true);
         }
 
         private void MenuItemShowTable_Click(object sender, RoutedEventArgs e)
         {
-            tournamentController.ShowProjector(new ProjectorWindow(), true);
+            tournamentController.ShowProjector(new ProjectorWindow(), true, CheckBoxShowProjectorTimer.IsChecked == true);
         }
 
         private void MenuItemPrint_Click(object sender, RoutedEventArgs e)
@@ -1195,6 +1206,16 @@ namespace TXM.GUI
         private void MenuItemListFortressExport_Click(object sender, RoutedEventArgs e)
         {
             tournamentController.GetJSON(new WindowsClipboard());
+        }
+
+        private void MenuItemPrintBestInFaction_Click(object sender, RoutedEventArgs e)
+        {
+            tournamentController.PrintBestInFaction(true);
+        }
+
+        private void MenuItemShowBestInFaction_Click(object sender, RoutedEventArgs e)
+        {
+            tournamentController.ShowProjector(new ProjectorWindow(), false, CheckBoxShowProjectorTimer.IsChecked == true, true);
         }
     }
 }
