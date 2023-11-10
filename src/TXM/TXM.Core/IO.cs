@@ -649,8 +649,12 @@ namespace TXM.Core
                 foreach (var p in tournament.Rounds[round].Pairings)
                 {
                     doublePairings.Add(new Pairing(p));
-                    doublePairings.Add(new Pairing(p));
-                    (doublePairings[^1].Player1, doublePairings[^1].Player2) = (doublePairings[^1].Player2, doublePairings[^1].Player1);
+                    if (doublePairings[^1].Player2.ID >= 0)
+                    {
+                        doublePairings.Add(new Pairing(p));
+                        (doublePairings[^1].Player1, doublePairings[^1].Player2) =
+                            (doublePairings[^1].Player2, doublePairings[^1].Player1);
+                    }
                 }
 
                 var sorted = doublePairings.OrderBy(x => (onlyNicknames ? x.Player1.Nickname : x.Player1Name)).ToList();
