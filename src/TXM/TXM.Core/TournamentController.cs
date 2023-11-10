@@ -280,13 +280,14 @@ namespace TXM.Core
         {
             Player player = ActiveTournament.Participants[index];
             string text = "remove";
-            if (Started)
-            {
-                text = "drop";
-            }
-            else if (Started & disqualify)
+            Started = ActiveTournament.Rounds == null ? false : true;
+            if (Started & disqualify)
             {
                 text = "disqualify";
+            }
+            else if (Started)
+            {
+                text = "drop";
             }
             if (ActiveIO.ShowMessageWithOKCancel("Do you really want to " + text + " " + player.DisplayName + "?"))
             {
@@ -333,16 +334,16 @@ namespace TXM.Core
             return pl;
         }
 
-        public string Print(bool print, bool pairings = false, bool results = false)
+        public string Print(bool print, bool pairings, bool results, bool onlyNicknames, bool lists)
         {
             string file = "";
             if (!pairings && ActiveTournament != null)
             {
-                file = ActiveIO.Print(ActiveTournament);
+                file = ActiveIO.Print(ActiveTournament, onlyNicknames, lists);
             }
             else if (pairings)
             {
-                file = ActiveIO.Print(ActiveTournament, results);
+                file = ActiveIO.PrintPairings(ActiveTournament, results, onlyNicknames);
             }
 
             if (print)
@@ -447,7 +448,7 @@ namespace TXM.Core
             iad.ShowDialog();
         }
 
-        public void ShowProjector(IProjectorWindow ipw, bool table, bool timerVisible, bool bestInFaction = false)
+        public void ShowProjector(IProjectorWindow ipw, bool table, bool timerVisible, bool bestInFaction, bool onlyNicknames, bool lists)
         {
             if (ActiveTournament != null && ActiveTournament.Rounds.Count > 0)
             {
@@ -457,18 +458,18 @@ namespace TXM.Core
                 string title = "";
                 if (bestInFaction)
                 {
-                    file = PrintBestInFaction(false);
+                    file = PrintBestInFaction(false, onlyNicknames);
                     title = ActiveTournament.Name + " - Best in Factions";
                 }
                 else if (table)
                 {
-                    file = Print(false);
+                    file = Print(false, false, false, onlyNicknames, lists);
                     title = ActiveTournament.Name + " - Standing";
                 }
                 else
                 {
 
-                    file = Print(false, true);
+                    file = Print(false, true, false, onlyNicknames, lists);
                     title = ActiveTournament.Name + " - Pairings";
                 }
                 projectorWindow.SetURL(file);
@@ -479,7 +480,7 @@ namespace TXM.Core
             }
         }
 
-        public void GetBBCode(IOutputDialog iod, IClipboard ic)
+        public void GetBBCode(IOutputDialog iod, IClipboard ic, bool onlyNicknames, bool lists)
         {
             iod.ShowDialog();
             if (iod.GetDialogResult())
@@ -487,15 +488,15 @@ namespace TXM.Core
                 StringBuilder sb = new StringBuilder();
                 if (iod.IsResultOutput())
                 {
-                    sb.Append(ActiveIO.GetBBCode(ActiveTournament, false, true));
+                    sb.Append(ActiveIO.GetBBCode(ActiveTournament, false, true, onlyNicknames, lists));
                 }
                 if (iod.IsTableOutput())
                 {
-                    sb.Append(ActiveIO.GetBBCode(ActiveTournament, true));
+                    sb.Append(ActiveIO.GetBBCode(ActiveTournament, true, false, onlyNicknames, lists));
                 }
                 if (iod.IsPairingOutput())
                 {
-                    sb.Append(ActiveIO.GetBBCode(ActiveTournament, false));
+                    sb.Append(ActiveIO.GetBBCode(ActiveTournament, false, false, onlyNicknames, lists));
                 }
                 ic.SetText(sb.ToString());
             }
@@ -621,9 +622,9 @@ namespace TXM.Core
             ActiveIO.CSVImportAdd(ActiveTournament);
         }
 
-        public string PrintBestInFaction(bool print)
+        public string PrintBestInFaction(bool print, bool onlyNicknames)
         {
-            string file = ActiveIO.PrintBestInFaction(ActiveTournament);
+            string file = ActiveIO.PrintBestInFaction(ActiveTournament, onlyNicknames);
 
             if (print)
             {

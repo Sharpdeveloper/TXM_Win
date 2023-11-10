@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
@@ -278,7 +279,7 @@ namespace TXM.Core
             }
         }
 
-        private string WriteTable(Tournament tournament, bool bbcode)
+        private string WriteTable(Tournament tournament, bool bbcode, bool onlyNicknames, bool lists)
         {
             StringBuilder sb = new StringBuilder();
             string title = tournament.Name + " - Table - Round " + tournament.DisplayedRound;
@@ -291,6 +292,9 @@ namespace TXM.Core
             string db = "<td>"; //Table data begin
             string de = "</td>"; //Table data end
             string end = "</body></html>";
+            string ab1 = "<a href=\"";
+            string ab2 = "\">";
+            string ae = "</a>";
             string nl = Environment.NewLine;
 
             if (bbcode)
@@ -302,6 +306,9 @@ namespace TXM.Core
                 re = "[/tr]";
                 db = "[td]";
                 de = "[/td]";
+                ab1 = "[url=";
+                ab2 = "]";
+                ae = "[/url]";
                 end = nl;
             }
 
@@ -318,9 +325,12 @@ namespace TXM.Core
             sb.Append(db);
             sb.Append("#"); //Rank
             sb.Append(de);
-            sb.Append(db);
-            sb.Append("Firstname"); //Firstname
-            sb.Append(de);
+            if(!onlyNicknames)
+            {
+                sb.Append(db);
+                sb.Append("Firstname"); //Firstname
+                sb.Append(de);
+            }
             sb.Append(db);
             sb.Append("Nickname"); //Nickname
             sb.Append(de);
@@ -372,6 +382,13 @@ namespace TXM.Core
                 sb.Append("eSoS"); //extended Strength of Schedule
                 sb.Append(de);
             }
+
+            if (lists)
+            {
+                sb.Append(db);
+                sb.Append("Lists");
+                sb.Append(de);
+            }
             sb.Append(re);
             sb.Append(nl);
 
@@ -383,9 +400,12 @@ namespace TXM.Core
                 sb.Append(db);
                 sb.Append(p.Rank); //Rank
                 sb.Append(de);
-                sb.Append(db);
-                sb.Append(p.Firstname); //Firstname
-                sb.Append(de);
+                if(!onlyNicknames)
+                {
+                    sb.Append(db);
+                    sb.Append(p.Firstname); //Firstname
+                    sb.Append(de);
+                }
                 sb.Append(db);
                 sb.Append(p.Nickname); //Nickname
                 sb.Append(de);
@@ -437,6 +457,24 @@ namespace TXM.Core
                     sb.Append(p.ExtendedStrengthOfSchedule); //extended Strength of Schedule
                     sb.Append(de);
                 }
+
+                if (lists)
+                {
+                    sb.Append(db);
+                    if (p.SquadList.Contains("http"))
+                    {
+                        sb.Append(ab1);
+                        sb.Append(p.SquadList);
+                        sb.Append(ab2);
+                        sb.Append(p.SquadList);
+                        sb.Append(ae);
+                    }
+                    else
+                    {
+                        sb.Append(p.SquadList);
+                    }
+                    sb.Append(de);
+                }
                 sb.Append(re);
                 sb.Append(nl);
             }
@@ -453,7 +491,7 @@ namespace TXM.Core
             return sb.ToString();
         }
 
-        private string WritePairings(Tournament tournament, bool bbcode, bool result)
+        private string WritePairings(Tournament tournament, bool bbcode, bool result, bool onlyNicknames)
         {
             if(tournament.Rounds.Count == 0)
             {
@@ -511,67 +549,128 @@ namespace TXM.Core
             //	sb.Append("<marquee direction=\"up\" behavior=\"alternate\">");
             //}
 
-            sb.Append(tb);
-            sb.Append(rb);
-            sb.Append(db);
-            sb.Append("T#"); //Table Number
-            sb.Append(de);
-            sb.Append(db);
-            sb.Append("Player 1"); //Player 1
-            sb.Append(de);
-            sb.Append(db);
-            sb.Append("Player 2"); //Player 2
-            sb.Append(de);
             if (result)
             {
-                sb.Append(db);
-                sb.Append("Score"); //Score
-                sb.Append(de);
-            }
-            if (result && tournament.Rule.IsDrawPossible)
-            {
-                sb.Append(db);
-                sb.Append("Winner"); //Winner
-                sb.Append(de);
-            }
-            sb.Append(re);
-            sb.Append(nl);
-
-            int round = tournament.Rounds.Count - 1;
-            if (result)
-            {
-                round--;
-            }
-            if (round < 0)
-            {
-                return "";
-            }
-            foreach (Pairing p in tournament.Rounds[round].Pairings)
-            {
+                sb.Append(tb);
                 sb.Append(rb);
                 sb.Append(db);
-                sb.Append(p.TableNr); //Table Number
+                sb.Append("T#"); //Table Number
                 sb.Append(de);
                 sb.Append(db);
-                sb.Append(p.Player1Name); //Player 1
+                sb.Append("Player 1"); //Player 1
                 sb.Append(de);
                 sb.Append(db);
-                sb.Append(p.Player2Name); //Player 2
+                sb.Append("Player 2"); //Player 2
                 sb.Append(de);
-                if (result)
+
+                    sb.Append(db);
+                    sb.Append("Score"); //Score
+                    sb.Append(de);
+                
+
+                if (tournament.Rule.IsDrawPossible)
                 {
                     sb.Append(db);
-                    sb.Append(p.Player1Score + ":" + p.Player2Score); //Score
+                    sb.Append("Winner"); //Winner
                     sb.Append(de);
                 }
-                if (result && tournament.Rule.IsDrawPossible)
-                {
-                    sb.Append(db);
-                    sb.Append(p.Winner); //Winner
-                    sb.Append(de);
-                }
+
                 sb.Append(re);
                 sb.Append(nl);
+
+                int round = tournament.Rounds.Count - 1;
+                if (result)
+                {
+                    round--;
+                }
+
+                if (round < 0)
+                {
+                    return "";
+                }
+
+                foreach (Pairing p in tournament.Rounds[round].Pairings)
+                {
+                    sb.Append(rb);
+                    sb.Append(db);
+                    sb.Append(p.TableNr); //Table Number
+                    sb.Append(de);
+                    sb.Append(db);
+                    sb.Append(onlyNicknames ? p.Player1.Nickname : p.Player1Name); //Player 1
+                    sb.Append(de);
+                    sb.Append(db);
+                    sb.Append(onlyNicknames ? p.Player2.Nickname : p.Player2Name); //Player 2
+                    sb.Append(de);
+                    
+                        sb.Append(db);
+                        sb.Append(p.Player1Score + ":" + p.Player2Score); //Score
+                        sb.Append(de);
+
+                    if (tournament.Rule.IsDrawPossible)
+                    {
+                        sb.Append(db);
+                        sb.Append(p.Winner); //Winner
+                        sb.Append(de);
+                    }
+
+                    sb.Append(re);
+                    sb.Append(nl);
+                }
+            }
+            else
+            {
+                 sb.Append(tb);
+                sb.Append(rb);
+                sb.Append(db);
+                sb.Append("Player 1"); //Player 1
+                sb.Append(de);
+                sb.Append(db);
+                sb.Append("Player 2"); //Player 2
+                sb.Append(de);
+                sb.Append(db);
+                sb.Append("T#"); //Table Number
+                sb.Append(de);
+                
+                sb.Append(re);
+                sb.Append(nl);
+
+                int round = tournament.Rounds.Count - 1;
+                if (result)
+                {
+                    round--;
+                }
+
+                if (round < 0)
+                {
+                    return "";
+                }
+
+                var doublePairings = new List<Pairing>();
+                foreach (var p in tournament.Rounds[round].Pairings)
+                {
+                    doublePairings.Add(new Pairing(p));
+                    doublePairings.Add(new Pairing(p));
+                    (doublePairings[^1].Player1, doublePairings[^1].Player2) = (doublePairings[^1].Player2, doublePairings[^1].Player1);
+                }
+
+                var sorted = doublePairings.OrderBy(x => (onlyNicknames ? x.Player1.Nickname : x.Player1Name)).ToList();
+
+                foreach (Pairing p in sorted)
+                {
+                    sb.Append(rb);
+                    sb.Append(db);
+                    sb.Append(onlyNicknames ? p.Player1.Nickname : p.Player1Name); //Player 1
+                    sb.Append(de);
+                    sb.Append(db);
+                    sb.Append(onlyNicknames ? p.Player2.Nickname : p.Player2Name); //Player 2
+                    sb.Append(de);
+                    sb.Append(db);
+                    sb.Append(p.TableNr); //Table Number
+                    sb.Append(de);
+
+                    sb.Append(re);
+                    sb.Append(nl);
+                }
             }
 
             sb.Append(te);
@@ -586,15 +685,15 @@ namespace TXM.Core
             return sb.ToString();
         }
 
-        public string GetBBCode(Tournament tournament, bool table, bool result = false)
+        public string GetBBCode(Tournament tournament, bool table, bool result, bool onlyNicknames, bool lists)
         {
             if (table)
             {
-                return WriteTable(tournament, true);
+                return WriteTable(tournament, true, onlyNicknames, lists);
             }
             else
             {
-                return WritePairings(tournament, true, result);
+                return WritePairings(tournament, true, result, onlyNicknames);
             }
         }
 
@@ -612,11 +711,11 @@ namespace TXM.Core
             return r;
         }
 
-        public string Print(Tournament tournament)
+        public string Print(Tournament tournament, bool onlyNicknames, bool lists)
         {
             string title = tournament.Name + " - Table - Round " + tournament.DisplayedRound;
 
-            string print = WriteTable(tournament, false);
+            string print = WriteTable(tournament, false, onlyNicknames, lists);
             if (!Directory.Exists(TempPath))
                 Directory.CreateDirectory(TempPath);
             using (StreamWriter sw = new StreamWriter(PrintFile, false))
@@ -627,7 +726,7 @@ namespace TXM.Core
             return PrintFile;
         }
 
-        public string Print(Tournament tournament, bool result)
+        public string PrintPairings(Tournament tournament, bool result, bool onlyNicknames)
         {
             string title = "";
             if (result)
@@ -635,7 +734,7 @@ namespace TXM.Core
             else
                 title = tournament.Name + " - Pairings - Round " + tournament.DisplayedRound;
 
-            string print = WritePairings(tournament, false, result);
+            string print = WritePairings(tournament, false, result, onlyNicknames);
             if (!Directory.Exists(TempPath))
                 Directory.CreateDirectory(TempPath);
             using (StreamWriter sw = new StreamWriter(PrintFile, false))
@@ -965,9 +1064,9 @@ namespace TXM.Core
             return Directory.GetFiles(AutosavePath, "*" + Settings.FILEEXTENSION);
         }
 
-        public string PrintBestInFaction(Tournament tournament)
+        public string PrintBestInFaction(Tournament tournament, bool onlyNicknames)
         {
-            string print = WriteFactions(tournament, false);
+            string print = WriteFactions(tournament, false, onlyNicknames);
             if (!Directory.Exists(TempPath))
                 Directory.CreateDirectory(TempPath);
             using (StreamWriter sw = new StreamWriter(PrintFile, false))
@@ -978,7 +1077,7 @@ namespace TXM.Core
             return PrintFile;
         }
 
-        private string WriteFactions(Tournament tournament, bool bbcode)
+        private string WriteFactions(Tournament tournament, bool bbcode, bool onlyNicknames)
         {
             StringBuilder sb = new StringBuilder();
             string title = tournament.Name + " - Best in Factions";
@@ -1016,7 +1115,7 @@ namespace TXM.Core
             foreach (var f in factions)
             {
                 sb.Append(blank);
-                sb.Append(WriteFaction(tournament, f, tb, te, rb, re, db, de, end, nl, hs, he, blank));
+                sb.Append(WriteFaction(tournament, f, tb, te, rb, re, db, de, end, nl, hs, he, blank, onlyNicknames));
             }
             
             return sb.ToString();
@@ -1032,7 +1131,7 @@ namespace TXM.Core
             , string de
             , string end
             , string nl,
-            string hs, string he, string blank)
+            string hs, string he, string blank, bool onlyNicknames)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -1045,9 +1144,12 @@ namespace TXM.Core
             sb.Append(db);
             sb.Append("#"); //Rank
             sb.Append(de);
-            sb.Append(db);
-            sb.Append("Firstname"); //Firstname
-            sb.Append(de);
+            if (!onlyNicknames)
+            {
+                sb.Append(db);
+                sb.Append("Firstname"); //Firstname
+                sb.Append(de);
+            }
             sb.Append(db);
             sb.Append("Nickname"); //Nickname
             sb.Append(de);
@@ -1116,9 +1218,12 @@ namespace TXM.Core
                 sb.Append(db);
                 sb.Append(p.Rank); //Rank
                 sb.Append(de);
-                sb.Append(db);
-                sb.Append(p.Firstname); //Firstname
-                sb.Append(de);
+                if (!onlyNicknames)
+                {
+                    sb.Append(db);
+                    sb.Append(p.Firstname); //Firstname
+                    sb.Append(de);
+                }
                 sb.Append(db);
                 sb.Append(p.Nickname); //Nickname
                 sb.Append(de);

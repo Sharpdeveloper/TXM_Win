@@ -157,9 +157,27 @@ namespace TXM.Core.Logic
 
                     ListOfPlayers = new List<Player>();
 
-                    for (int i = 0; i < currentCountOfPlayer; i++)
-                        ListOfPlayers.Add(Participants[i]);
+                    int counter = 0;
+                    foreach (var p in Participants)
+                    {
+                        if(!p.Disqualified && !p.Dropped)
+                        {
+                            ListOfPlayers.Add(p);
+                            counter++;
+                        }
 
+                        if (counter >= currentCountOfPlayer)
+                        {
+                            break;
+                        }
+                    }
+                    // for (int i = 0; i < currentCountOfPlayer; i++)
+                    // {
+                    //     if(!Participants[i].Disqualified && !Participants[i].Dropped)
+                    //     {
+                    //         ListOfPlayers.Add(Participants[i]);
+                    //     }
+                    // }
                     Pairings = new List<Pairing>();
 
                     while (ListOfPlayers.Count > 0)
@@ -1050,6 +1068,7 @@ namespace TXM.Core.Logic
                 bonus = false;
                 ActiveScenarios = new List<string>();
                 ChoosenScenario = "";
+                Rule = AbstractRules.GetRule(Rule.GetName());
             }
             else if (_version == 1)
             {
@@ -1087,6 +1106,7 @@ namespace TXM.Core.Logic
                 bonus = false;
                 ActiveScenarios = new List<string>();
                 ChoosenScenario = "";
+                Rule = AbstractRules.GetRule(Rule.GetName());
             }
             else if (_version == 2)
             {
@@ -1124,6 +1144,7 @@ namespace TXM.Core.Logic
                 bonus = (bool)info.GetValue("Tournament_bonus", typeof(bool));
                 ActiveScenarios = new List<string>();
                 ChoosenScenario = "";
+                Rule = AbstractRules.GetRule(Rule.GetName());
             }
             else if (_version == 3)
             {
@@ -1159,10 +1180,10 @@ namespace TXM.Core.Logic
                 WinnerLastRound = (List<Player>)info.GetValue("Tournament_WinnerLastRound", typeof(List<Player>));
                 bye = (bool)info.GetValue("Tournament_bye", typeof(bool));
                 bonus = (bool)info.GetValue("Tournament_bonus", typeof(bool));
+                Rule = AbstractRules.GetRule(Rule.GetName());
                 ActiveScenarios = (List<string>)info.GetValue("Tournament_ActiveScenarios", typeof(List<string>));
                 ChoosenScenario = (string)info.GetValue("Tournament_ChoosenScenario", typeof(string));
-            }
-            Rule = AbstractRules.GetRule(Rule.GetName());
+            } 
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)

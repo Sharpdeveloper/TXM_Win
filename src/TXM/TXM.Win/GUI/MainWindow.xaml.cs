@@ -496,6 +496,25 @@ namespace TXM.GUI
                 }
                 SetRandomTime();
             }
+
+            Refresh();
+            if (tournamentController.ActiveTournament != null)
+            {
+                MenuItemPrintHeader.IsEnabled = true;
+                if (tournamentController.ActiveTournament.Rule != null &&
+                    tournamentController.ActiveTournament.Rule.UsesScenarios)
+                {
+                    LabelScenarios.Visibility = Visibility.Visible;
+                    ComboboxScenarios.Visibility = Visibility.Visible;
+                    LabelScenario.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    LabelScenarios.Visibility = Visibility.Hidden;
+                    ComboboxScenarios.Visibility = Visibility.Hidden;
+                    LabelScenario.Visibility = Visibility.Hidden;
+                }
+            }
         }
 
         private void SetRandomTime()
@@ -579,7 +598,7 @@ namespace TXM.GUI
             if (DataGridPlayer.SelectedItem != null)
             {
                 RemovePlayerIsEnabled = true;
-                DisqualifyPlayerIsEnabled = tournamentController.Started;
+                DisqualifyPlayerIsEnabled = true;
                 EditPlayerIsEnabled = true;
             }
             else
@@ -728,7 +747,7 @@ namespace TXM.GUI
                 ButtonCut.IsEnabled = false;
                 InitDataGridPairing(true);
                 ComboboxScenarios.IsEnabled = false;
-                currentScenario = LabelScenarios.Content.ToString();
+                currentScenario = LabelScenarios.Content?.ToString();
                 LabelScenarios.Content = "Chosen Scenario: " + activeRound.Scenario;
             }
             tournamentController.ActiveTournament.DisplayedRound = round;
@@ -755,6 +774,14 @@ namespace TXM.GUI
         private void MenuItemTSettings_Click(object sender, RoutedEventArgs e)
         {
             tournamentController.EditTournament(new NewTournamentDialog());
+            if (tournamentController.ActiveTournament.Cut == TournamentCut.NoCut)
+            {
+                ButtonCut.IsEnabled = false;
+            }
+            else
+            {
+                ButtonCut.IsEnabled = true;
+            }
         }
 
         private void ButtonCut_Click(object sender, RoutedEventArgs e)
@@ -989,17 +1016,17 @@ namespace TXM.GUI
 
         private void MenuItemShowPairings_Click(object sender, RoutedEventArgs e)
         {
-            tournamentController.ShowProjector(new ProjectorWindow(), false, CheckBoxShowProjectorTimer.IsChecked == true);
+            tournamentController.ShowProjector(new ProjectorWindow(), false, CheckBoxShowProjectorTimer.IsChecked == true, false, CheckBoxShowOnlyNicknames.IsChecked == true,false);
         }
 
         private void MenuItemShowTable_Click(object sender, RoutedEventArgs e)
         {
-            tournamentController.ShowProjector(new ProjectorWindow(), true, CheckBoxShowProjectorTimer.IsChecked == true);
+            tournamentController.ShowProjector(new ProjectorWindow(), true, CheckBoxShowProjectorTimer.IsChecked == true, false, CheckBoxShowOnlyNicknames.IsChecked == true, false);
         }
 
         private void MenuItemPrint_Click(object sender, RoutedEventArgs e)
         {
-            tournamentController.Print(true);
+            tournamentController.Print(true, false, false, CheckBoxShowOnlyNicknames.IsChecked == true, false);
         }
 
         private void MenuItemTimeStart_Click(object sender, RoutedEventArgs e)
@@ -1024,7 +1051,7 @@ namespace TXM.GUI
 
         private void MenuItemPrintPairing_Click(object sender, RoutedEventArgs e)
         {
-            tournamentController.Print(true, true);
+            tournamentController.Print(true, true, false, CheckBoxShowOnlyNicknames.IsChecked == true, false);
         }
 
         private void RefreshPlayerList(object sender, RoutedEventArgs e)
@@ -1085,12 +1112,12 @@ namespace TXM.GUI
 
         private void MenuItemPrintResult_Click(object sender, RoutedEventArgs e)
         {
-            tournamentController.Print(true, true, true);
+            tournamentController.Print(true, true, true, CheckBoxShowOnlyNicknames.IsChecked == true, false);
         }
 
         private void MenuItemBBCode_Click(object sender, RoutedEventArgs e)
         {
-            tournamentController.GetBBCode(new OutputDialog(), new WindowsClipboard());
+            tournamentController.GetBBCode(new OutputDialog(), new WindowsClipboard(), CheckBoxShowOnlyNicknames.IsChecked == true, false);
         }
 
         private void MenuItemCSVImport_Click(object sender, RoutedEventArgs e)
@@ -1210,12 +1237,17 @@ namespace TXM.GUI
 
         private void MenuItemPrintBestInFaction_Click(object sender, RoutedEventArgs e)
         {
-            tournamentController.PrintBestInFaction(true);
+            tournamentController.PrintBestInFaction(true, CheckBoxShowOnlyNicknames.IsChecked == true);
         }
 
         private void MenuItemShowBestInFaction_Click(object sender, RoutedEventArgs e)
         {
-            tournamentController.ShowProjector(new ProjectorWindow(), false, CheckBoxShowProjectorTimer.IsChecked == true, true);
+            tournamentController.ShowProjector(new ProjectorWindow(), false, CheckBoxShowProjectorTimer.IsChecked == true, true, CheckBoxShowOnlyNicknames.IsChecked == true, false);
+        }
+
+        private void MenuItemPrintLists_Click(object sender, RoutedEventArgs e)
+        {
+            tournamentController.Print(true, false, false, CheckBoxShowOnlyNicknames.IsChecked == true, true);
         }
     }
 }

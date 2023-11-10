@@ -129,7 +129,7 @@ namespace TXM.Core
                 Locked = false;
                 DoubleLoss = false;
             }
-            else if (version == 2)
+            else if (_version == 2)
             {
                 tableNr = (int)info.GetValue("Pairing_tableNr", typeof(int));
                 TableNr = (int)info.GetValue("Pairing_TableNr", typeof(int));
@@ -144,7 +144,7 @@ namespace TXM.Core
                 Locked = (bool)info.GetValue("Pairing_Locked", typeof(bool));
                 DoubleLoss = false;
             }
-            else if (version == 3)
+            else if (_version == 3)
             {
                 tableNr = (int)info.GetValue("Pairing_tableNr", typeof(int));
                 TableNr = (int)info.GetValue("Pairing_TableNr", typeof(int));

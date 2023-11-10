@@ -37,6 +37,7 @@
                     <MenuItem x:Name="MenuItemPrintResult" Header="Print Pairings (with Results)" Click="MenuItemPrintResult_Click"/>
                     <MenuItem x:Name="MenuItemPrintPairingScoreSheet" Header="Print Pairing with Score Sheet" Click="MenuItemPrintParingScore_Click"/>
                     <MenuItem x:Name="MenuItemPrintBestInFaction" Header="Print Best in Faction" Click="MenuItemPrintBestInFaction_Click"/>
+                    <MenuItem x:Name="MenuItemPrintLists" Header="Print Table with Lists" Click="MenuItemPrintLists_Click"/>
                 </MenuItem>
                 <MenuItem x:Name="MenuItemExit" Header="Quit" Click="Close_Click"/>
             </MenuItem>
@@ -169,6 +170,7 @@
             <Label x:Name="LabelHide" Content="Hide" HorizontalAlignment="Right" Margin="0,402,0,0" Height="25" VerticalAlignment="Top"/>
             
             <CheckBox x:Name="CheckBoxShowProjectorTimer" IsChecked="True" Content="Show Timer on projector" HorizontalAlignment="Left" Margin="0, 450, 0, 0" VerticalAlignment="Top" />
+            <CheckBox x:Name="CheckBoxShowOnlyNicknames" IsChecked="True" Content="Show/Print only Nicknames" HorizontalAlignment="Left" Margin="0, 475, 0, 0" VerticalAlignment="Top" />
             
             <Image x:Name="ImageLogo" VerticalAlignment="Bottom" Source="pack://application:,,,/Resources/TXM_Logo.png"/>
         </Grid>
