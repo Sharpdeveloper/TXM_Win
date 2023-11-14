@@ -37,7 +37,7 @@ namespace TXM.Core
             SavePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TXM");
             AutosavePath = Path.Combine(SavePath, "Autosave");
             TempPath = Path.Combine(SavePath, "Temp");
-            PrintFile = Path.Combine(TempPath, "print.html");
+            PrintFile = Path.Combine(TempPath, "index.html");
             TextColorFile = Path.Combine(SavePath, "textcolor.txt");
             TextSizeFile = Path.Combine(SavePath, "textsize.txt");
             BGImageFile = Path.Combine(SavePath, "bgImage.txt");
