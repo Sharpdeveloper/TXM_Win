@@ -461,7 +461,11 @@ namespace TXM.Core
                 if (lists)
                 {
                     sb.Append(db);
-                    if (p.SquadList.Contains("http"))
+                    if (p.SquadList == null)
+                    {
+                        sb.Append("");
+                    }
+                    else if (p.SquadList.Contains("http"))
                     {
                         sb.Append(ab1);
                         sb.Append(p.SquadList);
@@ -1015,37 +1019,53 @@ namespace TXM.Core
         {
             string title = tournament.Name + " - Pairings - Round " + tournament.DisplayedRound;
             List<string> print = new List<string>();
-            string temp = "<!DOCTYPE html><html><head><title>" + title + "</title></head><body>";
-            title = "Round " + tournament.DisplayedRound + " - Table ";
-            foreach (Pairing p in tournament.Rounds[tournament.Rounds.Count - 1].Pairings)
+            if(tournament.Rounds.Count == 0)
             {
-                temp = "<table width=100%><tr><td><h4>" + title + p.TableNr + "</h4></td><td><h4>" + p.Player1Name + "</h4></td><td><h4>" + p.Player2Name + "</h4></td></tr>";
-                print.Add(temp);
-                temp = "<tr><td></td><td>Points destroyed    _________</td><td>Points destroyed    _________</td></tr>";
-                print.Add(temp);
-                if (false && tournament.FirstRound)
-                {
-                    if (tournament.PrintDDENG)
-                    {
-                        temp = "<tr><td colspan=\"3\"><b>Blue Deck:</b> 2x Shaken Pilot, 2x Blinded Pilot, 2x Damaged Cockpit, 2x Stunned Pilot, 2x Console Fire, 2x Damaged Engine, 2x Major Explosion, 2x Weapons Failure, 2x Major Hull Breach, 2x Structural Damage, 2x Damaged Sensor Array, 2x Loose Stabilizer, 2x Thrust Control Fire, 7x Direct Hit!</td></tr>";
-                        print.Add(temp);
-                        temp = "<tr><td colspan=\"3\"><b>Red Deck:</b> 2x Injured Pilot, 2x Blinded Pilot, 2x Damaged Cockpit, 2x Stunned Pilot, 2x Console Fire, 2x Damaged Engine, 2x Minor Explosion, 2x Weapon Malfunction, 2x Minor Hull Breach, 2x Structural Damage, 2x Damaged Sensor Array, 2x Munitions Failure, 2x Thrust Control Fire, 7x Direct Hit!</td></tr>";
-                        print.Add(temp);
-                    }
-                    else if (tournament.PrintDDGER)
-                    {
-                        temp = "<tr><td colspan=\"3\"><b>Blaues Deck:</b> 2x Verstörter Pilot, 2x Geblendeter Pilot, 2x Cockpitschaden, 2x Benommener Pilot, 2x Konsolenbrand, 2x Triebwerksschaden, 2x Schwere Explosion, 2x Waffenausfall, 2x Schwerer Hüllenbruch, 2x Strukturschäden, 2x Sensorenausfall, 2x Lockerer Stabilisator, 2x Schubreglerbrand, 7x Volltreffer!</td></tr>";
-                        print.Add(temp);
-                        temp = "<tr><td colspan=\"3\"><b>Rotes Deck:</b> 2x Verletzter Pilot, 2x Geblendeter Pilot, 2x Cockpitschaden, 2x Benommener Pilot, 2x Konsolenbrand, 2x Triebwerksschaden, 2x Schwache Explosion, 2x Waffenfehlfunktion, 2x Hüllenbruch, 2x Strukturschäden, 2x Sensorenausfall, 2x Ladehemmung, 2x Schubreglerbrand, 7x Volltreffer!</td></tr>";
-                        print.Add(temp);
-                    }
-                }
-                temp = "</table><hr/>";
-                print.Add(temp);
-
+                print.Add("<html><body><h1>No Round started => No Pairings yet</h1></body></html>");
             }
-            temp = "</body></html>";
-            print.Add(temp);
+            else
+            {
+                string temp = "<!DOCTYPE html><html><head><title>" + title + "</title></head><body>";
+                title = "Round " + tournament.DisplayedRound + " - Table ";
+                foreach (Pairing p in tournament.Rounds[tournament.Rounds.Count - 1].Pairings)
+                {
+                    temp = "<table width=100%><tr><td><h4>" + title + p.TableNr + "</h4></td><td><h4>" + p.Player1Name +
+                           "</h4></td><td><h4>" + p.Player2Name + "</h4></td></tr>";
+                    print.Add(temp);
+                    temp =
+                        "<tr><td></td><td>Points destroyed    _________</td><td>Points destroyed    _________</td></tr>";
+                    print.Add(temp);
+                    if (false && tournament.FirstRound)
+                    {
+                        if (tournament.PrintDDENG)
+                        {
+                            temp =
+                                "<tr><td colspan=\"3\"><b>Blue Deck:</b> 2x Shaken Pilot, 2x Blinded Pilot, 2x Damaged Cockpit, 2x Stunned Pilot, 2x Console Fire, 2x Damaged Engine, 2x Major Explosion, 2x Weapons Failure, 2x Major Hull Breach, 2x Structural Damage, 2x Damaged Sensor Array, 2x Loose Stabilizer, 2x Thrust Control Fire, 7x Direct Hit!</td></tr>";
+                            print.Add(temp);
+                            temp =
+                                "<tr><td colspan=\"3\"><b>Red Deck:</b> 2x Injured Pilot, 2x Blinded Pilot, 2x Damaged Cockpit, 2x Stunned Pilot, 2x Console Fire, 2x Damaged Engine, 2x Minor Explosion, 2x Weapon Malfunction, 2x Minor Hull Breach, 2x Structural Damage, 2x Damaged Sensor Array, 2x Munitions Failure, 2x Thrust Control Fire, 7x Direct Hit!</td></tr>";
+                            print.Add(temp);
+                        }
+                        else if (tournament.PrintDDGER)
+                        {
+                            temp =
+                                "<tr><td colspan=\"3\"><b>Blaues Deck:</b> 2x Verstörter Pilot, 2x Geblendeter Pilot, 2x Cockpitschaden, 2x Benommener Pilot, 2x Konsolenbrand, 2x Triebwerksschaden, 2x Schwere Explosion, 2x Waffenausfall, 2x Schwerer Hüllenbruch, 2x Strukturschäden, 2x Sensorenausfall, 2x Lockerer Stabilisator, 2x Schubreglerbrand, 7x Volltreffer!</td></tr>";
+                            print.Add(temp);
+                            temp =
+                                "<tr><td colspan=\"3\"><b>Rotes Deck:</b> 2x Verletzter Pilot, 2x Geblendeter Pilot, 2x Cockpitschaden, 2x Benommener Pilot, 2x Konsolenbrand, 2x Triebwerksschaden, 2x Schwache Explosion, 2x Waffenfehlfunktion, 2x Hüllenbruch, 2x Strukturschäden, 2x Sensorenausfall, 2x Ladehemmung, 2x Schubreglerbrand, 7x Volltreffer!</td></tr>";
+                            print.Add(temp);
+                        }
+                    }
+
+                    temp = "</table><hr/>";
+                    print.Add(temp);
+
+                }
+
+                temp = "</body></html>";
+                print.Add(temp);
+            }
+
             if (!Directory.Exists(TempPath))
                 Directory.CreateDirectory(TempPath);
             using (StreamWriter sw = new StreamWriter(PrintFile, false, Encoding.UTF8))
@@ -1114,7 +1134,15 @@ namespace TXM.Core
 
             sb.Append(head);
 
-            string[] factions = tournament.Rule.Factions;
+            List<string> factions = new();
+            foreach (var p in tournament.Participants)
+            {
+                if (!factions.Contains(p.Faction))
+                {
+                    factions.Add(p.Faction);
+                }
+            }
+            //string[] factions = tournament.Rule.Factions;
 
             foreach (var f in factions)
             {

@@ -1249,5 +1249,13 @@ namespace TXM.GUI
         {
             tournamentController.Print(true, false, false, CheckBoxShowOnlyNicknames.IsChecked == true, true);
         }
+
+        private void DataGridPlayer_OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+            {
+                RemovePlayer_Click(sender, e);
+            }
+        }
     }
 }

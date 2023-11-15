@@ -91,6 +91,7 @@ namespace TXM.Core
             p.Paid = player.Paid;
             p.TableNo = player.TableNo;
             p.Present = player.Present;
+            p.Faction = player.Faction;
         }
 
         private void ChangeTournament(Tournament tournament)
