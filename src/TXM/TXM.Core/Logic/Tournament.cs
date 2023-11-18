@@ -139,9 +139,9 @@ namespace TXM.Core.Logic
             #region Cut
             if (Cut != TournamentCut.NoCut && (cut || CutStarted))
             {
-                CalculateWonBye();
                 if (cut)
                 {
+                    CalculateWonBye();
                     Sort();
                     CutStarted = true;
                     if (Cut == TournamentCut.Top8)
@@ -675,7 +675,7 @@ namespace TXM.Core.Logic
         {
             Result r;
             int winnerID = 0;
-            bool winner;
+            //bool winner;
             WinnerLastRound = new List<Player>();
             if (bonus)
             {
@@ -699,14 +699,14 @@ namespace TXM.Core.Logic
                     else
                         winnerID = (pairing.Player1Score > pairing.Player2Score) ? pairing.Player1.ID : pairing.Player2.ID;
                     r = new Result(pairing.Player1Score, pairing.Player2Score, pairing.Player2, MaxPoints, winnerID, pairing.Player1Points);
-                    winner = Rule.AddResult(pairing.Player1, r);
-                    if (winner)
+                    //bool winner = Rule.AddResult(pairing.Player1, r);
+                    if (Rule.AddResult(pairing.Player1, r))
                         WinnerLastRound.Add(pairing.Player1);
                     if (pairing.Player2 != WonBye && pairing.Player2 != Bye)
                     {
                         r = new Result(pairing.Player2Score, pairing.Player1Score, pairing.Player1, MaxPoints, winnerID, pairing.Player2Points);
-                        winner = Rule.AddResult(pairing.Player2, r);
-                        if (winner)
+                        //winner = Rule.AddResult(pairing.Player2, r);
+                        if (Rule.AddResult(pairing.Player2, r))
                             WinnerLastRound.Add(pairing.Player2);
                     }
                 }

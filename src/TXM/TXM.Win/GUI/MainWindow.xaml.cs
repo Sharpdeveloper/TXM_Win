@@ -497,9 +497,10 @@ namespace TXM.GUI
                 SetRandomTime();
             }
 
-            Refresh();
+            
             if (tournamentController.ActiveTournament != null)
             {
+                Refresh();
                 MenuItemPrintHeader.IsEnabled = true;
                 if (tournamentController.ActiveTournament.Rule != null &&
                     tournamentController.ActiveTournament.Rule.UsesScenarios)

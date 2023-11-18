@@ -82,7 +82,7 @@ namespace TXM.Core
                     break;
             }
 
-            return tP == 1;
+            return tP == 3;
         }
 
         public override List<Player> SortTable(List<Player> unsorted)

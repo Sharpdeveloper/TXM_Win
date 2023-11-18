@@ -83,6 +83,7 @@ namespace TXM.Core
         private void ChangePlayer(int index, Player player)
         {
             Player p = ActiveTournament.Participants[index];
+            p.Nickname = player.Nickname;
             p.Team = player.Team;
             p.Name = player.Name;
             p.Firstname = player.Firstname;
@@ -92,6 +93,7 @@ namespace TXM.Core
             p.TableNo = player.TableNo;
             p.Present = player.Present;
             p.Faction = player.Faction;
+            p.SquadList = player.SquadList;
         }
 
         private void ChangeTournament(Tournament tournament)
