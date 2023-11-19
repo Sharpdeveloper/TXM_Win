@@ -5,7 +5,7 @@
         #region Constants
         private const string fileextension = "txmtournament";
         private const string fileextensionName = "TXM Tournaments";
-        private const string txmversion = "V3.5.4";
+        private const string txmversion = "V3.5.6";
         private const string copyrightYear = "2014 - 2023";
         #endregion
 

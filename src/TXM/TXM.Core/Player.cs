@@ -9,7 +9,7 @@ namespace TXM.Core
     public partial class Player//:ObservableObject
     {
         private static int currentID = 0;
-        private int version = 1;
+        private int version = 2;
 
         #region Player Informations
         //[ObservableProperty]
@@ -43,13 +43,8 @@ namespace TXM.Core
                 else
                     return "N";
             }}
-        public int Order
-        {
-            get
-            {
-                return new Random().Next(0, 99999);
-            }
-        }
+        public int Order { get; private set; }
+        public bool IsInCut { get; set; } = false;
         #endregion
 
         #region Game Infomations
@@ -284,6 +279,10 @@ namespace TXM.Core
         {
             currentID = 0;
         }
+        
+        public void NewRandom()        {
+                Order = new Random().Next(0, 99999);
+        }
         #endregion
 
         #region Properties
@@ -381,7 +380,48 @@ namespace TXM.Core
                 ArmyRank = (int)info.GetValue("Player_ArmyRank", typeof(int));
                 Paid = (bool)info.GetValue("Player_Paid", typeof(bool));
                 ListGiven = (bool)info.GetValue("Player_ListGiven", typeof(bool));
-			}
+                NewRandom();
+                IsInCut = false;
+            }
+            else if (_version == 2)
+            {
+				currentID = (int)info.GetValue("Player_currentID", typeof(int));
+                Name = (string)info.GetValue("Player_Name", typeof(string));
+                Firstname = (string)info.GetValue("Player_Firstname", typeof(string));
+                Nickname = (string)info.GetValue("Player_Nickname", typeof(string));
+                TableNo = (int)info.GetValue("Player_TableNo", typeof(int));
+                Team = (string)info.GetValue("Player_Team", typeof(string));
+                City = (string)info.GetValue("Player_City", typeof(string));
+                SquadList = (string)info.GetValue("Player_SquadList", typeof(string));
+                Disqualified = (bool)info.GetValue("Player_Disqualified", typeof(bool));
+                Dropped = (bool)info.GetValue("Player_Dropped", typeof(bool));
+                Present = (bool)info.GetValue("Player_Present", typeof(bool));
+                ID = (int)info.GetValue("Player_ID", typeof(int));
+                Wins = (int)info.GetValue("Player_Wins", typeof(int));
+                ModifiedWins = (int)info.GetValue("Player_ModifiedWins", typeof(int));
+                Losses = (int)info.GetValue("Player_Losses", typeof(int));
+                ModifiedLosses = (int)info.GetValue("Player_ModifiedLosses", typeof(int));
+                Draws = (int)info.GetValue("Player_Draws", typeof(int));
+                TournamentPoints = (int)info.GetValue("Player_TournamentPoints", typeof(int));
+                DestroyedPoints = (int)info.GetValue("Player_DestroyedPoints", typeof(int));
+                LostPoints = (int)info.GetValue("Player_LostPoints", typeof(int));
+                StrengthOfSchedule = (double)info.GetValue("Player_StrengthOfSchedule", typeof(double));
+                ExtendedStrengthOfSchedule = (double)info.GetValue("Player_ExtendedStrengthOfSchedule", typeof(double));
+                MarginOfVictory = (int)info.GetValue("Player_MarginOfVictory", typeof(int));
+                Faction = (string)info.GetValue("Player_Faction", typeof(string));
+                Results = (List<Result>)info.GetValue("Player_Results", typeof(List<Result>));
+                Enemies = (List<Player>)info.GetValue("Player_Enemies", typeof(List<Player>));
+                Bye = (bool)info.GetValue("Player_Bye", typeof(bool));
+                Paired = (bool)info.GetValue("Player_Paired", typeof(bool));
+                WonBye = (bool)info.GetValue("Player_WonBye", typeof(bool));
+                T3ID = (int)info.GetValue("Player_T3ID", typeof(int));
+                Rank = (int)info.GetValue("Player_Rank", typeof(int));
+                ArmyRank = (int)info.GetValue("Player_ArmyRank", typeof(int));
+                Paid = (bool)info.GetValue("Player_Paid", typeof(bool));
+                ListGiven = (bool)info.GetValue("Player_ListGiven", typeof(bool));
+                Order = (int)info.GetValue("Player_Order", typeof(int));
+                IsInCut = (bool)info.GetValue("Player_IsInCut", typeof(bool));
+            }
 		}
 
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -421,6 +461,8 @@ namespace TXM.Core
 			info.AddValue("Player_ArmyRank", ArmyRank, typeof(int));
 			info.AddValue("Player_Paid", Paid, typeof(bool));
 			info.AddValue("Player_ListGiven", ListGiven, typeof(bool));
+            info.AddValue("Player_Order", Order, typeof(int));
+            info.AddValue("Player_IsInCut", IsInCut, typeof(bool));
 		}
     }
 }

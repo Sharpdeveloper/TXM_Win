@@ -194,6 +194,16 @@ namespace TXM.GUI
                 };
                 DataGridPlayer.Columns.Add(dgc);
             }
+
+            if (tournamentController.ActiveTournament != null && tournamentController.ActiveTournament.Rule != null &&
+                tournamentController.ActiveTournament.Rule.GetName() == XWing25Rules.GetRuleName())
+            {
+                dgc = new DataGridTextColumn()
+                {
+                    Header = "Random", Binding = new Binding("Order"), IsReadOnly = true
+                };
+                DataGridPlayer.Columns.Add(dgc);
+            }
         }
 
         private void InitDataGridPairing(bool update = false, bool bonus = false)
@@ -475,7 +485,7 @@ namespace TXM.GUI
                     ButtonGetResults.Content = tournamentController.ActiveTournament.ButtonGetResultsText;
                     ButtonGetResults.IsEnabled = true;
                     ButtonCut.IsEnabled = tournamentController.ActiveTournament.ButtonCutState == true;
-                    tournamentController.ActiveTournament.Sort();
+                    //tournamentController.ActiveTournament.Sort();
                     RefreshDataGridPlayer(tournamentController.ActiveTournament.Participants);
                     if (tournamentController.ActiveTournament.Pairings != null)
                     {
@@ -567,7 +577,7 @@ namespace TXM.GUI
             dataView = CollectionViewSource.GetDefaultView(DataGridPlayer.ItemsSource);
             dataView.SortDescriptions.Clear();
 
-            tournamentController.ActiveTournament.Sort();
+            //tournamentController.ActiveTournament.Sort();
 
             dataView.SortDescriptions.Add(new SortDescription("Rank", ListSortDirection.Ascending));
             dataView.Refresh();

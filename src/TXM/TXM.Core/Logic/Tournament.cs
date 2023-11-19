@@ -141,8 +141,17 @@ namespace TXM.Core.Logic
             {
                 if (cut)
                 {
-                    CalculateWonBye();
-                    Sort();
+                    int i = CalculateWonBye();
+                    if (i > 0)
+                    {
+                        foreach (var p in Participants)
+                        {
+                            p.NewRandom();
+                        }
+
+                        Sort();
+                    }
+
                     CutStarted = true;
                     if (Cut == TournamentCut.Top8)
                         currentCountOfPlayer = 8;
@@ -162,6 +171,7 @@ namespace TXM.Core.Logic
                     {
                         if(!p.Disqualified && !p.Dropped)
                         {
+                            p.IsInCut = true;
                             ListOfPlayers.Add(p);
                             counter++;
                         }
@@ -209,7 +219,7 @@ namespace TXM.Core.Logic
                     Start();
                 else
                 {
-                    Sort();
+                    //Sort();
                     Rounds[Rounds.Count - 1].Participants = new List<Player>();
                     foreach (Player p in Participants)
                         Rounds[Rounds.Count - 1].Participants.Add(new Player(p));
@@ -451,7 +461,7 @@ namespace TXM.Core.Logic
                     Start();
                 else
                 {
-                    Sort();
+                    //Sort();
                     Rounds[Rounds.Count - 1].Participants = new List<Player>();
                     foreach (Player p in Participants)
                         Rounds[Rounds.Count - 1].Participants.Add(new Player(p));
@@ -731,10 +741,24 @@ namespace TXM.Core.Logic
                     }
                 }
             }
-            foreach (Player player in Participants)
-                player.SumStrengthOfSchedule();
-            foreach (Player player in Participants)
-                player.SumExtendedStrengthOfSchedule();
+            if(!CutStarted)
+            {
+                foreach (Player player in Participants)
+                    player.SumStrengthOfSchedule();
+                foreach (Player player in Participants)
+                    player.SumExtendedStrengthOfSchedule();
+            }
+            else
+            {
+                var inCut = Participants.Where(x => x.IsInCut == true).ToList();
+                foreach (var ic in inCut)
+                {
+                    if (!WinnerLastRound.Contains(ic))
+                    {
+                        ic.IsInCut = false;
+                    }
+                }
+            }
             for (int i = 0; i < results.Count; i++)
                 results[i].ResultEdited = false;
             if (update)
@@ -742,6 +766,13 @@ namespace TXM.Core.Logic
             else
                 Rounds[Rounds.Count - 1].Pairings = results;
             PrePaired = new List<Pairing>();
+            if (!CutStarted)
+            {
+                foreach (var p in Participants)
+                {
+                    p.NewRandom();
+                }
+            }
             Sort();
         }
 
@@ -948,8 +979,9 @@ namespace TXM.Core.Logic
             Participants.Remove(player);
         }
 
-        public void CalculateWonBye()
+        public int CalculateWonBye()
         {
+            int a = 0;
             if (!WonByeCalculated)
             {
                 foreach (var player in (Participants))
@@ -957,10 +989,12 @@ namespace TXM.Core.Logic
                     if (player.WonBye)
                     {
                         player.AddLastEnemy(GetStrongestUnplayedEnemy(player));
+                        a++;
                     }
                 }
             }
             WonByeCalculated = true;
+            return a;
         }
 
         public void DisqualifyPlayer(Player player)
@@ -979,6 +1013,11 @@ namespace TXM.Core.Logic
             player.SumStrengthOfSchedule();
             player.SumExtendedStrengthOfSchedule();
             player.Disqualify();
+            foreach (var p in Participants)
+            {
+                p.NewRandom();
+            }
+            Sort();
         }
 
         public void DropPlayer(Player player)

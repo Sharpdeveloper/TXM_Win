@@ -201,7 +201,7 @@ namespace TXM.Core
             {
                 //ChangeGUIState(false);
             }
-            ActiveTournament.Sort();
+            //ActiveTournament.Sort();
             return true;
         }
 
