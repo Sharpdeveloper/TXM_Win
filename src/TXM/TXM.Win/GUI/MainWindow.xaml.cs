@@ -733,7 +733,10 @@ namespace TXM.GUI
 
         private void ComboBoxRounds_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string header = ((ComboBox)sender).SelectedValue.ToString();
+            var cb = (ComboBox)sender;
+            if (cb.Items.Count == 0)
+                return;
+            string header = cb.SelectedValue.ToString();
             header = header.Remove(0, header.IndexOf(" "));
             int round = Int32.Parse(header);
             Round activeRound = tournamentController.ActiveTournament.Rounds[round - 1];
@@ -1197,8 +1200,18 @@ namespace TXM.GUI
         {
             if (e.Column.DisplayIndex != 0)
             {
-                int t = e.Row.GetIndex();
-                if (tournamentController.ActiveTournament.Pairings[e.Row.GetIndex()].Locked)
+                List<Pairing> pairings;
+                if (tournamentController.ActiveTournament.DisplayedRound ==
+                    tournamentController.ActiveTournament.Rounds.Count)
+                {
+                    pairings = tournamentController.ActiveTournament.Pairings;
+                }
+                else
+                {
+                    pairings = tournamentController.ActiveTournament
+                        .Rounds[tournamentController.ActiveTournament.DisplayedRound - 1].Pairings;
+                }
+                if (pairings[e.Row.GetIndex()].Locked)
                 {
                     e.Cancel = true;
                 }
