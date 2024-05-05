@@ -14,6 +14,7 @@ namespace TXM.Core
             InfinityRules.GetRuleName(),
             DiceThroneRules.GetRuleName(),
             LegendOfThe5RingesRules.GetRuleName(),
+            MastersofTheUniverseBattlegroundRules.GetRuleName(),
             RuneWarsRules.GetRuleName(),
             ArmadaRules.GetRuleName(),
             DestinyRules.GetRuleName(),
@@ -32,6 +33,7 @@ namespace TXM.Core
         private static string[] RuleNamesT3Able =
         {
             InfinityRules.GetRuleName(),
+            MastersofTheUniverseBattlegroundRules.GetRuleName(),
             RuneWarsRules.GetRuleName(),
             ArmadaRules.GetRuleName(),
             IARules.GetRuleName(),
@@ -86,6 +88,8 @@ namespace TXM.Core
                 return new DiceThroneRules();
             else if (name == WarmachineRules.GetRuleName())
                 return new WarmachineRules();
+            else if (name == MastersofTheUniverseBattlegroundRules.GetRuleName())
+                return new MastersofTheUniverseBattlegroundRules();
             return null;
         }
 

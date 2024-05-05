@@ -352,7 +352,7 @@ namespace TXM.Core
                 sb.Append("MW"); //Modified Wins
                 sb.Append(de);
             }
-            if (tournament.Rule.OptionalFields.Contains("Draws"))
+            if (tournament.Rule.IsDrawPossible)
             {
                 sb.Append(db);
                 sb.Append("D"); //Draws
@@ -370,7 +370,7 @@ namespace TXM.Core
             if (tournament.Rule.OptionalFields.Contains("MoV"))
             {
                 sb.Append(db);
-                sb.Append("MoV"); //Margin of Victory
+                sb.Append(tournament.Rule.MoVName); //Margin of Victory
                 sb.Append(de);
             }
             sb.Append(db);
@@ -427,7 +427,7 @@ namespace TXM.Core
                     sb.Append(p.ModifiedWins); //Modified Wins
                     sb.Append(de);
                 }
-                if (tournament.Rule.OptionalFields.Contains("Draws"))
+                if (tournament.Rule.IsDrawPossible)
                 {
                     sb.Append(db);
                     sb.Append(p.Draws); //Draws
