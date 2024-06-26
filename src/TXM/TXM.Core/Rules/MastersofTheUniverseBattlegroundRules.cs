@@ -12,6 +12,7 @@ namespace TXM.Core
         public MastersofTheUniverseBattlegroundRules()
         {
             IsDrawPossible = true;
+            IsWinnerDropDownNeeded = true;
             OptionalFields = new List<string>() { "MoV" };
             movName = "Victory Points";
             IsDoubleElimination = false;
