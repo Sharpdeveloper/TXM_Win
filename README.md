@@ -1,5 +1,3 @@
-# !This will be the new Version of TXM, if you are looking for the current version it's here: https://github.com/Sharpdeveloper/TXM_Win!
-
 # TXM - The Tournament App
 
 With TXM you can organize your boardgame, miniatures game or card game tournament.
