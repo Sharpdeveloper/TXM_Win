@@ -9,7 +9,7 @@ namespace TXM.Core.Export.JSON
         public string Name { get; set; }
         [JsonPropertyName("email")]
         public string Email { get; set; }
-        [JsonPropertyName("list-id")]
+        [JsonPropertyName("list")]
         public string ListID { get; set; }
         [JsonPropertyName("mov")]
         public int MoV { get; set; }

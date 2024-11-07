@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text.Json;
+using System.Net.Http;
 
 using TXM.Core.Logic;
 
@@ -8,6 +9,10 @@ namespace TXM.Core.Export.JSON
 {
 	public class JSONCreator
 	{
+		private static HttpClient client = new HttpClient()
+		{
+			BaseAddress = new Uri("https://www.pattern-analyzer.app/api/yasb/xws")
+		};
 		private JSONCreator()
 		{
 		}
@@ -15,7 +20,7 @@ namespace TXM.Core.Export.JSON
 		public static string TournamentToListFortress(Tournament t)
 		{
 			JSONPlayer[] players = t.Participants
-                .Select(x => new JSONPlayer(x.DisplayName, "", x.SquadList, x.MarginOfVictory, x.TournamentPoints, x.StrengthOfSchedule, x.Dropped ? 0 : t.DisplayedRound, new Dictionary<string, int>() { { "swiss", x.Rank } })).ToArray();
+                .Select(x => new JSONPlayer(x.DisplayName, "", ListLinkToJson(x.SquadList), x.MarginOfVictory, x.TournamentPoints, x.StrengthOfSchedule, x.Dropped ? 0 : t.DisplayedRound, new Dictionary<string, int>() { { "swiss", x.Rank } })).ToArray();
 			JSONRound[] rounds = t.Rounds
                 .Where(x => x.RoundNo >= 1)
                 .Select(x =>
@@ -28,6 +33,15 @@ namespace TXM.Core.Export.JSON
 
             var options = new JsonSerializerOptions { WriteIndented = true };
             return JsonSerializer.Serialize(tournament, options);
+		}
+
+		private static string ListLinkToJson(string link)
+		{
+			var start = link.IndexOf('?');
+			var list = link.Substring(start);
+			var task = client.GetStringAsync(list);
+			task.Wait();
+			return task.Result;
 		}
 	}
 }

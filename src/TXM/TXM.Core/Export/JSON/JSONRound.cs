@@ -13,7 +13,7 @@ namespace TXM.Core.Export.JSON
 		public JSONMatch[] Matches { get; set; }
 
         public JSONRound(string roundType, int roundNumber, JSONMatch[] matches)
-            => (RoundType, RoundNumber, Matches) = (roundType, RoundNumber, matches);
+            => (RoundType, RoundNumber, Matches) = (roundType, roundNumber, matches);
 	}
 }
 
